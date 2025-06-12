@@ -1,0 +1,91 @@
+<main class="dashboard-layout">
+  <div class="dashboard-grid">
+    <!-- Animal's Number Card -->
+    <div class="card animal-number-card">
+      <h3>Animal's Number</h3>
+      <div class="chart-placeholder donut-chart">
+        <div class="chart-center-text">
+          <span class="total-number">{{ animalNumbers.total }}</span>
+        </div>
+        <div class="chart-legend">
+          <ul>
+            <li><span class="legend-dot pregnant"></span> Pregnant</li>
+            <li><span class="legend-dot new-born"></span> New born</li>
+            <li><span class="legend-dot fattening"></span> Fattening</li>
+            <li><span class="legend-dot milch"></span> Milch</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 Quarters Milk Production Card -->
+    <div class="card milk-production-quarters-card dark-card">
+      <h3>4 Quarters Milk Production</h3>
+      <div class="quarters-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Quarters</th>
+              <th>Milk production</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let quarter of milkProduction">
+              <td>{{ quarter.quarter }}</td>
+              <td>{{ quarter.production }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Weight per week Card (Bar Chart) -->
+    <div class="card weight-per-week-card">
+      <h3>Weight per week</h3>
+      <div class="chart-placeholder bar-chart">
+        <div class="bar-container" *ngFor="let data of weightPerWeek" [style.--bar-height.px]="data.weight">
+          <div class="bar"></div>
+          <div class="bar-label">{{ data.week }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Up Coming Schedules Card -->
+    <div class="card upcoming-schedules-card dark-card">
+      <h3>Up Coming Schedules</h3>
+      <ul class="schedule-list">
+        <li *ngFor="let item of upcomingSchedules">
+          <span class="schedule-time">{{ item.time }}</span> | <span class="schedule-description">{{ item.description }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Milk production Card (Line Chart) -->
+    <div class="card milk-production-chart-card">
+      <h3>Milk production</h3>
+      <div class="chart-placeholder line-chart">
+        <div class="y-axis">
+          <span class="axis-label">1500</span>
+          <span class="axis-label">1200</span>
+          <span class="axis-label">900</span>
+          <span class="axis-label">600</span>
+          <span class="axis-label">300</span>
+          <span class="axis-label">0</span>
+        </div>
+        <div class="plot-area">
+          <div class="data-points-container">
+            <div class="data-point" *ngFor="let data of milkProductionChartData; let i = index" 
+                 [style.left.%]="(i / (milkProductionChartData.length - 1)) * 100"
+                 [style.bottom.%]="(data.production / 1500) * 100"></div>
+            <svg class="line-svg">
+              <!-- Placeholder for the actual SVG line drawing, will be handled by CSS/JS if needed -->
+            </svg>
+          </div>
+          <div class="x-axis">
+            <span class="axis-label" *ngFor="let data of milkProductionChartData">{{ data.day }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

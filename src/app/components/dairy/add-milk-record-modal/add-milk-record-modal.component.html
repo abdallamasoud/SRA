@@ -1,0 +1,52 @@
+<div class="modal-overlay">
+  <div class="modal-container-custom">
+    <button class="close-btn-custom" (click)="closeModal()">
+      <img src="assets/icons/close.svg" alt="Close">
+    </button>
+    <div class="header-custom">
+      <img src="assets/icons/milk.svg" alt="Milk Icon" class="milk-icon">
+      <h2 class="title-custom">Record Milk Production</h2>
+    </div>
+
+    <form [formGroup]="milkRecordForm" (ngSubmit)="onSubmit()">
+      <div class="form-item-custom">
+        <label class="label-custom">Code</label>
+        <input class="input-custom" type="text" [value]="dairy?.code" readonly placeholder="Code">
+      </div>
+
+      <div class="form-item-custom">
+        <label class="label-custom">Milk Production</label>
+        <input
+          class="input-custom"
+          type="number"
+          id="milk"
+          formControlName="milk"
+          placeholder="Milk Production"
+          step="0.1"
+        >
+      </div>
+
+      <div class="form-item-custom">
+        <label class="label-custom">Fat Presentence</label>
+        <input
+          class="input-custom"
+          type="number"
+          id="fatPercentage"
+          formControlName="fatPercentage"
+          placeholder="Fat Presentence"
+          step="0.1"
+        >
+      </div>
+
+      <!-- Hidden Date field as per image, assuming it's still needed in the form -->
+      <input type="hidden" formControlName="date">
+
+      <div class="form-actions-custom">
+        <button type="submit" class="save-btn-custom" [disabled]="isLoading">
+          <img src="assets/icons/save.svg" alt="Save Icon" class="save-icon">
+          <span class="button-text">{{ isLoading ? 'Saving...' : 'Save Milk production Today' }}</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

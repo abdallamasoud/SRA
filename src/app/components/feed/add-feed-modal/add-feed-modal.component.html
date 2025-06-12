@@ -1,0 +1,218 @@
+<div class="modal-overlay">
+  <div class="modal-container">
+    <div class="modal-header">
+      <img src="assets/images/hay-bale.png" alt="Make New Feed Icon" class="modal-icon">
+      <h2 class="modal-title">Make New Feed</h2>
+      <button class="close-btn" (click)="closeModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <form [formGroup]="feedForm" (ngSubmit)="onSubmit()">
+        <div class="form-row-grid">
+          <!-- Feed Name -->
+          <div class="form-group">
+            <label for="feedName">Feed Name</label>
+            <input
+              type="text"
+              id="feedName"
+              formControlName="feedName"
+              placeholder="Feed Name"
+              [ngClass]="{'invalid': feedForm.get('feedName')?.invalid && feedForm.get('feedName')?.touched}"
+            >
+            <div class="error-message" *ngIf="feedForm.get('feedName')?.invalid && feedForm.get('feedName')?.touched">
+              Feed name is required
+            </div>
+          </div>
+
+          <!-- Growth rate -->
+          <div class="form-group">
+            <label for="growthRate">Growth rate</label>
+            <input
+              type="text"
+              id="growthRate"
+              formControlName="growthRate"
+              placeholder="Growth Rate"
+              [ngClass]="{'invalid': feedForm.get('growthRate')?.invalid && feedForm.get('growthRate')?.touched}"
+            >
+            <div class="error-message" *ngIf="feedForm.get('growthRate')?.invalid && feedForm.get('growthRate')?.touched">
+              Growth rate is required
+            </div>
+          </div>
+
+          <!-- Weight -->
+          <div class="form-group">
+            <label for="weight">Weight</label>
+            <input
+              type="number"
+              id="weight"
+              formControlName="weight"
+              placeholder="Weight"
+              [ngClass]="{'invalid': feedForm.get('weight')?.invalid && feedForm.get('weight')?.touched}"
+            >
+            <div class="error-message" *ngIf="feedForm.get('weight')?.invalid && feedForm.get('weight')?.touched">
+              <span *ngIf="feedForm.get('weight')?.errors?.['required']">Weight is required</span>
+              <span *ngIf="feedForm.get('weight')?.errors?.['min']">Weight must be positive</span>
+            </div>
+          </div>
+
+          <!-- Gender Dropdown -->
+          <div class="form-group">
+            <label>Gender</label>
+            <app-custom-dropdown
+              [options]="genderOptions"
+              [placeholder]="'Gender'"
+              (selectionChange)="onDropdownSelectionChange('gender', $event)"
+            ></app-custom-dropdown>
+            <div class="error-message" *ngIf="feedForm.get('gender')?.invalid && feedForm.get('gender')?.touched">
+              Gender is required
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row-grid">
+          <!-- Animal's Types Dropdown -->
+          <div class="form-group">
+            <app-custom-dropdown
+              [options]="animalTypesOptions"
+              [placeholder]="'Animal\'s Types'"
+              (selectionChange)="onDropdownSelectionChange('animalTypes', $event)"
+            ></app-custom-dropdown>
+            <div class="error-message" *ngIf="feedForm.get('animalTypes')?.invalid && feedForm.get('animalTypes')?.touched">
+              Animal Type is required
+            </div>
+          </div>
+
+          <!-- Feed's Type Dropdown -->
+          <div class="form-group">
+            <app-custom-dropdown
+              [options]="feedTypesOptions"
+              [placeholder]="'Feed\'s Type'"
+              (selectionChange)="onDropdownSelectionChange('feedType', $event)"
+            ></app-custom-dropdown>
+            <div class="error-message" *ngIf="feedForm.get('feedType')?.invalid && feedForm.get('feedType')?.touched">
+              Feed Type is required
+            </div>
+          </div>
+
+          <!-- Season Dropdown -->
+          <div class="form-group">
+            <app-custom-dropdown
+              [options]="seasonsOptions"
+              [placeholder]="'Season'"
+              (selectionChange)="onDropdownSelectionChange('season', $event)"
+            ></app-custom-dropdown>
+            <div class="error-message" *ngIf="feedForm.get('season')?.invalid && feedForm.get('season')?.touched">
+              Season is required
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row-grid">
+          <!-- Protein Percentage -->
+          <div class="form-group">
+            <label for="proteinPercentage">Protein Percentage</label>
+            <input
+              type="text"
+              id="proteinPercentage"
+              value=""
+              readonly
+              placeholder="Protein Percentage"
+              class="read-only-input"
+            >
+          </div>
+
+          <!-- TDN percentage -->
+          <div class="form-group">
+            <label for="tdnPercentage">TDN percentage</label>
+            <input
+              type="text"
+              id="tdnPercentage"
+              value=""
+              readonly
+              placeholder="TDN percentage"
+              class="read-only-input"
+            >
+          </div>
+        </div>
+
+        <!-- Ingredients Section -->
+        <div class="ingredients-section">
+          <div class="form-row-grid ingredient-selection-row">
+            <!-- Ingredient type Dropdown -->
+            <div class="form-group">
+              <app-custom-dropdown
+                [options]="ingredientTypesOptions"
+                [placeholder]="'Ingredient type'"
+                (selectionChange)="onDropdownSelectionChange('ingredientType', $event)"
+              ></app-custom-dropdown>
+              <div class="error-message" *ngIf="feedForm.get('ingredientType')?.invalid && feedForm.get('ingredientType')?.touched">
+                Ingredient Type is required
+              </div>
+            </div>
+
+            <!-- Ingredients Dropdown -->
+            <div class="form-group">
+              <app-custom-dropdown
+                #ingredientDropdown
+                [options]="ingredients"
+                [placeholder]="'Ingredients'"
+                (selectionChange)="onIngredientSelected($event)"
+              ></app-custom-dropdown>
+            </div>
+
+            <!-- Price per KG -->
+            <div class="form-group">
+              <label for="pricePerKg">Price per KG</label>
+              <input type="number" #ingredientPriceInput placeholder="price per KG" min="0" class="price-input">
+            </div>
+
+            <!-- Add button -->
+            <div class="add-button-container">
+              <button type="button" class="add-ingredient-btn" (click)="addIngredientWithValues(ingredientPriceInput.value)">
+                <i class="fas fa-plus"></i>
+              </button>
+            </div>
+          </div>
+
+          <div formArrayName="ingredientPrice">
+            <div class="no-ingredients" *ngIf="ingredientPriceControls.length === 0">
+              No ingredients added. Use the fields above to add ingredients to this feed.
+            </div>
+
+            <div class="ingredients-list">
+              <div
+                *ngFor="let ingredient of ingredientPriceControls; let i = index"
+                [formGroupName]="i"
+                class="ingredient-row"
+              >
+                <div class="ingredient-info">
+                  <span class="ingredient-name">{{ getIngredientName(ingredient.get('id')?.value) }}</span>
+                  <span class="ingredient-price-value">{{ ingredient.get('price')?.value }} $</span>
+                </div>
+
+                <button type="button" class="remove-btn" (click)="removeIngredient(i)">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="error-message main-error" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+
+        <div class="form-actions">
+          <span class="finish-ingredients-text"><img src="assets/images/ingredients-basket.png" alt="Finish ingredients"> Finish choose ingredients</span>
+          <button type="submit" class="submit-btn" [disabled]="isLoading">
+            <i class="fas fa-spinner fa-spin" *ngIf="isLoading"></i>
+            <img src="assets/images/save-icon.png" alt="Save Icon" class="save-icon" *ngIf="!isLoading">
+            {{ isLoading ? 'Saving...' : 'Save Feed' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

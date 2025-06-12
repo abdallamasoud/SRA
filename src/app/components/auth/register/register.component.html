@@ -1,0 +1,132 @@
+<div class="auth-container">
+  <div class="auth-content">
+    <div class="auth-form-container">
+      <div class="logo">
+        <img src="assets/images/logo.svg" alt="SRA Logo">
+      </div>
+
+      <h2 class="auth-title">Create Account 👤</h2>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
+        <div class="form-group">
+          <label for="userName">
+            <i class="fas fa-user"></i> Username
+          </label>
+          <input
+            type="text"
+            id="userName"
+            formControlName="userName"
+            placeholder="Enter your username"
+            [ngClass]="{'invalid': registerForm.get('userName')?.invalid && registerForm.get('userName')?.touched}"
+          >
+          <div class="error-message" *ngIf="registerForm.get('userName')?.invalid && registerForm.get('userName')?.touched">
+            <span *ngIf="registerForm.get('userName')?.errors?.['required']">Username is required</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="name">
+            <i class="fas fa-id-card"></i> Full Name
+          </label>
+          <input
+            type="text"
+            id="name"
+            formControlName="name"
+            placeholder="Enter your full name"
+            [ngClass]="{'invalid': registerForm.get('name')?.invalid && registerForm.get('name')?.touched}"
+          >
+          <div class="error-message" *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
+            <span *ngIf="registerForm.get('name')?.errors?.['required']">Full name is required</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">
+            <i class="fas fa-envelope"></i> Email
+          </label>
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            placeholder="Enter your email"
+            [ngClass]="{'invalid': registerForm.get('email')?.invalid && registerForm.get('email')?.touched}"
+          >
+          <div class="error-message" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+            <span *ngIf="registerForm.get('email')?.errors?.['required']">Email is required</span>
+            <span *ngIf="registerForm.get('email')?.errors?.['email']">Please enter a valid email</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">
+            <i class="fas fa-lock"></i> Password
+          </label>
+          <div class="password-input-container">
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              id="password"
+              formControlName="password"
+              placeholder="Enter your password"
+              [ngClass]="{'invalid': registerForm.get('password')?.invalid && registerForm.get('password')?.touched}"
+            >
+            <button
+              type="button"
+              class="password-toggle"
+              (click)="togglePasswordVisibility()"
+              [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+            >
+              <i class="fas" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+            </button>
+          </div>
+          <div class="error-message" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+            <span *ngIf="registerForm.get('password')?.errors?.['required']">Password is required</span>
+            <span *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="role-label">
+            <i class="fas fa-user-shield"></i> Accessibility
+          </label>
+          <div class="role-options">
+            <div class="role-option">
+              <input
+                type="radio"
+                id="owner"
+                formControlName="role"
+                value="Owner"
+              >
+              <label for="owner">Owner</label>
+            </div>
+            <div class="role-option">
+              <input
+                type="radio"
+                id="engineer"
+                formControlName="role"
+                value="Engineer"
+              >
+              <label for="engineer">Engineer</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="error-message main-error" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+
+        <button type="submit" class="submit-btn" [disabled]="isLoading">
+          <i class="fas fa-spinner fa-spin" *ngIf="isLoading"></i>
+          {{ isLoading ? 'Creating Account...' : 'Create Account' }}
+        </button>
+
+        <div class="auth-footer">
+          <p>Already have an account? <a routerLink="/login" class="login-link">Login</a></p>
+        </div>
+      </form>
+    </div>
+
+    <div class="auth-image">
+      <!-- Image will be set as background in CSS -->
+    </div>
+  </div>
+</div>

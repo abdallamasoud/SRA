@@ -1,0 +1,392 @@
+:root {
+  --primary-color: #8bc34a;
+  --secondary-color: #1e1e2d;
+  --text-color: #333;
+  --text-light: #666;
+  --border-color: #eee;
+  --card-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  --chart-color-1: #8bc34a;
+  --chart-color-2: #2196f3;
+  --chart-color-3: #ff9800;
+  --chart-color-4: #9c27b0;
+  --chart-color-5: #f44336;
+  --status-good: #8bc34a;
+  --status-medium: #ff9800;
+  --status-low: #f44336;
+  --status-urgent: #f44336;
+  --status-soon: #ff9800;
+  --status-normal: #8bc34a;
+  --dark-bg-color: #2F4F4F; /* New dark background color from image */
+  --dark-text-color: #ffffff;
+}
+
+.dashboard-layout {
+  padding: 5px; /* Further reduced padding for overall layout to match image exactly */
+  background-color: #e0e0e0; /* Light gray background for the overall page matching login */
+  box-sizing: border-box;
+  /* Removed max-width: 1200px; */
+  /* Removed margin: 0 auto; */
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Enforce a strict 2-column layout */
+  gap: 20px; /* Slightly reduced gap */
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  padding: 15px; /* Reduced padding to make cards smaller */
+  display: flex;
+  flex-direction: column;
+  color: var(--text-color);
+  overflow: hidden; /* Ensure content is clipped if it overflows */
+}
+
+.card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 10px; /* Reduced margin to pull content closer */
+  color: #222;
+}
+
+.dark-card {
+  background-color: var(--dark-bg-color); /* Dark background color */
+  color: var(--dark-text-color);
+}
+
+.dark-card h3,
+.dark-card table,
+.dark-card td,
+.dark-card th,
+.dark-card ul,
+.dark-card li,
+.dark-card span {
+  color: var(--dark-text-color); /* Ensure text is white on dark cards */
+}
+
+/* Animal's Number Card (Donut Chart) */
+.animal-number-card {
+  grid-column: span 1; /* Takes 1 column */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.animal-number-card .chart-placeholder {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5px; /* Further reduced margin to pull chart closer to legend */
+  /* Conic-gradient colors based on image */
+  background-image: conic-gradient(
+    #8bc34a 0% calc(var(--pregnant-percentage) * 1%), /* Green */
+    #ffeb3b calc(var(--pregnant-percentage) * 1%) calc(var(--newborn-percentage) * 1%), /* Yellow */
+    #f44336 calc(var(--newborn-percentage) * 1%) calc(var(--fattening-percentage) * 1%), /* Red */
+    #2196f3 calc(var(--fattening-percentage) * 1%) 100% /* Blue */
+  );
+  border: 10px solid #f0f0f0; /* Add a border to the donut chart area */
+  box-sizing: border-box;
+}
+
+.animal-number-card .chart-center-text {
+  background-color: #ffffff;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  font-weight: 700;
+  color: #222;
+  box-shadow: 0 0 0 5px #f0f0f0; /* Add shadow to center text */
+}
+
+.animal-number-card .chart-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two columns for legend items */
+  gap: 10px;
+}
+
+.animal-number-card .chart-legend li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #555;
+}
+
+.animal-number-card .legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.animal-number-card .legend-dot.pregnant { background-color: #8bc34a; } /* Green */
+.animal-number-card .legend-dot.new-born { background-color: #ffeb3b; } /* Yellow */
+.animal-number-card .legend-dot.fattening { background-color: #f44336; } /* Red */
+.animal-number-card .legend-dot.milch { background-color: #2196f3; } /* Blue */
+
+/* 4 Quarters Milk Production Card */
+.milk-production-quarters-card {
+  grid-column: span 1; /* Takes 1 column */
+}
+
+.quarters-table {
+  width: 100%;
+  overflow-x: auto; /* Enable horizontal scrolling for small screens */
+}
+
+.quarters-table table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--dark-text-color);
+}
+
+.quarters-table th,
+.quarters-table td {
+  padding: 5px 15px; /* Further reduced padding for table cells to make rows more compact */
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Lighter border for dark card */
+  font-size: 15px;
+  white-space: nowrap; /* Prevent text wrapping in table cells */
+}
+
+.quarters-table th {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.quarters-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Weight per week Card (Bar Chart) */
+.weight-per-week-card {
+  grid-column: span 2; /* Takes full width (2 columns) */
+  height: 200px; /* Further adjusted fixed height for the chart to fit better and prevent scroll */
+  display: flex;
+  flex-direction: column; /* Ensure content stacks vertically */
+}
+
+.weight-per-week-card .chart-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: transparent; /* Remove background color */
+  display: flex;
+  align-items: flex-end;
+  padding: 5px; /* Further reduced padding for chart placeholder */
+  gap: 10px;
+  border-bottom: 1px solid var(--border-color); /* X-axis line */
+  position: relative;
+}
+
+.weight-per-week-card .bar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  flex-grow: 1;
+  position: relative;
+  height: 100%;
+}
+
+.weight-per-week-card .bar {
+  background-color: #8bc34a; /* Bar color (light green) */
+  width: 40px; /* Bar width */
+  height: var(--bar-height); /* Dynamic height based on data */
+  border-radius: 5px 5px 0 0;
+  transition: height 0.3s ease;
+}
+
+.weight-per-week-card .bar-label {
+  font-size: 12px;
+  color: #555;
+  margin-top: 5px;
+  white-space: nowrap;
+}
+
+/* Up Coming Schedules Card */
+.upcoming-schedules-card {
+  grid-column: span 1; /* Takes 1 column */
+}
+
+.schedule-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.schedule-list li {
+  padding: 3px 0; /* Further reduced padding for schedule list items to match image */
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.3); /* Dashed border for dark card */
+  font-size: 15px;
+  white-space: normal; /* Allow schedule descriptions to wrap */
+}
+
+.schedule-list li:last-child {
+  border-bottom: none;
+}
+
+.schedule-time {
+  font-weight: 600;
+  margin-right: 5px;
+}
+
+.schedule-description {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Milk production Card (Line Chart) */
+.milk-production-chart-card {
+  grid-column: span 1; /* Takes 1 column */
+  height: 200px; /* Further adjusted fixed height for the chart to fit better and prevent scroll */
+}
+
+.milk-production-chart-card .line-chart {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  position: relative;
+  display: flex;
+  flex-direction: column; /* Changed to column to stack Y-axis, plot-area, X-axis */
+  justify-content: space-between;
+  padding: 0; /* Remove padding here, add to sub-elements */
+  box-sizing: border-box;
+}
+
+.milk-production-chart-card .y-axis {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: calc(100% - 30px); /* Adjust height to align with plot area */
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: space-between;
+  padding-bottom: 20px; /* Space for x-axis labels */
+  font-size: 12px;
+  color: #555;
+  text-align: right;
+  width: 40px; /* Width for Y-axis labels */
+}
+
+.milk-production-chart-card .y-axis .axis-label {
+  height: calc(100% / 5); /* 5 intervals */
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 5px;
+}
+
+.milk-production-chart-card .plot-area {
+  flex-grow: 1;
+  position: relative;
+  border-left: 1px solid var(--border-color); /* Y-axis line */
+  border-bottom: 1px solid var(--border-color); /* X-axis line */
+  margin-left: 40px; /* Offset for Y-axis labels */
+  padding-bottom: 20px; /* Space for x-axis labels */
+}
+
+.milk-production-chart-card .data-points-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.milk-production-chart-card .data-point {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: #2196f3; /* Blue dot */
+  border-radius: 50%;
+  transform: translate(-50%, 50%); /* Center the dot */
+  z-index: 2;
+  border: 2px solid white; /* White border to stand out */
+}
+
+.milk-production-chart-card .line-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow: visible; /* Allow stroke to extend */
+}
+
+.milk-production-chart-card .x-axis {
+  display: flex;
+  justify-content: space-around;
+  position: absolute;
+  bottom: 0;
+  left: 40px; /* Offset for Y-axis labels */
+  width: calc(100% - 40px);
+  font-size: 12px;
+  color: #555;
+}
+
+.milk-production-chart-card .x-axis .axis-label {
+  padding-top: 5px;
+}
+
+@media (max-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr; /* Single column on smaller screens */
+  }
+
+  .animal-number-card,
+  .milk-production-quarters-card,
+  .weight-per-week-card,
+  .upcoming-schedules-card,
+  .milk-production-chart-card {
+    grid-column: span 1; /* All cards take full width */
+  }
+
+  .weight-per-week-card,
+  .milk-production-chart-card {
+    height: auto; /* Allow charts to adjust height */
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-layout {
+    padding: 15px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .card h3 {
+    font-size: 16px;
+  }
+
+  .animal-number-card .chart-placeholder {
+    width: 150px;
+    height: 150px;
+  }
+
+  .animal-number-card .chart-center-text {
+    width: 100px;
+    height: 100px;
+    font-size: 30px;
+  }
+
+  .animal-number-card .chart-legend ul {
+    grid-template-columns: 1fr;
+  }
+}

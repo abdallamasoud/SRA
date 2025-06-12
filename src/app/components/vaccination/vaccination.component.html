@@ -1,0 +1,162 @@
+<main class="content-container">
+  <div class="frame-4">
+    <!-- Add New Vaccine Button -->
+    <button class="frame-9" (click)="openAddNewVaccineModal()">
+      <img class="btn-icon" src="assets/icons/add-vaccine.svg" alt="Add Vaccine Icon">
+      <div class="btntext">Add New Vaccine</div>
+    </button>
+
+    <!-- Updating Data Button -->
+    <button class="frame-9" (click)="openEditExistVaccineModal()">
+      <img class="btn-icon" src="assets/icons/update-data.svg" alt="Update Icon">
+      <div class="btntext">Updating Data</div>
+    </button>
+
+    <!-- Search Input -->
+    <div class="search-container">
+      <div class="search-input-wrapper">
+        <img class="search-icon" src="assets/icons/search-green.svg" alt="Search Icon">
+        <input type="text" class="search-field" placeholder="Search" [(ngModel)]="searchTerm" (input)="performSearch()">
+      </div>
+    </div>
+
+    <!-- Filter Button -->
+    <div class="filter-dropdown-container" [class.active]="isFilterDropdownOpen">
+      <button class="frame-9 filter-button" (click)="toggleFilterDropdown()">
+        <img class="double-left1" src="assets/icons/filter.svg">
+        <div class="btntext">Filter</div>
+      </button>
+      <div class="filter-dropdown-menu">
+        <div class="filter-option" (click)="applyFilter('name')">Name</div>
+        <div class="filter-option" (click)="applyFilter('type')">Type</div>
+        <div class="filter-option" (click)="applyFilter('dose')">Dose</div>
+        <div class="filter-option" (click)="applyFilter('timeToTake')">Time To Take</div>
+      </div>
+    </div>
+
+    <!-- Delete Vaccine Button -->
+    <button class="frame-9 delete-btn" (click)="openDeleteVaccineModal()">
+      <img class="btn-icon" src="assets/icons/delete.svg" alt="Delete Icon">
+      <div class="btntext">Delete Vaccine</div>
+    </button>
+  </div>
+
+  <!-- Vaccination Table -->
+  <div class="table-container">
+    <h3>Vaccination</h3>
+    <table>
+      <thead>
+        <tr>
+          <th><input type="checkbox"></th>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Dose</th>
+          <th>Time To Take</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let vaccine of filteredVaccines">
+          <td><input type="checkbox"></td>
+          <td>{{ vaccine.name }}</td>
+          <td>{{ vaccine.type }}</td>
+          <td>{{ vaccine.dose }}</td>
+          <td>{{ vaccine.timeToTake }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Add New Vaccine Modal -->
+  <div class="choose-update-milch" *ngIf="showAddNewVaccineModal">
+    <div class="frame-4 modal add-edit-modal">
+      <button class="close-btn" (click)="closeAllModals()"><img src="assets/icons/close.svg" alt="Close"></button>
+      <div class="frame-5">
+        <img class="modal-icon" src="assets/icons/add-vaccine-modal.svg" alt="Add Vaccine Icon">
+        <div class="text-wrapper-5">Add New Vaccine</div>
+      </div>
+      <div class="frame-6">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="text-wrapper-6">Name</label>
+            <input type="text" class="data-filled" placeholder="Name" [(ngModel)]="selectedVaccine.name">
+          </div>
+          <div class="form-group">
+            <label class="text-wrapper-6">Type</label>
+            <input type="text" class="data-filled" placeholder="Type" [(ngModel)]="selectedVaccine.type">
+          </div>
+          <div class="form-group">
+            <label class="text-wrapper-6">Dose</label>
+            <input type="text" class="data-filled" placeholder="Dose" [(ngModel)]="selectedVaccine.dose">
+          </div>
+          <div class="form-group">
+            <label class="text-wrapper-6">Time To Take</label>
+            <input type="text" class="data-filled" placeholder="Time To Take" [(ngModel)]="selectedVaccine.timeToTake">
+          </div>
+        </div>
+        <div class="frame-8">
+          <button class="frame-9 modal-save-btn" (click)="submitNewVaccine()">
+            <img class="btn-icon" src="assets/icons/save.svg" alt="Save Icon">
+            <div class="btntext">Save Vaccine</div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Exist Vaccine Modal -->
+  <div class="choose-update-milch" *ngIf="showEditExistVaccineModal">
+    <div class="frame-4 modal add-edit-modal">
+      <button class="close-btn" (click)="closeAllModals()"><img src="assets/icons/close.svg" alt="Close"></button>
+      <div class="frame-5">
+        <img class="modal-icon" src="assets/icons/edit-vaccine-modal.svg" alt="Edit Vaccine Icon">
+        <div class="text-wrapper-5">Edit Exist Vaccine</div>
+      </div>
+      <div class="frame-6">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="text-wrapper-6">Name</label>
+            <input type="text" class="data-filled" placeholder="Name" [(ngModel)]="selectedVaccine.name">
+          </div>
+          <div class="form-group">
+            <button class="frame-9 show-data-btn" (click)="showDataForVaccine()">
+              <div class="btntext">Show Data</div>
+            </button>
+          </div>
+          <div class="form-group">
+            <label class="text-wrapper-6">Type</label>
+            <input type="text" class="data-filled" placeholder="Type" [(ngModel)]="selectedVaccine.type">
+          </div>
+          <div class="form-group">
+            <label class="text-wrapper-6">Dose</label>
+            <input type="text" class="data-filled" placeholder="Dose" [(ngModel)]="selectedVaccine.dose">
+          </div>
+          <div class="form-group">
+            <label class="text-wrapper-6">Time To Take</label>
+            <input type="text" class="data-filled" placeholder="Time To Take" [(ngModel)]="selectedVaccine.timeToTake">
+          </div>
+        </div>
+        <div class="frame-8">
+          <button class="frame-9 modal-save-btn" (click)="submitUpdateVaccine()">
+            <img class="btn-icon" src="assets/icons/save.svg" alt="Save Icon">
+            <div class="btntext">Save Updates</div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Vaccination Modal -->
+  <div class="choose-update-milch" *ngIf="showDeleteVaccineModal">
+    <div class="frame-4 modal delete-modal">
+      <button class="close-btn" (click)="closeAllModals()"><img src="assets/icons/close.svg" alt="Close"></button>
+      <div class="delete-content">
+        <img class="delete-icon" src="assets/icons/delete-vaccine-modal.svg" alt="Delete Vaccine Icon">
+        <div class="delete-text">Delete Vaccination?</div>
+        <div class="delete-buttons">
+          <button class="delete-cancel-btn" (click)="closeAllModals()">Cancel</button>
+          <button class="delete-confirm-btn" (click)="confirmDeleteVaccine()">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

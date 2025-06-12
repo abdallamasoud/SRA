@@ -1,0 +1,25 @@
+<main class="dashboard-content-container">
+  <div class="dashboard-header">
+  </div>
+
+  <div class="report-sections-grid">
+    <div class="report-card" *ngFor="let section of reportSections">
+      <div class="report-card-header">
+        <img [src]="section.icon" [alt]="section.title + ' Icon'" class="report-card-icon">
+        <h3 class="report-card-title">{{ section.title }}</h3>
+      </div>
+      <ul class="report-card-items">
+        <li *ngFor="let item of section.items" class="report-item">
+          {{ item.text }}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="print-button-container">
+    <button class="print-button" (click)="printReport()">
+      <img src="assets/icons/print.svg" alt="Print Icon">
+      <span>Print</span>
+    </button>
+  </div>
+</main>

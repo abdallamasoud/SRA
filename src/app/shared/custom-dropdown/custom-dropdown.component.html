@@ -1,0 +1,49 @@
+<div class="custom-dropdown">
+  <label *ngIf="label">{{ label }}</label>
+
+  <div class="dropdown-container">
+    <div class="dropdown-header" (click)="toggleDropdown()">
+      <div class="selected-option" [class.placeholder]="selectedId === null">
+        {{ getSelectedOptionName() }}
+      </div>
+      <div class="dropdown-actions">
+        <button *ngIf="selectedId !== null" class="clear-btn" (click)="clearSelection($event)">
+          <i class="fas fa-times"></i>
+        </button>
+        <div class="dropdown-arrow">
+          <i class="fas" [ngClass]="isOpen ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="dropdown-menu" *ngIf="isOpen">
+      <div class="search-container">
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search..."
+          [(ngModel)]="searchText"
+          (input)="onSearchChange()"
+          (click)="$event.stopPropagation()"
+        >
+        <i class="fas fa-search search-icon"></i>
+      </div>
+
+      <div class="options-container">
+        <div class="no-results" *ngIf="filteredOptions.length === 0">
+          No results found
+        </div>
+
+        <div
+          *ngFor="let option of filteredOptions"
+          class="option-item"
+          [class.selected]="option.id === selectedId"
+          (click)="selectOption(option)"
+        >
+          {{ option.name }}
+          <i *ngIf="option.id === selectedId" class="fas fa-check check-icon"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

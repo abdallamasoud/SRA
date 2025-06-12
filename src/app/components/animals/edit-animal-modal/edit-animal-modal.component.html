@@ -1,0 +1,120 @@
+<div class="modal-overlay">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2 class="modal-title"><i class="fas fa-folder-pen"></i> Edit Animal</h2>
+      <button class="close-btn" (click)="closeModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <form [formGroup]="animalForm" (ngSubmit)="onSubmit()">
+
+        <!-- Type Radio Buttons -->
+        <div class="form-group-radio">
+          <label>Type</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" formControlName="animalType" value="Dairy"> Dairy
+            </label>
+            <label class="radio-label">
+              <input type="radio" formControlName="animalType" value="Newborn"> Newborn
+            </label>
+            <label class="radio-label">
+              <input type="radio" formControlName="animalType" value="Fattening"> Fattening
+            </label>
+          </div>
+          <div class="error-message" *ngIf="animalForm.get('animalType')?.invalid && animalForm.get('animalType')?.touched">
+            Type is required
+          </div>
+        </div>
+
+        <div class="form-row-grid">
+          <div class="form-group">
+            <label for="code">Code</label>
+            <input type="text" id="code" formControlName="code" placeholder="Code">
+            <div class="error-message" *ngIf="animalForm.get('code')?.invalid && animalForm.get('code')?.touched">
+              Code is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="herdNumber">Herd Number</label>
+            <input type="text" id="herdNumber" formControlName="herdNumber" placeholder="Herd Number">
+            <div class="error-message" *ngIf="animalForm.get('herdNumber')?.invalid && animalForm.get('herdNumber')?.touched">
+              Herd Number is required
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row-grid">
+          <div class="form-group">
+            <label for="weight">Weight</label>
+            <input type="number" id="weight" formControlName="weight" placeholder="weight" step="0.1">
+            <div class="error-message" *ngIf="animalForm.get('weight')?.invalid && animalForm.get('weight')?.touched">
+              <span *ngIf="animalForm.get('weight')?.errors?.['required']">Weight is required</span>
+              <span *ngIf="animalForm.get('weight')?.errors?.['min']">Weight must be positive</span>
+            </div>
+          </div>
+
+          <div class="form-group-radio">
+            <label>Gender</label>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" formControlName="gender" value="Female"> Female
+              </label>
+              <label class="radio-label">
+                <input type="radio" formControlName="gender" value="Male"> Male
+              </label>
+            </div>
+            <div class="error-message" *ngIf="animalForm.get('gender')?.invalid && animalForm.get('gender')?.touched">
+              Gender is required
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row-grid">
+          <div class="form-group">
+            <label for="weightDate">Date of weight</label>
+            <input type="date" id="weightDate" formControlName="weightDate" placeholder="Date of weight">
+            <div class="error-message" *ngIf="animalForm.get('weightDate')?.invalid && animalForm.get('weightDate')?.touched">
+              Weight date is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="dateOfBirth">Date of Birth</label>
+            <input type="date" id="dateOfBirth" formControlName="dateOfBirth" placeholder="Date of birth">
+            <div class="error-message" *ngIf="animalForm.get('dateOfBirth')?.invalid && animalForm.get('dateOfBirth')?.touched">
+              Date of Birth is required
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row-grid">
+          <div class="form-group">
+            <label for="healthcareNote">Healthcare note</label>
+            <textarea id="healthcareNote" formControlName="healthcareNote" placeholder="Health Care" rows="3"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="takenVaccinations">Taken Vaccinations</label>
+            <textarea id="takenVaccinations" formControlName="takenVaccinations" placeholder="Taken Vaccinations" rows="3"></textarea>
+          </div>
+        </div>
+
+        <div class="error-message main-error" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="submit-btn" [disabled]="isLoading">
+            <i class="fas fa-spinner fa-spin" *ngIf="isLoading"></i>
+            <i class="fas fa-save" *ngIf="!isLoading"></i>
+            {{ isLoading ? 'Updating...' : 'Update Animal' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

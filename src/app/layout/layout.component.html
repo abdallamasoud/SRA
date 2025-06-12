@@ -1,0 +1,30 @@
+<div class="app-container">
+  <!-- Main content area -->
+  <div class="main-content">
+    <!-- Navbar -->
+    <div class="navbar">
+      <div class="navbar-left">
+        <div class="page-title">{{ getPageTitle() }}</div>
+      </div>
+      <div class="navbar-right">
+        <div class="navbar-icon">
+          <i class="fas fa-search"></i>
+        </div>
+        <div class="notifications">
+          <i class="fas fa-bell"></i>
+        </div>
+        <div class="navbar-icon">
+          <i class="fas fa-cog"></i>
+        </div>
+        <div class="user-profile">
+          <img src="assets/user-avatar.png" alt="User profile">
+        </div>
+      </div>
+    </div>
+
+    <!-- Page content -->
+    <div class="content">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>

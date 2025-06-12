@@ -1,0 +1,118 @@
+<div class="layout-container" [ngClass]="{'auth-layout': isAuthPage}">
+  <!-- Sidebar Component -->
+  <div class="side-bar" *ngIf="!isAuthPage">
+      <div class="sra-parent">
+        <h1 class="sra">SRA</h1>
+          <div class="smart-raising-animal">Smart Raising Animal</div>
+    </div>
+    <div class="side-bar-bottom">
+      <div class="side-bar-bottom-inner">
+        <img class="item-separator-child" loading="lazy" alt="" src="assets/images/line-1.svg" />
+      </div>
+      <div class="side-bar-elements">
+        <div class="side-bar-options">
+          <div class="side-bar-option-parent">
+            <a class="vuesaxlinearcategory-2-parent" routerLink="/dashboard" routerLinkActive="active">
+              <img class="vuesaxlinearcategory-2-icon" loading="lazy" alt="" src="assets/images/icons/dashboard.png" />
+              <div class="animals">Dashboard</div>
+            </a>
+          </div>
+          <div class="side-bar-option-parent-inner">
+            <img class="item-separator-child" loading="lazy" alt="" src="assets/images/line-1.svg" />
+          </div>
+          <div class="side-bar-option-parent1">
+            <div class="side-bar-element">
+              <a class="side-animal" routerLink="/animals" routerLinkActive="active">
+                <img class="bull-icon" loading="lazy" alt="" src="assets/images/icons/bull.png" />
+                <div class="animals-wrapper">
+                  <div class="animals">Animals</div>
+                </div>
+              </a>
+              <a class="side-animal" routerLink="/dairy" routerLinkActive="active">
+                <img class="bull-icon" loading="lazy" alt="" src="assets/images/icons/milch.png" />
+                <div class="animals">Dairy</div>
+              </a>
+              <a class="side-animal" routerLink="/newborn" routerLinkActive="active">
+                <img class="cow-1-icon" loading="lazy" alt="" src="assets/images/icons/newborn.png" />
+                <div class="animals">New Born</div>
+              </a>
+              <a class="side-animal" routerLink="/feed" routerLinkActive="active">
+                <img class="cow-1-icon" loading="lazy" alt="" src="assets/images/icons/feed.png" />
+                <div class="animals">Feed</div>
+              </a>
+              <a class="side-animal" routerLink="/ingredients" routerLinkActive="active">
+                <img class="cow-1-icon" loading="lazy" alt="" src="assets/images/icons/ingrediant icon.png" />
+                <div class="animals">Ingredients</div>
+              </a>
+              <a class="side-animal" routerLink="/vaccination" routerLinkActive="active">
+                <img class="cow-1-icon" loading="lazy" alt="" src="assets/images/icons/vaccine.png" />
+                <div class="animals">Vaccination</div>
+              </a>
+              <a class="side-animal" routerLink="/reports" routerLinkActive="active">
+                <img class="cow-1-icon" loading="lazy" alt="" src="assets/images/icons/reports.png" />
+                <div class="animals">Reports</div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content" [ngClass]="{'full-width': isAuthPage}">
+    <!-- Navbar Component -->
+    <header class="navbar" *ngIf="!isAuthPage">
+      <div class="navbar-left">
+        <a class="dashboard">
+          <div class="bell-icon-container" (click)="toggleNotificationsDropdown($event)">
+            <img class="bell-icon" alt="" src="assets/images/icons/ring.png" />
+            <!-- Notifications Dropdown -->
+            <div class="notifications-dropdown" [class.show]="showNotificationsDropdown">
+              <div class="notifications-header">
+                <h3>Notifications</h3>
+                <i class="fas fa-times"></i>
+              </div>
+              <div class="notification-item">
+                <img class="notification-icon" src="assets/images/icons/bell.svg" alt="" />
+                <div class="notification-content">
+                  <div class="notification-title">New Animal Added</div>
+                  <div class="notification-time">2 hours ago</div>
+                </div>
+              </div>
+              <div class="notification-item">
+                <img class="notification-icon" src="assets/images/icons/bell.svg" alt="" />
+                <div class="notification-content">
+                  <div class="notification-title">Milk Production Recorded</div>
+                  <div class="notification-time">Yesterday</div>
+                </div>
+              </div>
+              <div class="view-all-notifications">
+                <a href="#">View All Notifications</a>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="navbar-right">
+        <div class="user-profile" id="navProfileContainer" (click)="toggleProfileDropdown($event)">
+          <img class="male-avatar-portrait-of-a-youn-icon" loading="lazy" alt="" src="assets/images/icons/navbarperson.jpg" />
+        <div class="side-pregnant">
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <!-- Profile Dropdown -->
+          <div class="profile-dropdown" [class.show]="showProfileDropdown">
+            <a routerLink="/logout" (click)="logout()">Log Out</a>
+            <a routerLink="/settings">Settings</a>
+            <a routerLink="/about">About</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content Area -->
+    <div class="content-area" [ngClass]="{'auth-content': isAuthPage}">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

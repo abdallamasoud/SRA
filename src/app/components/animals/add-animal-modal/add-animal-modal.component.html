@@ -1,0 +1,157 @@
+<div class="modal-overlay">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2 class="modal-title"><img src="assets/images/add_dairy_animal_icon.png" alt="Add Dairy Animal Icon" style="width: 28px; height: 28px; margin-right: 10px;"> Add Dairy Animal</h2>
+      <button class="close-btn" (click)="closeModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <form [formGroup]="animalForm" (ngSubmit)="onSubmit()">
+
+        <div class="form-row-grid">
+          <div class="form-group">
+            <label for="code">Code</label>
+            <input type="text" id="code" formControlName="code" placeholder="Code">
+            <div class="error-message" *ngIf="animalForm.get('code')?.invalid && animalForm.get('code')?.touched">
+              Code is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="dateOfBirth">Date Of Birth</label>
+            <input type="date" id="dateOfBirth" formControlName="dateOfBirth" placeholder="mm/dd/yyyy">
+            <div class="error-message" *ngIf="animalForm.get('dateOfBirth')?.invalid && animalForm.get('dateOfBirth')?.touched">
+              Date of Birth is required
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row-grid">
+          <div class="form-group">
+            <label>Type</label>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" formControlName="animalType" value="Dairy"> Dairy
+              </label>
+              <label class="radio-label">
+                <input type="radio" formControlName="animalType" value="Drying"> Drying
+              </label>
+            </div>
+            <div class="error-message" *ngIf="animalForm.get('animalType')?.invalid && animalForm.get('animalType')?.touched">
+              Type is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Made Artificial Insemination</label>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" formControlName="madeArtificialInsemination" value="Yes"> Yes
+              </label>
+              <label class="radio-label">
+                <input type="radio" formControlName="madeArtificialInsemination" value="No"> No
+              </label>
+            </div>
+            <div class="error-message" *ngIf="animalForm.get('madeArtificialInsemination')?.invalid && animalForm.get('madeArtificialInsemination')?.touched">
+              This field is required
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row-grid">
+          <div class="form-group">
+            <label for="weight">Weight</label>
+            <input type="number" id="weight" formControlName="weight" placeholder="0" step="0.1">
+            <div class="error-message" *ngIf="animalForm.get('weight')?.invalid && animalForm.get('weight')?.touched">
+              <span *ngIf="animalForm.get('weight')?.errors?.['required']">Weight is required</span>
+              <span *ngIf="animalForm.get('weight')?.errors?.['min']">Weight must be positive</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="dateOfArtificialInsemination">Date Of Artificial Insemination</label>
+            <input type="date" id="dateOfArtificialInsemination" formControlName="dateOfArtificialInsemination" placeholder="mm/dd/yyyy">
+            <div class="error-message" *ngIf="animalForm.get('dateOfArtificialInsemination')?.invalid && animalForm.get('dateOfArtificialInsemination')?.touched">
+              Date is required
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row-grid">
+          <div class="form-group">
+            <label for="weightDate">Date of weight</label>
+            <input type="date" id="weightDate" formControlName="weightDate" placeholder="mm/dd/yyyy">
+            <div class="error-message" *ngIf="animalForm.get('weightDate')?.invalid && animalForm.get('weightDate')?.touched">
+              Weight date is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Statue of Insemination</label>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" formControlName="statueOfInsemination" value="Pregnant"> Pregnant
+              </label>
+              <label class="radio-label">
+                <input type="radio" formControlName="statueOfInsemination" value="Make Insemination Again"> Make Insemination Again
+              </label>
+            </div>
+            <div class="error-message" *ngIf="animalForm.get('statueOfInsemination')?.invalid && animalForm.get('statueOfInsemination')?.touched">
+              This field is required
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row-grid">
+          <div class="form-group">
+            <label for="herdNumber">Herd Number</label>
+            <input type="text" id="herdNumber" formControlName="herdNumber" placeholder="Herd Number">
+            <div class="error-message" *ngIf="animalForm.get('herdNumber')?.invalid && animalForm.get('herdNumber')?.touched">
+              Herd Number is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="healthcareNote">Healthcare note</label>
+            <textarea id="healthcareNote" formControlName="healthcareNote" placeholder="Health Care" rows="3"></textarea>
+            <div class="error-message" *ngIf="animalForm.get('healthcareNote')?.invalid && animalForm.get('healthcareNote')?.touched">
+              <span *ngIf="animalForm.get('healthcareNote')?.errors?.['required']">Healthcare note is required</span>
+              <span *ngIf="animalForm.get('healthcareNote')?.errors?.['maxlength']">Healthcare note cannot exceed 500 characters</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row-grid">
+          <div class="form-group">
+            <label for="expectedDateOfCalving">Expected Date Of Calving</label>
+            <input type="date" id="expectedDateOfCalving" formControlName="expectedDateOfCalving" placeholder="mm/dd/yyyy">
+            <div class="error-message" *ngIf="animalForm.get('expectedDateOfCalving')?.invalid && animalForm.get('expectedDateOfCalving')?.touched">
+              Date is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="takenVaccinations">Taken Vaccinations</label>
+            <textarea id="takenVaccinations" formControlName="takenVaccinations" placeholder="Taken Vaccinations" rows="3"></textarea>
+            <div class="error-message" *ngIf="animalForm.get('takenVaccinations')?.invalid && animalForm.get('takenVaccinations')?.touched">
+              Taken Vaccinations is required
+            </div>
+          </div>
+        </div>
+
+        <div class="error-message main-error" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="submit-btn" [disabled]="isLoading">
+            <img src="assets/images/save_animal_icon.png" alt="Save Animal Icon" style="width: 24px; height: 24px; margin-right: 8px;">
+            {{ isLoading ? 'Saving...' : 'Save Animal' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
