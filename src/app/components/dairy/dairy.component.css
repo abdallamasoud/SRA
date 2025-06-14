@@ -126,14 +126,14 @@ a {
   display: inline-block;
 }
 
-.filter-button {
+/* .filter-button {
   /* Inherits most styles from .frame-9 */
   /* If any specific override is needed for filter button, it should be added here */
-}
+/* }
 
 .filter-button:hover {
   /* Inherits hover from .frame-9 */
-}
+/* } */ 
 
 .double-left1 {
   width: 18px;
@@ -480,4 +480,4 @@ textarea {
   .modal-content h2 {
     text-align: center;
   }
-} 
+}

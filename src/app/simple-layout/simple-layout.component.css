@@ -829,10 +829,14 @@ html, body {
 
 /* Navbar specific styles */
 .navbar {
+  border-radius: 30px;
+  width: 98%;
+  height: 48px;
+
   position: sticky;
   top: 10px;
   z-index: 10;
-  margin-left: calc(var(--sidebar-width) + 20px);
+  margin-left: 20px;
   margin-right: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
