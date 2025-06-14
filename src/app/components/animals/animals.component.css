@@ -155,7 +155,7 @@ a {
 
 .choose-update-milch .frame-5 {
   display: flex;
-  justify-content: flex-start; /* Align icon and title to start */
+  justify-content: flex-start;
   align-items: center;
   gap: 15px;
   margin-bottom: 20px; /* Add margin below header */
@@ -208,7 +208,9 @@ a {
 }
 
 .text-wrapper-6 {
-  display: block; /* Make it block to take full width */
+
+  display: flex;
+ flex-direction: row ;
   margin-bottom: 8px; /* From ingredient modal label */
   font-weight: 500; /* From ingredient modal label */
   color: #333; /* From ingredient modal label */
@@ -491,12 +493,27 @@ th {
   border-radius: 8px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   width: 90%;
-  max-width:700px;
+  max-width:800px;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
   box-sizing: border-box;
 }
+
+.modale {
+
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width:550px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-sizing: border-box;
+}
+
+
 
 .close-btn {
   position: absolute;
@@ -562,6 +579,14 @@ th {
   grid-template-columns: 1fr 1fr;
   gap: 20px;
   width: 100%;
+}
+.form-flex {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+
+
 }
 
 .form-group {
@@ -638,19 +663,19 @@ th {
 }
 
 /* Form grid layout */
-/* .form-grid {
+.form-grid {
   display: grid;
-  grid-template-columns: 1fr ;
+  grid-template-columns: 1fr 1fr;
   gap: 20px;
   width: 100%;
   padding: 20px;
-} */
-.form-grid{
+}
+/* .form-grid{
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
+} */
 
 /* Full width elements */
 

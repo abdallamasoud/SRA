@@ -183,39 +183,40 @@
           </div>
         </div>
 
-        <div class="frame-8" *ngIf="showAddModal || (showEditModal && selectedAnimal.code)">
+
+      </div>
+       <div class="frame-8" *ngIf="showAddModal || (showEditModal && selectedAnimal.code)">
           <button class="frame-9 modal-save-btn" (click)="submitAnimal()">
             <img class="btn-icon" src="assets/images/icons/save.png" alt="">
             <div class="btntext">{{ showAddModal ? 'Save Animal' : 'Save Updates' }}</div>
           </button>
         </div>
-      </div>
     </div>
   </div>
 
   <!-- Fattening Weight Modal -->
   <div class="choose-update-milch" *ngIf="showFatteningWeightModal">
-    <div class="frame-4 modal">
+    <div class="frame-4 modale">
       <button class="close-btn" (click)="closeAllModals()"><img src="assets/images/icons/cross.png" alt=""></button>
       <div class="frame-5">
         <img class="modal-icon" src="assets/images/icons/scale.png" alt="">
         <div class="text-wrapper-5">Weight Fattening</div>
       </div>
       <div class="frame-6">
-        <div class="form-grid">
+        <div class="form-flex ">
           <div class="form-group">
             <div class="text-wrapper-6">Weight</div>
             <input type="number" class="data-filled" placeholder="weight" [(ngModel)]="selectedAnimal.weight">
           </div>
-          <div class="form-group">
+          <div class="form-flex ">
             <div class="text-wrapper-6">Date of weight</div>
             <input type="date" class="data-filled" placeholder="Date of weight" [(ngModel)]="selectedAnimal.weightDate">
           </div>
-          <div class="form-group">
+          <div class="form-flex ">
             <div class="text-wrapper-6">Code</div>
             <input type="text" class="data-filled" placeholder="Code" [(ngModel)]="selectedAnimal.code">
           </div>
-          <div class="form-group">
+          <div class="form-flex ">
             <div class="text-wrapper-6">Healthcare note</div>
             <textarea class="textarea" placeholder="Health Care" [(ngModel)]="selectedAnimal.healthcareNote"></textarea>
           </div>
