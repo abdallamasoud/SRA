@@ -129,6 +129,21 @@ a {
   position: relative; /* Ensure z-index works correctly relative to overlay */
 }
 
+.modaldelete {
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width:514px;
+  height: 299px;
+  max-height: 599px;
+  overflow-y: auto;
+  position: relative;
+  box-sizing: border-box;
+}
 .close-btn {
   background: none;
   border: none;
@@ -164,7 +179,7 @@ a {
   height: auto;
   position: static;
   left: auto;
-  border-bottom: 1px solid #eee; /* From ingredient modal */
+ /* From ingredient modal */
   padding-bottom: 15px; /* Add padding below border */
 }
 
@@ -300,7 +315,7 @@ a {
 /* Modal Save Button */
 .modal-save-btn {
   flex-grow: 0;
-  width: 190px;
+  width: 258px;
   height: 50px;
   padding: 10px 20px;
   border-radius: 4px;
@@ -326,7 +341,7 @@ a {
 
 /* Modal Delete Confirmation Buttons */
 .delete-cancel-btn {
-  background-color: #e0e0e0;
+  background-color: #32CD32;
   color: #555;
   border: none;
   border-radius: 4px;
@@ -342,7 +357,7 @@ a {
 }
 
 .delete-confirm-btn {
-  background-color: #f44336 !important; /* Corrected to red with !important */
+  background-color: #32CD32 !important; /* Corrected to red with !important */
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -357,10 +372,10 @@ a {
   box-shadow: 0 2px 8px rgba(244, 67, 54, 0.3) !important; /* Added shadow for consistency with newborn delete confirm */
 }
 
-.delete-confirm-btn:hover {
+/* .delete-confirm-btn:hover {
   background-color: #d32f2f !important;
   box-shadow: 0 4px 10px rgba(244, 67, 54, 0.5) !important;
-}
+} */
 
 /* Search Input and Filter Dropdown */
 .search-container {
@@ -425,6 +440,7 @@ a {
 .filter-dropdown-container.active .filter-dropdown-menu {
   display: block;
     background-color: #8bc34a;
+
 }
 
 .filter-option {
@@ -462,7 +478,7 @@ table {
 th, td {
   padding: 15px;
   text-align: left;
-  border-bottom: 1px solid #eee;
+
 }
 
 th {
@@ -525,7 +541,7 @@ th {
   justify-content: flex-start;
   align-items: center;
   padding: 20px;
-  border-bottom: 1px solid #eee;
+
   margin-bottom: 0;
   gap: 15px;
 }
@@ -746,24 +762,24 @@ th {
 }
 
 .delete-cancel-btn {
-  background-color: #e0e0e0;
-  color: #555;
+  background-color: #32CD32;
+  color: #ffffff;
 }
-
+/*
 .delete-cancel-btn:hover {
   background-color: #d0d0d0;
-}
+} */
 
 .delete-confirm-btn {
   background-color: #f44336; /* Corrected to red */
-  color: #fff;
+  color: #ffffff;
   box-shadow: 0 2px 8px rgba(244, 67, 54, 0.3);
 }
-
+/*
 .delete-confirm-btn:hover {
   background-color: #d32f2f;
   box-shadow: 0 4px 10px rgba(244, 67, 54, 0.5);
-}
+} */
 
 /* Media queries for responsiveness */
 @media (max-width: 768px) {

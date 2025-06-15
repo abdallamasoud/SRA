@@ -148,6 +148,8 @@ export class DairyComponent implements OnInit {
     });
   }
 
+
+
   submitRecordMilkProduction(): void {
     this.selectedDairy.totalQuantity = this.selectedDairy.morningQuantity + this.selectedDairy.eveningQuantity;
     console.log('Submitting milk production record:', this.selectedDairy);
@@ -155,7 +157,7 @@ export class DairyComponent implements OnInit {
     alert('Milk production record saved!');
   }
 
-  confirmDeleteDairy(): void {
+  confirmDelete(): void {
     if (this.selectedDairy.id) {
       this.dairyService.deleteDairyRecord(this.selectedDairy.id).subscribe({
         next: () => {

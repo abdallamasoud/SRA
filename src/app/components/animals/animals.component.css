@@ -345,7 +345,7 @@ a {
 }
 
 .delete-confirm-btn {
-  background-color: #f44336 !important; /* Corrected to red with !important */
+  background-color: #32CD32 !important; /* Corrected to red with !important */
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -499,6 +499,21 @@ th {
   position: relative;
   box-sizing: border-box;
 }
+.modaldelete {
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width:514px;
+  height: 299px;
+  max-height: 599px;
+  overflow-y: auto;
+  position: relative;
+  box-sizing: border-box;
+}
 
 .modale {
 
@@ -542,12 +557,20 @@ th {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding: 20px;
+  margin-bottom: 25px;
+
+
   border-bottom: 1px solid #eee;
   margin-bottom: 0;
   gap: 15px;
 }
-
+/* .frame-5 {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+  justify-content: flex-start;
+} */
 .modal-icon {
   width: 24px;
   height: 24px;
@@ -736,6 +759,7 @@ radio-group {
 
 /* Delete Modal */
 .delete-modal {
+
   background-color: #fff;
   padding: 40px;
   border-radius: 20px;
@@ -748,7 +772,7 @@ radio-group {
 .delete-content {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center ;
   gap: 25px;
 }
 
@@ -783,24 +807,22 @@ radio-group {
 }
 
 .delete-cancel-btn {
-  background-color: #e0e0e0;
-  color: #555;
+  background-color: #32CD32;
+  color: #fff;
 }
 
-.delete-cancel-btn:hover {
-  background-color: #d0d0d0;
-}
+
 
 .delete-confirm-btn {
-  background-color: #f44336; /* Corrected to red */
+  background-color: #32CD32; /* Corrected to red */
   color: #fff;
   box-shadow: 0 2px 8px rgba(244, 67, 54, 0.3);
 }
 
-.delete-confirm-btn:hover {
+/* .delete-confirm-btn:hover {
   background-color: #d32f2f;
   box-shadow: 0 4px 10px rgba(244, 67, 54, 0.5);
-}
+} */
 
 /* Media queries for responsiveness */
 @media (max-width: 768px) {
