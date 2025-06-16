@@ -6,12 +6,13 @@
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   margin: 0px;
   height: 100%;
   padding: 0%;
   width: 100%;
-  font-family: 'Roboto', sans-serif; /* Use a common, clean font */
+  font-family: "Roboto", sans-serif; /* Use a common, clean font */
   color: #333;
 }
 
@@ -54,7 +55,7 @@ a {
   gap: 8px;
   padding: 14px 15px;
   border-radius: 20px !important;
-  background-color: #AEDF32 !important;
+  background-color: #aedf32 !important;
   color: #ffffff !important;
   font-size: 14px;
   font-weight: 500;
@@ -79,16 +80,22 @@ a {
 .btntext {
   white-space: nowrap;
 }
+.add-button {
+  background: none;
+  cursor: pointer;
+  border: none;
+}
 
 /* Filter button specific style - removing redundant styles to ensure inheritance from .frame-9 */
 /* .filter-button {
   /* All styles now inherited from .frame-9 */
-  /* If any specific override is needed for filter button, it should be added here */
+/* If any specific override is needed for filter button, it should be added here */
 /* }
 
 .filter-button:hover {
   /* All styles now inherited from .frame-9 */
-/* } */ */ */
+/* } */
+*/ */
 
 /* Delete button specific style */
 .delete-btn {
@@ -193,7 +200,7 @@ a {
   gap: 20px;
 }
 
-.row{
+.row {
   width: 95%;
   padding-top: 4.2%;
   display: flex;
@@ -206,27 +213,39 @@ a {
   flex-direction: row;
   width: 100%;
 }
+.selected-items-container {
+  width: 100%;
+  border: none;
+}
+.remove-button {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: none;
+  position: relative;
+  top: 18px;
+}
 
 .text-wrapper-6 {
-
   display: flex;
- flex-direction: row ;
+  flex-direction: row;
   margin-bottom: 8px; /* From ingredient modal label */
   font-weight: 500; /* From ingredient modal label */
   color: #333; /* From ingredient modal label */
   font-size: 14px; /* From ingredient modal label */
   position: static; /* Remove absolute positioning */
-  width: auto; /* Remove fixed width */
+  /* Remove fixed width */
   left: auto; /* Remove fixed positioning */
-  white-space: normal; /* Allow text to wrap */
+
   line-height: normal; /* Reset line height */
 }
 
-.data-filled, .textarea {
+.data-filled,
+.textarea {
   width: 100%; /* Full width */
   padding: 10px 12px; /* From ingredient modal input */
   border: 1px solid #ddd; /* From ingredient modal input */
-  border-radius: 4px; /* From ingredient modal input */
+  border-radius: 34px; /* From ingredient modal input */
   font-size: 14px; /* From ingredient modal input */
   transition: border-color 0.3s ease; /* From ingredient modal input */
   background-color: #f1f1f1; /* Keep existing background if preferred */
@@ -241,8 +260,8 @@ a {
   width: 45%;
   font-size: 16px;
   display: flex;
-  gap:10%;
-  justify-content:center;
+  gap: 10%;
+  justify-content: center;
   left: 40%;
   background-color: #f1f1f1;
   border-radius: 12px;
@@ -255,8 +274,8 @@ a {
   font-size: 16px;
   border-radius: 12px;
   display: flex;
-  gap:10%;
-  justify-content:center;
+  gap: 10%;
+  justify-content: center;
   left: 20%;
   top: 20%;
   background-color: #f1f1f1;
@@ -269,14 +288,14 @@ a {
   justify-content: flex-start; /* Align to start */
 }
 
-.raddiv{
+.raddiv {
   display: inline-flex;
   align-items: center;
   justify-content: flex-start; /* Align individual radio text to start */
   padding-left: 0; /* Remove any previous padding */
 }
 
-.radio{
+.radio {
   width: 17px;
   height: 17px;
   background: #e3e4e4;
@@ -284,7 +303,7 @@ a {
   accent-color: black;
 }
 
-.textarea{
+.textarea {
   resize: vertical; /* From ingredient modal textarea */
   min-height: 80px; /* From ingredient modal textarea */
 }
@@ -298,7 +317,6 @@ a {
   justify-content: flex-end; /* Align to end for save button */
   margin-top: 20px; /* Add margin to separate from form */
 }
-
 
 /* Modal Save Button */
 .modal-save-btn {
@@ -345,7 +363,7 @@ a {
 }
 
 .delete-confirm-btn {
-  background-color: #32CD32 !important; /* Corrected to red with !important */
+  background-color: #32cd32 !important; /* Corrected to red with !important */
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -418,7 +436,7 @@ a {
   left: 0;
   background: white;
   border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 8px 0;
   min-width: 150px;
   display: none;
@@ -427,7 +445,7 @@ a {
 
 .filter-dropdown-container.active .filter-dropdown-menu {
   display: block;
-    background-color: #8bc34a;
+  background-color: #8bc34a;
 }
 
 .filter-option {
@@ -438,7 +456,7 @@ a {
 .filter-option:hover {
   background-color: #f5f5f5;
 }
-.x{
+.x {
   display: flex;
   flex-direction: row;
   gap: 8px;
@@ -462,7 +480,8 @@ table {
   font-size: 15px;
 }
 
-th, td {
+th,
+td {
   padding: 15px;
   text-align: left;
   border-bottom: 1px solid #eee;
@@ -493,7 +512,7 @@ th {
   border-radius: 8px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   width: 90%;
-  max-width:800px;
+  max-width: 800px;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
@@ -507,7 +526,7 @@ th {
   border-radius: 8px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   width: 90%;
-  max-width:514px;
+  max-width: 514px;
   height: 299px;
   max-height: 599px;
   overflow-y: auto;
@@ -516,19 +535,16 @@ th {
 }
 
 .modale {
-
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   width: 90%;
-  max-width:550px;
+  max-width: 550px;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
   box-sizing: border-box;
 }
-
-
 
 .close-btn {
   position: absolute;
@@ -558,7 +574,6 @@ th {
   justify-content: flex-start;
   align-items: center;
   margin-bottom: 25px;
-
 
   border-bottom: 1px solid #eee;
   margin-bottom: 0;
@@ -593,7 +608,7 @@ th {
   align-items: center;
   position: static;
   top: auto;
-  padding: 20px;
+
   gap: 20px;
 }
 
@@ -608,8 +623,6 @@ th {
   flex-direction: row;
   justify-content: center;
   gap: 10px;
-
-
 }
 
 .form-group {
@@ -618,7 +631,7 @@ th {
   align-items: center;
   gap: 10px;
   /* background: rgba(128, 128, 128, 0.10); */
-  padding: 10px;
+
   border-radius: 16px;
 }
 
@@ -635,28 +648,26 @@ th {
   display: flex;
   width: 190px;
   height: 60px;
-  padding: 10px;
+
   justify-content: center;
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
   border: 1px solid #ddd;
-  background: rgba(128, 128, 128, 0.10);
-
+  background: rgba(128, 128, 128, 0.1);
 }
-.form-group .data-filledd{
-   border-radius: 16px;
+.form-group .data-filledd {
+  border-radius: 16px;
   display: flex;
   width: 437px;
   height: 60px;
-  padding: 10px;
+
   justify-content: center;
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
   border: 1px solid #ddd;
-  background: rgba(128, 128, 128, 0.10);
-
+  background: rgba(128, 128, 128, 0.1);
 }
 
 /* Label styles */
@@ -664,7 +675,7 @@ th {
   font-size: 14px;
   font-weight: 500;
   color: #333;
-  min-width: 120px;
+  width: 100px;
   /* text-align: right; */
 }
 
@@ -677,7 +688,6 @@ th {
   min-height: 60px;
   resize: vertical;
 }
-
 
 .form-group .radio-group {
   display: flex;
@@ -706,7 +716,7 @@ th {
   grid-template-columns: 1fr 1fr;
   gap: 20px;
   width: 100%;
-  padding: 20px;
+  /* padding: 20px; */
 }
 /* .form-grid{
   display: flex;
@@ -718,24 +728,21 @@ th {
 /* Full width elements */
 
 .form-group.full-width .textarea,
-.form-group.full-width  .radio-group {
+.form-group.full-width .radio-group {
   width: 82%;
 }
-.form-group.full-width .data-filled{
+.form-group.full-width .data-filled {
   width: 60%;
   height: 50px;
-
 }
 radio-group {
   width: 100%;
 }
 
-
 /* Special handling for full-width type field */
 .form-group.full-width {
   display: flex;
   flex-direction: row;
-
 }
 
 .form-group.full-width .text-wrapper-6 {
@@ -753,10 +760,9 @@ radio-group {
 }
 
 .show-data-btn {
-
   width: 200px;
   height: 60px;
-  background-color: #32CD32;
+  background-color: #32cd32;
   color: #ffffff;
 
   padding: 12px 20px;
@@ -777,7 +783,6 @@ radio-group {
 
 /* Delete Modal */
 .delete-modal {
-
   background-color: #fff;
   padding: 40px;
   border-radius: 20px;
@@ -790,7 +795,7 @@ radio-group {
 .delete-content {
   display: flex;
   flex-direction: column;
-  align-items: center ;
+  align-items: center;
   gap: 25px;
 }
 
@@ -825,14 +830,12 @@ radio-group {
 }
 
 .delete-cancel-btn {
-  background-color: #32CD32;
+  background-color: #32cd32;
   color: #fff;
 }
 
-
-
 .delete-confirm-btn {
-  background-color: #32CD32; /* Corrected to red */
+  background-color: #32cd32; /* Corrected to red */
   color: #fff;
   box-shadow: 0 2px 8px rgba(244, 67, 54, 0.3);
 }
@@ -884,5 +887,6 @@ radio-group {
 .double-left1 {
   width: 18px;
   height: 18px;
-  filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(0%) contrast(100%); /* Makes SVG black */
+  filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(0%)
+    contrast(100%); /* Makes SVG black */
 }

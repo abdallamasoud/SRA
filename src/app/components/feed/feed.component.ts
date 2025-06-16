@@ -80,7 +80,7 @@ export class FeedComponent implements OnInit {
       {
         id: 1,
         count: 1,
-        feedName: 'Newborn Feed A',
+        feedName: 'a',
         category: 'category1',
         proteinPercentage: 22,
         tdnPercentage: 22,
@@ -226,6 +226,8 @@ export class FeedComponent implements OnInit {
   }
 
   addSelectedItem(): void {
+
+    
     if (this.selectedFeed.type && this.selectedFeed.ingredients && this.selectedFeed.price !== undefined) {
       this.selectedItems.push({
         type: this.selectedFeed.type,
@@ -244,6 +246,7 @@ export class FeedComponent implements OnInit {
       i.type !== item.type || i.ingredients !== item.ingredients
     );
   }
+  
 
   // --- Search and Filter Functions ---
   performSearch(): void {
