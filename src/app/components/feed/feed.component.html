@@ -2,20 +2,20 @@
   <div class="frame-4">
     <!-- Make New Feed Button -->
     <button class="frame-9" (click)="openMakeNewFeedModal()">
-      <img class="btn-icon" src="assets/icons/add-feed.svg" alt="Add Feed Icon">
+      <img class="btn-icon" src="assets/images/icons/feed.png" alt="Add Feed Icon">
       <div class="btntext">Make New Feed</div>
     </button>
 
     <!-- Edit Existed Feed Button -->
     <button class="frame-9" (click)="openEditExistFeedModal()">
-      <img class="btn-icon" src="assets/icons/edit-feed.svg" alt="Edit Feed Icon">
+      <img class="btn-icon" src="assets/images/icons/iconupdate.png" alt="Edit Feed Icon">
       <div class="btntext">Edit Existed Feed</div>
     </button>
 
     <!-- Search Input -->
     <div class="search-container">
       <div class="search-input-wrapper">
-        <img class="search-icon" src="assets/icons/search-green.svg" alt="Search Icon">
+        <img class="search-icon" src="assets/images/icons/search.png" alt="Search Icon">
         <input type="text" class="search-field" placeholder="Search" [(ngModel)]="searchTerm" (input)="performSearch()">
       </div>
     </div>
@@ -23,7 +23,7 @@
     <!-- Filter Button -->
     <div class="filter-dropdown-container" [class.active]="isFilterDropdownOpen">
       <button class="frame-9 filter-button" (click)="toggleFilterDropdown()">
-        <img class="double-left1" src="assets/icons/filter.svg">
+        <img class="double-left1" src="assets/images/icons/filter.png">
         <div class="btntext">Filter</div>
       </button>
       <div class="filter-dropdown-menu">
@@ -34,7 +34,7 @@
 
     <!-- Delete Feed Button -->
     <button class="frame-9 delete-btn" (click)="openDeleteFeedModal()">
-      <img class="btn-icon" src="assets/icons/delete.svg" alt="Delete Icon">
+      <img class="btn-icon" src="assets/images/icons/Trash.png" alt="Delete Icon">
       <div class="btntext">Delete Feed</div>
     </button>
   </div>
@@ -67,11 +67,11 @@
   </div>
 
   <!-- Make New Feed Modal -->
-  <div class="choose-add" *ngIf="showMakeNewFeedModal">
+  <div class="choose-update-milch" *ngIf="showMakeNewFeedModal">
     <div class="frame-4 modal add-edit-modal">
-      <button class="close-btn" (click)="closeAllModals()"><img src="assets/icons/close.svg" alt="Close"></button>
+      <button class="close-btn" (click)="closeAllModals()"><img src="assets/images/icons/cross.png" alt="Close"></button>
       <div class="frame-5">
-        <img class="modal-icon" src="assets/icons/add-feed-modal.svg" alt="Make New Feed Icon">
+        <img class="modal-icon" src="assets/images/icons/feed.png" alt="Make New Feed Icon">
         <div class="text-wrapper-5">Make New Feed</div>
       </div>
       <div class="frame-6">
@@ -118,7 +118,7 @@
           </div>
           <div class="form-group add-button-container">
             <button class="add-button" (click)="addSelectedItem()">
-              <img src="assets/icons/add.svg" alt="Add" class="add-icon">
+              <img src="assets/images/icons/addingred.png" alt="Add" class="add-icon">
             </button>
           </div>
         </div>
@@ -132,7 +132,7 @@
 
         <div class="frame-8">
           <button class="frame-9 modal-save-btn" (click)="submitNewFeed()">
-            <img class="btn-icon" src="assets/icons/save-feed.svg" alt="Save Feed Icon">
+            <img class="btn-icon" src="assets/images/icons/save.png" alt="Save Feed Icon">
             <div class="btntext">Save Feed</div>
           </button>
         </div>
@@ -143,20 +143,20 @@
   <!-- Edit Exist Feed Modal -->
   <div class="choose-update-milch" *ngIf="showEditExistFeedModal">
     <div class="frame-4 modal add-edit-modal">
-      <button class="close-btn" (click)="closeAllModals()"><img src="assets/icons/close.svg" alt="Close"></button>
+      <button class="close-btn" (click)="closeAllModals()"><img src="assets/images/icons/cross.png" alt="Close"></button>
       <div class="frame-5">
-        <img class="modal-icon" src="assets/icons/edit-feed-modal.svg" alt="Edit Feed Icon">
+        <img class="modal-icon" src="assets/images/icons/update.png" alt="Edit Feed Icon">
         <div class="text-wrapper-5">Edit Exist Feed</div>
       </div>
       <div class="frame-6">
         <div class="form-grid">
           <div class="form-group">
-            <label class="text-wrapper-6">Feed Name</label>
-            <input type="text" class="data-filled" placeholder="Enter Feed Name" [(ngModel)]="selectedFeed.feedName">
+
+            <input type="text" class="data-filledd" placeholder="Enter Feed Name" [(ngModel)]="selectedFeed.feedName">
           </div>
           <div class="form-group show-button-container">
             <button class="show-data-btn" (click)="showDataForFeed()">
-              <img class="btn-icon" src="assets/icons/show.svg" alt="Show Icon">
+
               <div class="btntext">Show</div>
             </button>
           </div>
@@ -212,7 +212,7 @@
 
         <div class="frame-8" *ngIf="isFeedDataLoaded">
           <button class="frame-9 modal-save-btn" (click)="submitUpdateFeed()">
-            <img class="btn-icon" src="assets/icons/save.svg" alt="Save Icon">
+            <img class="btn-icon" src="assets/images/icons/save.png" alt="Save Icon">
             <div class="btntext">Save Updates</div>
           </button>
         </div>
@@ -220,66 +220,20 @@
     </div>
   </div>
 
-  <!-- Delete Feed Modal -->
-  <div class="choose-update-milch" *ngIf="showDeleteFeedModal">
-    <div class="frame-4 modal add-edit-modal">
-      <button class="close-btn" (click)="closeAllModals()"><img src="assets/icons/close.svg" alt="Close"></button>
-      <div class="frame-5">
-        <img class="modal-icon" src="assets/icons/delete-feed-modal.svg" alt="Delete Feed Icon">
-        <div class="text-wrapper-5">Delete Feed</div>
-      </div>
-      <div class="frame-6">
-        <div class="delete-content">
-          <div class="delete-text">Are you sure you want to delete this feed?</div>
-          <div class="delete-buttons">
-            <button class="delete-cancel-btn" (click)="closeAllModals()">Cancel</button>
-            <button class="delete-confirm-btn" (click)="confirmDeleteFeed()">Delete</button>
-          </div>
+ <div class="choose-update-milch" *ngIf="showDeleteFeedModal">
+    <div class="frame-4 modaldelete">
+
+      <div class="delete-content">
+        <img class="delete-icon" src="assets/images/icons/delete.png" alt="">
+        <div class="delete-text">Delete Feed?</div>
+        <div class="delete-buttons">
+          <button class="delete-cancel-btn" (click)="closeAllModals()">Cancel</button>
+          <button class="delete-confirm-btn" (click)="confirmDeleteFeed()">Delete</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Add New Vaccine Modal -->
-  <div class="choose-update-milch" *ngIf="showAddNewVaccineModal">
-    <div class="frame-4 modal add-edit-modal">
-      <button class="close-btn" (click)="closeAllModals()"><img src="assets/icons/close.svg" alt="Close"></button>
-      <div class="frame-5">
-        <img class="modal-icon" src="assets/icons/add-feed-modal.svg" alt="Add Vaccine Icon">
-        <div class="text-wrapper-5">Add New Vaccine</div>
-      </div>
-      <div class="frame-6">
-        <div class="vaccine-form">
-          <div class="form-group">
-            <label class="text-wrapper-6">Name</label>
-            <input type="text" class="data-filled" placeholder="Name" [(ngModel)]="selectedVaccine.name">
-          </div>
-          <div class="form-group">
-            <label class="text-wrapper-6">Type</label>
-            <select class="data-filled" [(ngModel)]="selectedVaccine.type">
-              <option value="">Type</option>
-              <option value="type1">Type 1</option>
-              <option value="type2">Type 2</option>
-              <option value="type3">Type 3</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="text-wrapper-6">Dose</label>
-            <input type="number" class="data-filled" placeholder="Dose" [(ngModel)]="selectedVaccine.dose">
-          </div>
-          <div class="form-group">
-            <label class="text-wrapper-6">Time to Take</label>
-            <input type="text" class="data-filled" placeholder="Time To Take" [(ngModel)]="selectedVaccine.timeToTake">
-          </div>
-        </div>
 
-        <div class="frame-8">
-          <button class="frame-9 modal-save-btn" (click)="submitNewVaccine()">
-            <img class="btn-icon" src="assets/icons/save.svg" alt="Save Icon">
-            <div class="btntext">Save Vaccine</div>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
+
 </main>

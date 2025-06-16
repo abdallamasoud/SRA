@@ -184,7 +184,7 @@ a {
 
 .choose-update-milch .frame-6 {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   width: 100%;
   height: auto;
   align-items: center;
@@ -628,12 +628,26 @@ th {
 }
 
 /* Style for all form elements in the popup */
-.form-group .data-filled,
+
 .form-group .textarea,
 .form-group .radio-group {
   border-radius: 16px;
   display: flex;
   width: 190px;
+  height: 60px;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  border: 1px solid #ddd;
+  background: rgba(128, 128, 128, 0.10);
+
+}
+.form-group .data-filledd{
+   border-radius: 16px;
+  display: flex;
+  width: 437px;
   height: 60px;
   padding: 10px;
   justify-content: center;
@@ -738,9 +752,12 @@ radio-group {
 }
 
 .show-data-btn {
-  background-color: #607d8b;
+
+  width: 200px;
+  height: 60px;
+  background-color: #32CD32;
   color: #ffffff;
-  margin-top: 10px;
+
   padding: 12px 20px;
   border-radius: 20px;
   font-size: 14px;

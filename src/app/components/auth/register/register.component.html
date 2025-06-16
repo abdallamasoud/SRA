@@ -2,10 +2,13 @@
   <div class="auth-content">
     <div class="auth-form-container">
       <div class="logo">
-        <img src="assets/images/logo.svg" alt="SRA Logo">
+        <img src="assets/images/icons/logo.png" alt="">
       </div>
 
-      <h2 class="auth-title">Create Account 👤</h2>
+      <div class="w">
+      <h1  class="auth-title">Create Account </h1>
+      <img src="assets/images/icons/penman.png" alt="">
+      </div>
 
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
         <div class="form-group">
@@ -26,13 +29,13 @@
 
         <div class="form-group">
           <label for="name">
-            <i class="fas fa-id-card"></i> Full Name
+            <i class="fas fa-id-card"></i> Farm Name
           </label>
           <input
             type="text"
             id="name"
             formControlName="name"
-            placeholder="Enter your full name"
+            placeholder="Enter your Farm name"
             [ngClass]="{'invalid': registerForm.get('name')?.invalid && registerForm.get('name')?.touched}"
           >
           <div class="error-message" *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
@@ -98,6 +101,7 @@
               >
               <label for="owner">Owner</label>
             </div>
+
             <div class="role-option">
               <input
                 type="radio"
@@ -107,8 +111,21 @@
               >
               <label for="engineer">Engineer</label>
             </div>
+              <div class="role-option">
+              <input
+                type="radio"
+                id="farmer"
+                formControlName="role"
+                value="Farmer"
+              >
+              <label for="farmer">Farmer</label>
+            </div>
+
+
           </div>
+
         </div>
+
 
         <div class="error-message main-error" *ngIf="errorMessage">
           {{ errorMessage }}
@@ -127,6 +144,7 @@
 
     <div class="auth-image">
       <!-- Image will be set as background in CSS -->
+         <img class="unsplash" src="assets/images/icons/register.jpg" />
     </div>
   </div>
 </div>
