@@ -323,7 +323,7 @@ export class AddIngredientModalComponent implements OnInit {
     }
 
     this.isLoading = true;
-    this.ingredientService.createIngredient(this.ingredientForm.value).subscribe(
+    this.ingredientService.create(this.ingredientForm.value).subscribe(
       (response) => {
         this.isLoading = false;
         this.closeModal(true);

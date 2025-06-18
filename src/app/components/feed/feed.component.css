@@ -171,7 +171,7 @@ a {
   height: auto;
   position: static;
   left: auto;
-  border-bottom: 1px solid #eee; /* From ingredient modal */
+  /* border-bottom: 1px solid #eee; From ingredient modal */
   padding-bottom: 15px; /* Add padding below border */
 }
 
@@ -484,7 +484,7 @@ th,
 td {
   padding: 15px;
   text-align: left;
-  border-bottom: 1px solid #eee;
+
 }
 
 th {
@@ -574,8 +574,8 @@ th {
   justify-content: flex-start;
   align-items: center;
   margin-bottom: 25px;
-
-  border-bottom: 1px solid #eee;
+/*
+  border-bottom: 1px solid #eee; */
   margin-bottom: 0;
   gap: 15px;
 }
@@ -885,8 +885,12 @@ radio-group {
 }
 
 .double-left1 {
+
   width: 18px;
   height: 18px;
-  filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(0%)
-    contrast(100%); /* Makes SVG black */
+  filter: invert(0%);
+  /* filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(0%)
+    contrast(100%); Makes SVG black */
 }
+
+

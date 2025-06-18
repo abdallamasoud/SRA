@@ -349,7 +349,7 @@ export class EditIngredientModalComponent implements OnInit, OnChanges {
     }
 
     this.isLoading = true;
-    this.ingredientService.updateIngredient(this.ingredientForm.value).subscribe(
+    this.ingredientService.update(this.ingredientForm.value).subscribe(
       (response) => {
         this.isLoading = false;
         this.closeModal(true);

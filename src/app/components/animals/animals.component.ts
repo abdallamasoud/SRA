@@ -78,7 +78,7 @@ export class AnimalsComponent implements OnInit {
     this.isFilterDropdownOpen = !this.isFilterDropdownOpen;
   }
 
-  applyFilter(type: 'herdNumber' | 'weight' | 'type' | 'all'): void {
+  applyFilter(type: 'herdNumber' |'gender'| 'weight' | 'type' | 'all'): void {
     this.isFilterDropdownOpen = false; // Close dropdown after applying filter
 
     if (type === 'all') {
@@ -94,6 +94,8 @@ export class AnimalsComponent implements OnInit {
           return animal.weight !== null && animal.weight !== undefined;
         case 'type':
           return animal.animalType !== null && animal.animalType !== undefined;
+           case 'gender':
+          return animal.gender !== null && animal.gender !== undefined;
         default:
           return true;
       }
@@ -268,7 +270,7 @@ export class AnimalsComponent implements OnInit {
     }
 
     // First try to find in the current animals list
-    let foundAnimal = this.allAnimals.find(animal => 
+    let foundAnimal = this.allAnimals.find(animal =>
       animal.code.toLowerCase() === this.searchCode.toLowerCase()
     );
 

@@ -29,8 +29,8 @@
       <div class="filter-dropdown-menu">
         <div class="filter-option" (click)="applyFilter('name')">Name</div>
         <div class="filter-option" (click)="applyFilter('type')">Ingredient Type</div>
-        <div class="filter-option" (click)="applyFilter('proteins')">Proteins</div>
-        <div class="filter-option" (click)="applyFilter('crudeFiber')">Crude Fiber</div>
+        <div class="filter-option" (click)="applyFilter('cp')">Proteins</div>
+        <div class="filter-option" (click)="applyFilter('cf')">Crude Fiber</div>
         <div class="filter-option" (click)="applyFilter('tdn')">TDN</div>
         <div class="filter-option" (click)="applyFilter('me')">ME</div>
       </div>
@@ -57,6 +57,9 @@
         <input type="radio" class="radio" name="season" value="winter" [(ngModel)]="selectedSeason" (change)="applySeasonFilter()">
         <span>winter</span>
       </label>
+
+
+
       <label class="raddiv">
         <input type="radio" class="radio" name="season" value="summer" [(ngModel)]="selectedSeason" (change)="applySeasonFilter()">
         <span>summer</span>
@@ -76,13 +79,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let ingredient of filteredIngredients">
+       <tr *ngFor="let ingredient of filteredIngredients">
           <td><input type="checkbox"></td>
           <td>{{ ingredient.season }}</td>
           <td>{{ ingredient.name }}</td>
           <td>{{ ingredient.type }}</td>
-          <td>{{ ingredient.proteins }}</td>
-          <td>{{ ingredient.crudeFiber }}</td>
+          <td>{{ ingredient.cp }}</td>
+          <td>{{ ingredient.cf }}</td>
           <td>{{ ingredient.tdn }}</td>
           <td>{{ ingredient.me }}</td>
         </tr>
@@ -121,11 +124,11 @@
 
           <div class="form-group">
             <label class="text-wrapper-6">Proteins</label>
-            <input type="number" class="data-filled" placeholder="Proteins" [(ngModel)]="selectedIngredient.proteins">
+            <input type="number" class="data-filled" placeholder="Proteins" [(ngModel)]="selectedIngredient.cp">
           </div>
           <div class="form-group">
             <label class="text-wrapper-6">Crude Fiber</label>
-            <input type="number" class="data-filled" placeholder="Crude Fiber" [(ngModel)]="selectedIngredient.crudeFiber">
+            <input type="number" class="data-filled" placeholder="Crude Fiber" [(ngModel)]="selectedIngredient.cf">
           </div>
           <div class="form-group">
             <label class="text-wrapper-6">TDN</label>
@@ -139,7 +142,7 @@
 
       </div>
         <div class="frame-8">
-          <button class="frame-9 modal-save-btn" (click)="submitNewIngredient()">
+          <button class="frame-9 modal-save-btn" (click)="saveIngredient()">
             <img class="btn-icon" src="assets/images/icons/save.png" alt="Save Icon">
             <div class="btntext">Save Ingredient</div>
           </button>
@@ -178,11 +181,11 @@
 
           <div class="form-group">
             <label class="text-wrapper-6">Proteins</label>
-            <input type="number" class="data-filled" placeholder="Proteins" [(ngModel)]="selectedIngredient.proteins">
+            <input type="number" class="data-filled" placeholder="Proteins" [(ngModel)]="selectedIngredient.cp">
           </div>
           <div class="form-group">
             <label class="text-wrapper-6">Crude Fiber</label>
-            <input type="number" class="data-filled" placeholder="Crude Fiber" [(ngModel)]="selectedIngredient.crudeFiber">
+            <input type="number" class="data-filled" placeholder="Crude Fiber" [(ngModel)]="selectedIngredient.cf">
           </div>
           <div class="form-group">
             <label class="text-wrapper-6">TDN</label>

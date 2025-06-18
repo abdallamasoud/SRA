@@ -3,41 +3,40 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Ingredient {
-  id: number;
+  id?: number;
   name: string;
   type: number;
   unit: number;
-  cp: number;  // Crude Protein
-  tdn: number; // Total Digestible Nutrients
-  cf: number;  // Crude Fiber
-  me: number;  // Metabolizable Energy
+  cp: number;
+  tdn: number;
+  cf: number;
+  me: number;
+  season?: string;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class IngredientService {
-  private apiUrl = 'https://sra.runasp.net/api';
+  private baseUrl = 'https://sra.runasp.net/api';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  getAllIngredients(): Observable<Ingredient[]> {
-    return this.http.get<Ingredient[]>(`${this.apiUrl}/Ingredients`);
+  getAll(): Observable<Ingredient[]> {
+    return this.http.get<Ingredient[]>(`${this.baseUrl}/Ingredients`);
   }
 
-  getIngredientById(id: number): Observable<Ingredient> {
-    return this.http.get<Ingredient>(`${this.apiUrl}/Ingredients/${id}`);
-  }
+ getById(id: number): Observable<Ingredient> {
+  return this.http.get<Ingredient>(`${this.baseUrl}/Ingredients/${id}`);
+}
 
-  createIngredient(ingredient: Ingredient): Observable<Ingredient> {
-    return this.http.post<Ingredient>(`${this.apiUrl}/Ingredients`, ingredient);
-  }
+create(ingredient: Ingredient): Observable<Ingredient> {
+  return this.http.post<Ingredient>(`${this.baseUrl}/Ingredients`, ingredient);
+}
 
-  updateIngredient(ingredient: Ingredient): Observable<Ingredient> {
-    return this.http.put<Ingredient>(`${this.apiUrl}/Ingredients/${ingredient.id}`, ingredient);
-  }
+update(ingredient: Ingredient): Observable<void> {
+  return this.http.put<void>(`${this.baseUrl}/Ingredients/${ingredient.id}`, ingredient);
+}
 
-  deleteIngredient(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/Ingredients/${id}`);
-  }
+delete(id: number): Observable<void> {
+  return this.http.delete<void>(`${this.baseUrl}/Ingredients/${id}`);
+}
 }

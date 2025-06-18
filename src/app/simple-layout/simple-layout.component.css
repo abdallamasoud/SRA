@@ -206,9 +206,28 @@
 }
 
 .bell-icon {
+
+   display: inline-block;
+  animation: bell-ring 1.5s ease-in-out infinite;
+  transform-origin: top center;
   width: 24px;
   height: 24px;
 }
+@keyframes  bell-ring {
+  0% { transform: rotate(0); }
+  15% { transform: rotate(15deg); }
+  30% { transform: rotate(-10deg); }
+  45% { transform: rotate(10deg); }
+  60% { transform: rotate(-5deg); }
+  75% { transform: rotate(5deg); }
+  100% { transform: rotate(0); }
+}
+
+
+
+
+
+
 
 .notifications-dropdown {
   position: absolute;

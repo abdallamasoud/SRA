@@ -29,7 +29,7 @@
       <div class="filter-dropdown-menu">
         <div class="filter-option" (click)="applyFilter('herdNumber')">Herd Number</div>
         <div class="filter-option" (click)="applyFilter('weight')">Weight</div>
-        <div class="filter-option" (click)="applyFilter('weight')">Gender</div>
+        <div class="filter-option" (click)="applyFilter('gender')">Gender</div>
         <div class="filter-option" (click)="applyFilter('type')">Type</div>
       </div>
     </div>
@@ -187,7 +187,7 @@
       </div>
        <div class="frame-8" *ngIf="showAddModal || (showEditModal && selectedAnimal.code)">
           <button class="frame-9 modal-save-btn" (click)="submitAnimal()">
-            <img class="btn-icon" src="assets/images/icons/save.png" alt="">
+            <img class="btn-icon cli"  src="assets/images/icons/save.png" alt="">
             <div class="btntext">{{ showAddModal ? 'Save Animal' : 'Save Updates' }}</div>
           </button>
         </div>
@@ -235,7 +235,7 @@
   <!-- Delete Animal Modal -->
   <div class="choose-update-milch" *ngIf="showDeleteModal">
     <div class="frame-4 modaldelete">
-     
+
       <div class="delete-content">
         <img class="delete-icon" src="assets/images/icons/delete.png" alt="">
         <div class="delete-text">Delete Animal?</div>

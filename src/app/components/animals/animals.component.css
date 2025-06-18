@@ -450,6 +450,7 @@ a {
 .table-container {
   background-color: #fff;
   border-radius: 20px;
+
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
   overflow-x: auto;
   padding: 20px;
@@ -478,6 +479,7 @@ th {
 
 .table-container tbody tr:hover {
   background-color: #f5f5f5;
+
 }
 
 .table-container input[type="checkbox"] {
@@ -485,6 +487,7 @@ th {
   height: 20px;
   accent-color: #8bc34a;
   cursor: pointer;
+
 }
 
 /* Modal Styles */
@@ -866,5 +869,6 @@ radio-group {
 .double-left1 {
   width: 18px;
   height: 18px;
-  filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(0%) contrast(100%); /* Makes SVG black */
+  /* filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(0%) contrast(100%); Makes SVG black */
+   filter: invert(0%);
 }

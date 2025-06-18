@@ -70,7 +70,11 @@
 
   <!-- Feed Table -->
   <div class="table-container">
+   <div class="x">
+         <img class="btn-icon" src="assets/images/icons/feed.png" alt="">
     <h3>Feed</h3>
+
+    </div>
     <table>
       <thead>
         <tr>
@@ -173,7 +177,7 @@
         </div>
 
         <div class="selected-items-container">
-          
+
             <table>
               <tr class="m">
                 <th>type</th>
@@ -181,19 +185,19 @@
                 <th>price</th>
                 <th></th>
               </tr>
-              
-            
+
+
                <tr *ngFor="let item of selectedItems" class="selected-item">
                 <td>{{ item.type }}</td>
                 <td>{{ item.ingredients }}</td>
                 <td>{{ item.price }}</td>
                 <td>   <button class="remove-button" (click)="removeItem(item)"><img src="assets/images/icons/delingred.png"></button></td>
               </tr>
-            
-           
+
+
             </table>
 
-         
+
           </div>
         </div>
 
@@ -209,7 +213,7 @@
         </div>
       </div>
     </div>
- 
+
   <!-- Edit Exist Feed Modal -->
   <div class="choose-update-milch" *ngIf="showEditExistFeedModal">
     <div class="frame-4 modal add-edit-modal">
