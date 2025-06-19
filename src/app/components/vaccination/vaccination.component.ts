@@ -1,145 +1,208 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Observable, of } from 'rxjs';
-
-export interface Vaccine {
-  id?: number;
-  name: string;
-  type: string;
-  dose: string;
-  timeToTake: string;
-}
+import { ImmunizationRecord, ImmunizationRecordService } from '../../services/immunization-record.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-vaccination',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
   templateUrl: './vaccination.component.html',
   styleUrls: ['./vaccination.component.css']
 })
-export class VaccinationComponent implements OnInit {
-  vaccines: Vaccine[] = [];
-  filteredVaccines: Vaccine[] = [];
+export class VaccineComponent implements OnInit {
+  records: ImmunizationRecord[] = [];
+  filteredRecords: ImmunizationRecord[] = [];
+
+
+  selectedIds: number[] = [];
+  selectedRecord: ImmunizationRecord = this.initRecord();
   searchTerm: string = '';
-  isFilterDropdownOpen: boolean = false;
+  isFilterDropdownOpen = false;
+  showAddModal = false;
+  showEditModal = false;
+  showDeleteModal = false;
 
-  showAddNewVaccineModal: boolean = false;
-  showEditExistVaccineModal: boolean = false;
-  showDeleteVaccineModal: boolean = false;
-  selectedVaccine: Vaccine = this.initializeVaccine();
-
-  constructor() { } // No service for now, using mock data
+  constructor(private recordService: ImmunizationRecordService) {}
 
   ngOnInit(): void {
-    this.loadVaccines();
+    this.loadRecords();
   }
 
-  initializeVaccine(): Vaccine {
-    return {
-      id: undefined,
-      name: '',
-      type: '',
-      dose: '',
-      timeToTake: ''
-    };
+  initRecord(): ImmunizationRecord {
+    return { name: '', type: '', dose: '', date: '' };
   }
 
-  loadVaccines(): void {
-    this.vaccines = [
-      { id: 1, name: 'Foot-and-Mouth Disease Vaccine', type: 'Inactivated viral vaccine', dose: '2 ml for large animals,1ml per 50 KG', timeToTake: 'At 4-6 months of age Taken again 4-6 weeks after the first dose.' },
-      { id: 2, name: 'Rabies Vaccine', type: 'Killed virus vaccine', dose: '1 ml for all animals', timeToTake: 'Annually' },
-      { id: 3, name: 'Bovine Viral Diarrhea (BVD) Vaccine', type: 'Modified-live virus vaccine', dose: '2 ml for all animals', timeToTake: 'Pre-breeding' },
-      { id: 4, name: 'Clostridial Vaccine (7-way)', type: 'Bacterin-toxoid vaccine', dose: '5 ml for all animals', timeToTake: 'Annually' },
-      { id: 5, name: 'Brucellosis Vaccine (RB51)', type: 'Live attenuated vaccine', dose: '2 ml for all animals', timeToTake: 'Between 4-12 months of age (heifers only)' }
-    ];
-    this.filteredVaccines = [...this.vaccines];
+  loadRecords(): void {
+    this.recordService.getAll().subscribe({
+      next: data => {
+         this.records = data.map(record => ({
+        ...record,
+        date: record.date.split('T')[0] // قص التاريخ فقط
+      }));
+        this.applySearch();
+      },
+      error: err => console.error(err)
+    });
   }
 
-  // Modal control functions
-  openAddNewVaccineModal(): void {
-    this.selectedVaccine = this.initializeVaccine();
-    this.showAddNewVaccineModal = true;
+saveRecord(): void {
+  const missingField = this.getMissingField(this.selectedRecord);
+  if (missingField) {
+    alert(`Please fill in the "${missingField}" field.`);
+    return;
   }
 
-  openEditExistVaccineModal(): void {
-    this.selectedVaccine = this.initializeVaccine();
-    this.showEditExistVaccineModal = true;
+  const isDuplicate = this.records.some(record =>
+    record.name.trim().toLowerCase() === this.selectedRecord.name.trim().toLowerCase() &&
+    record.type.trim().toLowerCase() === this.selectedRecord.type.trim().toLowerCase() &&
+    record.dose.trim().toLowerCase() === this.selectedRecord.dose.trim().toLowerCase() &&
+    record.date === this.selectedRecord.date
+  );
+
+  if (isDuplicate) {
+    alert('العنصر موجود بالفعل.');
+    return;
   }
 
-  openDeleteVaccineModal(): void {
-    this.showDeleteVaccineModal = true;
+  this.recordService.create(this.selectedRecord).subscribe({
+    next: () => {
+      this.loadRecords();
+      this.closeAllModals();
+    },
+    error: err => console.error(err)
+  });
+}
+
+private getMissingField(record: ImmunizationRecord): string | null {
+  if (!record.name?.trim()) return 'Name';
+  if (!record.type?.trim()) return 'Type';
+  if (!record.dose?.trim()) return 'Dose';
+  if (!record.date?.trim()) return 'Date';
+  return null;
+}
+
+
+updateRecord(): void {
+  const missingField = this.getMissingField(this.selectedRecord);
+  if (missingField) {
+    alert(`Please fill in the "${missingField}" field.`);
+    return;
   }
+
+  const isDuplicate = this.records.some(record =>
+    record.id !== this.selectedRecord.id &&
+    record.name.trim().toLowerCase() === this.selectedRecord.name.trim().toLowerCase() &&
+    record.type.trim().toLowerCase() === this.selectedRecord.type.trim().toLowerCase() &&
+    record.dose.trim().toLowerCase() === this.selectedRecord.dose.trim().toLowerCase() &&
+    record.date === this.selectedRecord.date
+  );
+
+  if (isDuplicate) {
+    alert('العنصر موجود بالفعل.');
+    return;
+  }
+
+  this.recordService.update(this.selectedRecord).subscribe({
+    next: () => {
+      this.loadRecords();
+      this.closeAllModals();
+    },
+    error: err => console.error(err)
+  });
+}
+
+
+  openAddModal(): void {
+    this.selectedRecord = this.initRecord();
+    this.showAddModal = true;
+  }
+
+  openEditModal(): void {
+      if (!this.selectedRecord.id) {
+    alert('Please select a record first.');
+    return;
+  }
+    this.showEditModal = true;
+  }
+
+  openDeleteModal(): void {
+      if (!this.selectedRecord.id) {
+    alert('Please select a record to delete.');
+    return;
+  }
+    this.showDeleteModal = true;
+  }
+
+
+toggleAllSelections(event: any): void {
+  const isChecked = event.target.checked;
+  if (isChecked) {
+    this.selectedIds = this.filteredRecords.map(r => r.id!);
+  } else {
+    this.selectedIds = [];
+  }
+}
+toggleSelection(id: number): void {
+  if (this.selectedIds.includes(id)) {
+    this.selectedIds = this.selectedIds.filter(i => i !== id);
+  } else {
+    this.selectedIds.push(id);
+  }
+}
+confirmDelete(): void {
+  if (this.selectedIds.length === 0) {
+    alert('Please select at least one record to delete.');
+    return;
+  }
+
+  const deleteObservables = this.selectedIds.map(id => this.recordService.delete(id));
+  forkJoin(deleteObservables).subscribe({
+    next: () => {
+      this.loadRecords();
+      this.selectedIds = [];
+      this.closeAllModals();
+    },
+    error: err => console.error('Error deleting records', err)
+  });
+}
+
+  selectRecord(record: ImmunizationRecord): void {
+  this.selectedRecord = { ...record };
+}
 
   closeAllModals(): void {
-    this.showAddNewVaccineModal = false;
-    this.showEditExistVaccineModal = false;
-    this.showDeleteVaccineModal = false;
-    this.selectedVaccine = this.initializeVaccine();
+    this.showAddModal = false;
+    this.showEditModal = false;
+    this.showDeleteModal = false;
+    this.selectedRecord = this.initRecord();
+
   }
 
-  // Submission functions (mocked)
-  submitNewVaccine(): void {
-    const newVaccine = { ...this.selectedVaccine, id: this.vaccines.length > 0 ? Math.max(...this.vaccines.map(v => v.id || 0)) + 1 : 1 };
-    this.vaccines.push(newVaccine);
-    this.filteredVaccines = [...this.vaccines];
-    this.closeAllModals();
-    alert('Vaccine added successfully!');
-  }
-
-  submitUpdateVaccine(): void {
-    const index = this.vaccines.findIndex(v => v.id === this.selectedVaccine.id);
-    if (index !== -1) {
-      this.vaccines[index] = { ...this.selectedVaccine };
-      this.filteredVaccines = [...this.vaccines];
-      alert('Vaccine updated successfully!');
-    } else {
-      alert('Vaccine not found for update.');
-    }
-    this.closeAllModals();
-  }
-
-  confirmDeleteVaccine(): void {
-    // In a real app, you'd delete selected items. For simplicity, delete the selectedVaccine
-    if (this.selectedVaccine.id) {
-      this.vaccines = this.vaccines.filter(v => v.id !== this.selectedVaccine.id);
-      this.filteredVaccines = [...this.vaccines];
-      alert('Vaccine deleted successfully!');
-    } else {
-      alert('No vaccine selected for deletion.');
-    }
-    this.closeAllModals();
-  }
-
-  // Search and filter functions
-  performSearch(): void {
-    this.filteredVaccines = this.vaccines.filter(vaccine =>
-      vaccine.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      vaccine.type.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      vaccine.dose.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      vaccine.timeToTake.toLowerCase().includes(this.searchTerm.toLowerCase())
+  applyFilter(property: keyof ImmunizationRecord): void {
+    this.filteredRecords = [...this.records].sort((a, b) =>
+      (a[property] ?? '').toString().localeCompare((b[property] ?? '').toString())
     );
   }
 
+  performSearch(): void {
+    this.applySearch();
+  }
+
+  applySearch(): void {
+    this.filteredRecords = this.records.filter(record =>
+      !this.searchTerm || record.name?.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+  }
+
+showDataForRecord(): void {
+  const found = this.records.find(r => r.name === this.selectedRecord.name);
+  if (found) {
+    this.selectedRecord = { ...found };
+  } else {
+    alert('No record found with this name');
+  }
+}
+
+
   toggleFilterDropdown(): void {
     this.isFilterDropdownOpen = !this.isFilterDropdownOpen;
-  }
-
-  applyFilter(filterType: string): void {
-    // For now, simple console log. Could implement sorting/filtering based on type
-    console.log(`Applying filter: ${filterType}`);
-    this.isFilterDropdownOpen = false;
-  }
-
-  showDataForVaccine(): void {
-    if (this.selectedVaccine.name) {
-      const foundVaccine = this.vaccines.find(v => v.name.toLowerCase() === this.selectedVaccine.name.toLowerCase());
-      if (foundVaccine) {
-        this.selectedVaccine = { ...foundVaccine };
-      } else {
-        alert('Vaccine not found with this name.');
-        this.selectedVaccine = this.initializeVaccine();
-      }
-    }
   }
 }

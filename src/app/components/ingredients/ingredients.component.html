@@ -2,33 +2,56 @@
   <div class="frame-4">
     <!-- Add New Ingredient Button -->
     <button class="frame-9" (click)="openAddNewIngredientModal()">
-      <img class="btn-icon" src="assets/images/icons/Plus.png" alt="Add Ingredient Icon">
+      <img
+        class="btn-icon"
+        src="assets/images/icons/Plus.png"
+        alt="Add Ingredient Icon"
+      />
       <div class="btntext">Add New Ingredient</div>
     </button>
 
     <!-- Edit Added Ingredient Button -->
     <button class="frame-9" (click)="openEditExistIngredientsModal()">
-      <img class="btn-icon" src="assets/images/icons/iconupdate.png" alt="Edit Ingredient Icon">
+      <img
+        class="btn-icon"
+        src="assets/images/icons/iconupdate.png"
+        alt="Edit Ingredient Icon"
+      />
       <div class="btntext">Edit Added Ingredient</div>
     </button>
 
     <!-- Search Input -->
     <div class="search-container">
       <div class="search-input-wrapper">
-        <img class="search-icon" src="assets/images/icons/search.png" alt="Search Icon">
-        <input type="text" class="search-field" placeholder="Search" [(ngModel)]="searchTerm" (input)="performSearch()">
+        <img
+          class="search-icon"
+          src="assets/images/icons/search.png"
+          alt="Search Icon"
+        />
+        <input
+          type="text"
+          class="search-field"
+          placeholder="Search"
+          [(ngModel)]="searchTerm"
+          (input)="performSearch()"
+        />
       </div>
     </div>
 
     <!-- Filter Button -->
-    <div class="filter-dropdown-container" [class.active]="isFilterDropdownOpen">
+    <div
+      class="filter-dropdown-container"
+      [class.active]="isFilterDropdownOpen"
+    >
       <button class="frame-9 filter-button" (click)="toggleFilterDropdown()">
-        <img class="double-left1" src="assets/images/icons/filter.png">
+        <img class="double-left1" src="assets/images/icons/filter.png" />
         <div class="btntext">Filter</div>
       </button>
       <div class="filter-dropdown-menu">
         <div class="filter-option" (click)="applyFilter('name')">Name</div>
-        <div class="filter-option" (click)="applyFilter('type')">Ingredient Type</div>
+        <div class="filter-option" (click)="applyFilter('type')">
+          Ingredient Type
+        </div>
         <div class="filter-option" (click)="applyFilter('cp')">Proteins</div>
         <div class="filter-option" (click)="applyFilter('cf')">Crude Fiber</div>
         <div class="filter-option" (click)="applyFilter('tdn')">TDN</div>
@@ -38,37 +61,70 @@
 
     <!-- Delete Ingredients Button -->
     <button class="frame-9 delete-btn" (click)="openDeleteIngredientModal()">
-      <img class="btn-icon" src="assets/images/icons/Trash.png" alt="Delete Icon">
+      <img
+        class="btn-icon"
+        src="assets/images/icons/Trash.png"
+        alt="Delete Icon"
+      />
       <div class="btntext">Delete Ingredients</div>
     </button>
   </div>
 
   <!-- Ingredients Table -->
   <div class="table-container">
-      <div class="x">
-         <img class="btn-icon" src="assets/images/icons/ingrediant icon.png" alt="">
-    <h3>Ingredients</h3>
-
+    <div class="x">
+      <img
+        class="btn-icon"
+        src="assets/images/icons/ingrediant icon.png"
+        alt=""
+      />
+      <h3>Ingredients</h3>
     </div>
     <div class="season-radio-group">
       <label class="raddiv">
-         <strong class="seasonname">season</strong>
-
-        <input type="radio" class="radio" name="season" value="winter" [(ngModel)]="selectedSeason" (change)="applySeasonFilter()">
+        <strong class="seasonname">season</strong>
+      </label>
+         <label class="raddiv">
+        <input
+          type="radio"
+          class="radio"
+          name="season"
+          value="All"
+          [(ngModel)]="selectedSeason"
+          (change)="applySeasonFilter()"
+        />
+        <span>All</span>
+      </label>
+         <label class="raddiv">
+        <input
+          type="radio"
+          class="radio"
+          name="season"
+          value="winter"
+          [(ngModel)]="selectedSeason"
+          (change)="applySeasonFilter()"
+        />
         <span>winter</span>
       </label>
 
 
-
       <label class="raddiv">
-        <input type="radio" class="radio" name="season" value="summer" [(ngModel)]="selectedSeason" (change)="applySeasonFilter()">
+        <input
+          type="radio"
+          class="radio"
+          name="season"
+          value="summer"
+          [(ngModel)]="selectedSeason"
+          (change)="applySeasonFilter()"
+        />
         <span>summer</span>
       </label>
+
     </div>
     <table>
       <thead>
         <tr>
-          <th><input type="checkbox"></th>
+          <th><input type="checkbox" (change)="toggleAllSelections($event)"></th>
           <th>Season</th>
           <th>Name</th>
           <th>Type</th>
@@ -79,11 +135,13 @@
         </tr>
       </thead>
       <tbody>
-       <tr *ngFor="let ingredient of filteredIngredients">
-          <td><input type="checkbox"></td>
+         <tr *ngFor="let ingredient of filteredIngredients">
+          <td>
+      <input type="checkbox" [checked]="selectedIds.includes(ingredient.id!)" (change)="toggleSelection(ingredient.id!)">
+    </td>
           <td>{{ ingredient.season }}</td>
           <td>{{ ingredient.name }}</td>
-          <td>{{ ingredient.type }}</td>
+         <td>{{ typeLabels[ingredient.type??0] }}</td>
           <td>{{ ingredient.cp }}</td>
           <td>{{ ingredient.cf }}</td>
           <td>{{ ingredient.tdn }}</td>
@@ -96,127 +154,232 @@
   <!-- Add New Ingredients Modal -->
   <div class="choose-add" *ngIf="showAddNewIngredientModal">
     <div class="frame-4 modal add-edit-modal">
-      <button class="close-btn" (click)="closeAllModals()"><img src="assets/images/icons/cross.png" alt="Close"></button>
+      <button class="close-btn" (click)="closeAllModals()">
+        <img src="assets/images/icons/cross.png" alt="Close" />
+      </button>
       <div class="frame-5">
-        <img class="modal-icon" src="assets/images/icons/ingrediant icon.png" alt="Add Ingredient Icon">
+        <img
+          class="modal-icon"
+          src="assets/images/icons/ingrediant icon.png"
+          alt="Add Ingredient Icon"
+        />
         <div class="text-wrapper-5">Add New Ingredients</div>
       </div>
       <div class="frame-6">
         <div class="form-flex">
+        <div class="form-group">
+  <label class="text-wrapper-6">Ingredient type</label>
+  <select class="data-filled" [(ngModel)]="selectedIngredient.type">
+    <option value="null" disabled selected>Ingredient Type</option>
+    <option [value]="0">Grain</option>
+    <option [value]="1">Cake</option>
+    <option [value]="2">Bran</option>
 
+  </select>
+</div>
 
-             <div class="form-group">
-            <label class="text-wrapper-6">Ingredient type</label>
-            <select class="data-filled" [(ngModel)]="selectedIngredient.type">
-              <option value="">Ingredient type</option>
-              <option value="Forages">Forages</option>
-              <option value="Concentrates">Concentrates</option>
-              <option value="Proteins">Proteins</option>
-              <option value="Roughages">Roughages</option>
-              <option value="Mill By Product">Mill By Product</option>
-              <option value="Crude Fiber">Crude Fiber</option>
-            </select>
+          <div class="form-group full-width">
+            <div class="text-wrapper-6">Season</div>
+            <div class="radio-group">
+              <div class="raddive">
+                <input  type="radio" class="radio"name="seasonadd"value="winter"  [(ngModel)]="selectedIngredient.season" (change)="applySeasonFilter()"/>
+                  <label>winter</label>
+              </div>
+              <div class="raddive">
+                 <input  type="radio" class="radio"name="seasonadd"value="summer"  [(ngModel)]="selectedIngredient.season" (change)="applySeasonFilter()"/>
+                   <label>summer</label>
+              </div>
+
+            </div>
           </div>
           <div class="form-group">
             <label class="text-wrapper-6">Name</label>
-            <input type="text" class="data-filled" placeholder="Name" [(ngModel)]="selectedIngredient.name">
+            <input
+              type="text"
+              class="data-filled"
+              placeholder="Name"
+              [(ngModel)]="selectedIngredient.name"
+            />
           </div>
 
           <div class="form-group">
             <label class="text-wrapper-6">Proteins</label>
-            <input type="number" class="data-filled" placeholder="Proteins" [(ngModel)]="selectedIngredient.cp">
+            <input
+              type="number"
+              class="data-filled"
+              placeholder="Proteins"
+              [(ngModel)]="selectedIngredient.cp"
+            />
           </div>
           <div class="form-group">
             <label class="text-wrapper-6">Crude Fiber</label>
-            <input type="number" class="data-filled" placeholder="Crude Fiber" [(ngModel)]="selectedIngredient.cf">
+            <input
+              type="number"
+              class="data-filled"
+              placeholder="Crude Fiber"
+              [(ngModel)]="selectedIngredient.cf"
+            />
           </div>
           <div class="form-group">
             <label class="text-wrapper-6">TDN</label>
-            <input type="number" class="data-filled" placeholder="Total Digestible nutrients" [(ngModel)]="selectedIngredient.tdn">
+            <input
+              type="number"
+              class="data-filled"
+              placeholder="Total Digestible nutrients"
+              [(ngModel)]="selectedIngredient.tdn"
+            />
           </div>
           <div class="form-group">
             <label class="text-wrapper-6">ME</label>
-            <input type="number" class="data-filled" placeholder="Metabolizable energy" [(ngModel)]="selectedIngredient.me">
+            <input
+              type="number"
+              class="data-filled"
+              placeholder="Metabolizable energy"
+              [(ngModel)]="selectedIngredient.me"
+            />
           </div>
         </div>
-
       </div>
-        <div class="frame-8">
-          <button class="frame-9 modal-save-btn" (click)="saveIngredient()">
-            <img class="btn-icon" src="assets/images/icons/save.png" alt="Save Icon">
-            <div class="btntext">Save Ingredient</div>
-          </button>
-        </div>
+      <div class="frame-8">
+        <button class="frame-9 modal-save-btn" (click)="saveIngredient()">
+          <img
+            class="btn-icon"
+            src="assets/images/icons/save.png"
+            alt="Save Icon"
+          />
+          <div class="btntext">Save Ingredient</div>
+        </button>
+      </div>
     </div>
   </div>
 
   <!-- Edit Exist Ingredients Modal -->
   <div class="choose-add" *ngIf="showEditExistIngredientsModal">
     <div class="frame-4 modal add-edit-modal">
-      <button class="close-btn" (click)="closeAllModals()"><img src="assets/images/icons/cross.png" alt="Close"></button>
+      <button class="close-btn" (click)="closeAllModals()">
+        <img src="assets/images/icons/cross.png" alt="Close" />
+      </button>
       <div class="frame-5">
-        <img class="modal-icon" src="assets/images/icons/update.png" alt="Edit Ingredient Icon">
+        <img
+          class="modal-icon"
+          src="assets/images/icons/update.png"
+          alt="Edit Ingredient Icon"
+        />
         <div class="text-wrapper-5">Edit Exist Ingredients</div>
       </div>
       <div class="frame-6">
         <div class="form-flex">
+              <div class="form-group">
+  <label class="text-wrapper-6">Ingredient type</label>
+  <select class="data-filled" [(ngModel)]="selectedIngredient.type">
+    <option value="null" disabled selected>Ingredient Type</option>
+    <option [value]="0">Grain</option>
+    <option [value]="1">Cake</option>
+    <option [value]="2">Bran</option>
+
+  </select>
+</div>
 
 
-            <div class="form-group">
-            <label class="text-wrapper-6">Ingredient type</label>
-            <select class="data-filled" [(ngModel)]="selectedIngredient.type">
-              <option value="">Ingredient type</option>
-              <option value="Forages">Forages</option>
-              <option value="Concentrates">Concentrates</option>
-              <option value="Proteins">Proteins</option>
-              <option value="Roughages">Roughages</option>
-              <option value="Mill By Product">Mill By Product</option>
-              <option value="Crude Fiber">Crude Fiber</option>
-            </select>
+          <div class="form-group full-width">
+            <div class="text-wrapper-6">Season</div>
+            <div class="radio-group">
+              <div class="raddive">
+                <input  type="radio" class="radio"name="seasonadd"value="winter"  [(ngModel)]="selectedSeason"  (change)="applySeasonFilter()"/>
+                  <label>winter</label>
+              </div>
+              <div class="raddive">
+                 <input  type="radio" class="radio"name="seasonadd"value="summer"   [(ngModel)]="selectedSeason"  (change)="applySeasonFilter()"/>
+                   <label>summer</label>
+              </div>
+
+            </div>
           </div>
           <div class="form-group">
             <label class="text-wrapper-6">Name</label>
-            <input type="text" class="data-filled" placeholder="Name" [(ngModel)]="selectedIngredient.name" (input)="showDataForIngredient()">
+            <input
+              type="text"
+              class="data-filled"
+              placeholder="Name"
+              [(ngModel)]="selectedIngredient.name"
+              (input)="showDataForIngredient()"
+            />
           </div>
 
           <div class="form-group">
             <label class="text-wrapper-6">Proteins</label>
-            <input type="number" class="data-filled" placeholder="Proteins" [(ngModel)]="selectedIngredient.cp">
+            <input
+              type="number"
+              class="data-filled"
+              placeholder="Proteins"
+              [(ngModel)]="selectedIngredient.cp"
+            />
           </div>
           <div class="form-group">
             <label class="text-wrapper-6">Crude Fiber</label>
-            <input type="number" class="data-filled" placeholder="Crude Fiber" [(ngModel)]="selectedIngredient.cf">
+            <input
+              type="number"
+              class="data-filled"
+              placeholder="Crude Fiber"
+              [(ngModel)]="selectedIngredient.cf"
+            />
           </div>
           <div class="form-group">
             <label class="text-wrapper-6">TDN</label>
-            <input type="number" class="data-filled" placeholder="Total Digestible nutrients" [(ngModel)]="selectedIngredient.tdn">
+            <input
+              type="number"
+              class="data-filled"
+              placeholder="Total Digestible nutrients"
+              [(ngModel)]="selectedIngredient.tdn"
+            />
           </div>
           <div class="form-group">
             <label class="text-wrapper-6">ME</label>
-            <input type="number" class="data-filled" placeholder="Metabolizable energy" [(ngModel)]="selectedIngredient.me">
+            <input
+              type="number"
+              class="data-filled"
+              placeholder="Metabolizable energy"
+              [(ngModel)]="selectedIngredient.me"
+            />
           </div>
         </div>
-
       </div>
-        <div class="frame-8">
-          <button class="frame-9 modal-save-btn" (click)="submitUpdateIngredient()">
-            <img class="btn-icon" src="assets/images/icons/save.png" alt="Save Icon">
-            <div class="btntext">Save Updates</div>
-          </button>
-        </div>
+      <div class="frame-8">
+        <button
+          class="frame-9 modal-save-btn"
+          (click)="submitUpdateIngredient()"
+        >
+          <img
+            class="btn-icon"
+            src="assets/images/icons/save.png"
+            alt="Save Icon"
+          />
+          <div class="btntext">Save Updates</div>
+        </button>
+      </div>
     </div>
   </div>
 
   <!-- Delete Ingredient Modal -->
   <div class="choose-update-milch" *ngIf="showDeleteIngredientModal">
     <div class="frame-4 delete-modal">
-
       <div class="delete-content">
-        <img class="delete-icon" src="assets/images/icons/delete.png" alt="Delete Vaccine Icon">
+        <img
+          class="delete-icon"
+          src="assets/images/icons/delete.png"
+          alt="Delete Vaccine Icon"
+        />
         <div class="delete-text">Delete Ingredient?</div>
         <div class="delete-buttons">
-          <button class="delete-cancel-btn" (click)="closeAllModals()">Cancel</button>
-          <button class="delete-confirm-btn" (click)="confirmDeleteIngredient()">Delete</button>
+          <button class="delete-cancel-btn" (click)="closeAllModals()">
+            Cancel
+          </button>
+          <button
+            class="delete-confirm-btn"
+            (click)="confirmDelete()"
+          >
+            Delete
+          </button>
         </div>
       </div>
     </div>

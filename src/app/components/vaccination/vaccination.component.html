@@ -1,13 +1,13 @@
 <main class="content-container">
   <div class="frame-4">
     <!-- Add New Vaccine Button -->
-    <button class="frame-9" (click)="openAddNewVaccineModal()">
+    <button class="frame-9" (click)="openAddModal()">
       <img class="btn-icon" src="assets/images/icons/Plus.png" alt="Add Vaccine Icon">
       <div class="btntext">Add New Vaccine</div>
     </button>
 
     <!-- Updating Data Button -->
-    <button class="frame-9" (click)="openEditExistVaccineModal()">
+    <button class="frame-9" (click)="openEditModal()">
       <img class="btn-icon" src="assets/images/icons/iconupdate.png" alt="Update Icon">
       <div class="btntext">Updating Data</div>
     </button>
@@ -30,12 +30,12 @@
         <div class="filter-option" (click)="applyFilter('name')">Name</div>
         <div class="filter-option" (click)="applyFilter('type')">Type</div>
         <div class="filter-option" (click)="applyFilter('dose')">Dose</div>
-        <div class="filter-option" (click)="applyFilter('timeToTake')">Time To Take</div>
+        <div class="filter-option" (click)="applyFilter('date')">Time To Take</div>
       </div>
     </div>
 
     <!-- Delete Vaccine Button -->
-    <button class="frame-9 delete-btn" (click)="openDeleteVaccineModal()">
+    <button class="frame-9 delete-btn" (click)="openDeleteModal()">
       <img class="btn-icon" src="assets/images/icons/Trash.png" alt="Delete Icon">
       <div class="btntext">Delete Vaccine</div>
     </button>
@@ -51,7 +51,7 @@
     <table>
       <thead>
         <tr>
-          <th><input type="checkbox"></th>
+       <th> <input type="checkbox" (change)="toggleAllSelections($event)"></th>
           <th>Name</th>
           <th>Type</th>
           <th>Dose</th>
@@ -59,19 +59,22 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let vaccine of filteredVaccines">
-          <td><input type="checkbox"></td>
+        <tr *ngFor="let vaccine of filteredRecords" (click)="selectRecord(vaccine)">
+        
+          <td><input type="checkbox" [checked]="selectedIds.includes(vaccine.id!)" (change)="toggleSelection(vaccine.id!)"></td>
+
           <td>{{ vaccine.name }}</td>
           <td>{{ vaccine.type }}</td>
           <td>{{ vaccine.dose }}</td>
-          <td>{{ vaccine.timeToTake }}</td>
+          <td>{{ vaccine.date }}</td>
         </tr>
+
       </tbody>
     </table>
   </div>
 
   <!-- Add New Vaccine Modal -->
-  <div class="choose-add" *ngIf="showAddNewVaccineModal">
+  <div class="choose-add" *ngIf="showAddModal">
     <div class="frame-4 modal add-edit-modal">
       <button class="close-btn" (click)="closeAllModals()"><img src="assets/images/icons/cross.png" alt="Close"></button>
       <div class="frame-5">
@@ -82,22 +85,22 @@
         <div class="form-flex">
           <div class="form-group">
             <label class="text-wrapper-6">Name</label>
-            <input type="text" class="data-filled" placeholder="Name" [(ngModel)]="selectedVaccine.name">
+            <input type="text" class="data-filled" placeholder="Name" [(ngModel)]="selectedRecord.name">
           </div>
           <div class="form-group">
             <label class="text-wrapper-6">Type</label>
-            <input type="text" class="data-filled" placeholder="Type" [(ngModel)]="selectedVaccine.type">
+            <input type="text" class="data-filled" placeholder="Type" [(ngModel)]="selectedRecord.type">
           </div>
           <div class="form-group">
             <label class="text-wrapper-6">Dose</label>
-            <input type="text" class="data-filled" placeholder="Dose" [(ngModel)]="selectedVaccine.dose">
+            <input type="text" class="data-filled" placeholder="Dose" [(ngModel)]="selectedRecord.dose">
           </div>
           <div class="form-group">
             <label class="text-wrapper-6">Time To Take</label>
-            <input type="text" class="data-filled" placeholder="Time To Take" [(ngModel)]="selectedVaccine.timeToTake">
+            <input type="date" class="data-filled" placeholder="Time To Take" [(ngModel)]="selectedRecord.date">
           </div>
            <div class="frame-8">
-          <button class="frame-9 modal-save-btn" (click)="submitNewVaccine()">
+          <button class="frame-9 modal-save-btn" (click)="saveRecord()">
             <img class="btn-icon" src="assets/images/icons/save.png" alt="Save Icon">
             <div class="btntext">Save Vaccine</div>
           </button>
@@ -109,7 +112,7 @@
   </div>
 
   <!-- Edit Exist Vaccine Modal -->
-  <div class="choose-add" *ngIf="showEditExistVaccineModal">
+  <div class="choose-add" *ngIf="showEditModal">
     <div class="frame-4 modal add-edit-modal">
       <button class="close-btn" (click)="closeAllModals()"><img src="assets/images/icons/cross.png" alt="Close"></button>
       <div class="frame-5">
@@ -120,10 +123,10 @@
         <div class="form-flex">
           <div class="form-group">
             <label class="text-wrapper-6">Name</label>
-            <input type="text" class="data-filled" placeholder="Name" [(ngModel)]="selectedVaccine.name">
+            <input type="text" class="data-filled" placeholder="Name" [(ngModel)]="selectedRecord.name">
 
 
-              <button class="frame-9 show-data-btn" (click)="showDataForVaccine()">
+              <button class="frame-9 show-data-btn" (click)="showDataForRecord()">
               <div class="btntext">Show Data</div>
               </button>
 
@@ -132,19 +135,19 @@
 
           <div class="form-group">
             <label class="text-wrapper-6">Type</label>
-            <input type="text" class="data-filled" placeholder="Type" [(ngModel)]="selectedVaccine.type">
+            <input type="text" class="data-filled" placeholder="Type" [(ngModel)]="selectedRecord.type">
           </div>
           <div class="form-group">
             <label class="text-wrapper-6">Dose</label>
-            <input type="text" class="data-filled" placeholder="Dose" [(ngModel)]="selectedVaccine.dose">
+            <input type="text" class="data-filled" placeholder="Dose" [(ngModel)]="selectedRecord.dose">
           </div>
           <div class="form-group">
             <label class="text-wrapper-6">Time To Take</label>
-            <input type="text" class="data-filled" placeholder="Time To Take" [(ngModel)]="selectedVaccine.timeToTake">
+            <input type="date" class="data-filled" placeholder="Time To Take" [(ngModel)]="selectedRecord.date">
           </div>
         </div>
         <!-- <div class="frame-8"> -->
-          <button class="frame-9 modal-save-btn" (click)="submitUpdateVaccine()">
+          <button class="frame-9 modal-save-btn" (click)="updateRecord()">
             <img class="btn-icon" src="assets/images/icons/save.png" alt="Save Icon">
             <div class="btntext">Save Updates</div>
           </button>
@@ -154,7 +157,7 @@
   <!-- </div> -->
 
   <!-- Delete Vaccination Modal -->
-  <div class="choose-update-milch" *ngIf="showDeleteVaccineModal">
+  <div class="choose-update-milch" *ngIf="showDeleteModal">
     <div class="frame-4 delete-modal">
 
       <div class="delete-content">
@@ -162,7 +165,7 @@
         <div class="delete-text">Delete Vaccination?</div>
         <div class="delete-buttons">
           <button class="delete-cancel-btn" (click)="closeAllModals()">Cancel</button>
-          <button class="delete-confirm-btn" (click)="confirmDeleteVaccine()">Delete</button>
+          <button class="delete-confirm-btn" (click)="confirmDelete()">Delete</button>
         </div>
       </div>
     </div>

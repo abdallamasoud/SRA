@@ -320,20 +320,32 @@ a {
   flex-direction: row;
   gap: 30px;
 }
+.season-radie-group{
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+}
 .seasonname{
   font-weight: 500;
   font-size: 22px;
 
 }
-.raddiv{
+
+/* .raddiv{
   display: inline-flex;
   align-items: center;
 
   justify-content: flex-start; /* Align individual radio text to start */
-  padding-left: 0; /* Remove any previous padding */
-}
+  /* padding-left: 0; /* Remove any previous padding */
 
 .radio{
+  width: 17px;
+  height: 17px;
+  background: #e3e4e4;
+  margin-right: 5px;
+  accent-color: black;
+}
+.radie{
   width: 17px;
   height: 17px;
   background: #e3e4e4;
@@ -751,6 +763,22 @@ th {
   display: flex;
   align-items: center;
   gap: 8px;
+    display: inline-flex;
+  align-items: center;
+
+  justify-content: flex-start; /* Align individual radio text to start */
+  padding-left: 0;
+}
+
+.raddive {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+    display: inline-flex;
+  align-items: center;
+
+  justify-content: flex-start; /* Align individual radio text to start */
+  padding-left: 0;
 }
 
 /* Focus states */
@@ -781,6 +809,10 @@ th {
 .form-group.full-width .textarea,
 .form-group.full-width  .radio-group {
   width: 82%;
+}
+
+.form-group.full-width  .radio-group{
+ width: 72%;
 }
 .form-group.full-width .data-filled{
   width: 60%;

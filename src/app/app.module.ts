@@ -26,6 +26,7 @@ import { AnimalService } from './services/animal.service';
 import { DairyComponent } from './components/dairy/dairy.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { AboutComponent } from './components/about/about.component';
+import { VaccineComponent } from './components/vaccination/vaccination.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { AboutComponent } from './components/about/about.component';
     EditAnimalModalComponent,
     DashboardComponent,
     NewbornComponent,
+    VaccineComponent,
     LoginComponent,
     RegisterComponent,
     ForgotPasswordComponent,

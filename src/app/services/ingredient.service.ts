@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 export interface Ingredient {
   id?: number;
   name: string;
-  type: number;
+  type: number|null;
   unit: number;
   cp: number;
   tdn: number;
