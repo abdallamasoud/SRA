@@ -2,32 +2,47 @@
   <div class="frame-4">
     <!-- Add New Animal Button -->
     <button class="frame-9" (click)="openAddModal()">
-      <img src="assets/images/icons/Plus.png" alt="Add" class="btn-icon">
+      <img src="assets/images/icons/Plus.png" alt="Add" class="btn-icon" />
       <span class="btntext">Add New Animal</span>
     </button>
 
     <!-- Update Data Button -->
     <button class="frame-9" (click)="openEditModal(null)">
-      <img class="btn-icon" src="assets/images/icons/iconupdate.png" alt="">
+      <img class="btn-icon" src="assets/images/icons/iconupdate.png" alt="" />
       <div class="btntext">Updating Data</div>
     </button>
 
     <!-- Search Input and Dropdown -->
     <div class="search-container">
       <div class="search-input-wrapper">
-        <img src="assets/images/icons/search.png" alt="Search" class="search-icon">
-        <input type="text" class="search-field" placeholder="Search" [(ngModel)]="searchTerm" (input)="searchAnimals()">
+        <img
+          src="assets/images/icons/search.png"
+          alt="Search"
+          class="search-icon"
+        />
+        <input
+          type="text"
+          class="search-field"
+          placeholder="Search"
+          [(ngModel)]="searchTerm"
+          (input)="searchAnimals()"
+        />
       </div>
     </div>
 
     <!-- Filter Button -->
-    <div class="filter-dropdown-container" [class.active]="isFilterDropdownOpen">
+    <div
+      class="filter-dropdown-container"
+      [class.active]="isFilterDropdownOpen"
+    >
       <button class="frame-9 filter-button" (click)="toggleFilterDropdown()">
-        <img class="double-left1" src="assets/images/icons/filter.png">
+        <img class="double-left1" src="assets/images/icons/filter.png" />
         <div class="btntext">Filter</div>
       </button>
       <div class="filter-dropdown-menu">
-        <div class="filter-option" (click)="applyFilter('herdNumber')">Herd Number</div>
+        <div class="filter-option" (click)="applyFilter('herdNumber')">
+          Herd Number
+        </div>
         <div class="filter-option" (click)="applyFilter('weight')">Weight</div>
         <div class="filter-option" (click)="applyFilter('gender')">Gender</div>
         <div class="filter-option" (click)="applyFilter('type')">Type</div>
@@ -35,30 +50,36 @@
     </div>
 
     <!-- Fattening Weight Button -->
-    <button class="frame-9" (click)="openFatteningWeightModal()">
-
+    <button class="frame-9" (click)="openFatteningWeightModal(this.selectedAnimal)">
       <div class="btntext">Fattening Weight</div>
     </button>
 
     <!-- Delete Animal Button -->
     <button class="frame-9 delete-btn" (click)="openDeleteModal()">
-      <img class="btn-icon" src="assets/images/icons/Trash.png" alt="">
+      <img class="btn-icon" src="assets/images/icons/Trash.png" alt="" />
       <div class="btntext">Delete Animal</div>
     </button>
   </div>
 
   <!-- Animals Table -->
   <div class="table-container">
-
-  <div class="x">
-         <img class="btn-icon" src="assets/images/icons/bull.png" alt="">
-    <h3>Animals</h3>
-
+    <div class="x">
+      <img class="btn-icon" src="assets/images/icons/bull.png" alt="" />
+      <h3>Animals</h3>
     </div>
     <table>
       <thead>
         <tr>
-          <th><input type="checkbox"></th>
+          <th>
+            <input
+              type="checkbox"
+              [checked]="
+                selectedAnimalIds.length === filteredAnimals.length &&
+                filteredAnimals.length > 0
+              "
+              (change)="toggleAllAnimalSelections($event)"
+            />
+          </th>
           <th>Code</th>
           <th>Type</th>
           <th>Herd Number</th>
@@ -70,14 +91,23 @@
       </thead>
       <tbody>
         <tr *ngFor="let animal of animals">
-          <td><input type="checkbox"></td>
+          <td>
+            <input
+              type="checkbox"
+              [checked]="selectedAnimalIds.includes(animal.id!)"
+              (click)="$event.stopPropagation()"
+              (change)="toggleAnimalSelection(animal.id!)"
+            />
+          </td>
           <td>{{ animal.code }}</td>
-          <td>{{ animal.animalType }}</td>
-          <td>{{ animal.herdNumber }}</td>
-          <td>{{ animal.gender }}</td>
+         <td>{{ typeLabels[animal.animalType] }}</td>
+          <td>{{ animal.noFamily }}</td>
+       <td>{{ genderLabels[animal.gender] }}</td>
+
+
           <td>{{ animal.weight }}</td>
           <td>{{ animal.weightDate }}</td>
-          <td>{{ animal.healthcareNote }}</td>
+          <td>{{ animal.description }}</td>
         </tr>
       </tbody>
     </table>
@@ -86,165 +116,415 @@
   <!-- Add/Edit Animal Modal -->
   <div class="choose-update-milch" *ngIf="showAddModal || showEditModal">
     <div class="frame-4 modal">
-      <button class="close-btn" (click)="closeAllModals()"><img src="assets/images/icons/cross.png"alt=""></button>
+      <button class="close-btn" (click)="closeAllModals()">
+        <img src="assets/images/icons/cross.png" alt="" />
+      </button>
       <div class="frame-5">
-          <ng-container *ngIf="showAddModal; else editImage">
-        <img class="modal-icon" src="assets/images/icons/add.png" alt="Add Icon">
-      </ng-container>
-      <ng-template #editImage>
-        <img class="modal-icon" src="assets/images/icons/update.png" alt="Edit Icon">
-      </ng-template>
-        <div class="text-wrapper-5">{{ showAddModal ? 'Add New Animal' : 'Update Animal' }}</div>
+        <ng-container *ngIf="showAddModal; else editImage">
+          <img
+            class="modal-icon"
+            src="assets/images/icons/add.png"
+            alt="Add Icon"
+          />
+        </ng-container>
+        <ng-template #editImage>
+          <img
+            class="modal-icon"
+            src="assets/images/icons/update.png"
+            alt="Edit Icon"
+          />
+        </ng-template>
+        <div class="text-wrapper-5">
+          {{ showAddModal ? "Add New Animal" : "Update Animal" }}
+        </div>
       </div>
 
-
-
       <div class="frame-6">
-        <!-- Code input for Update Animal -->
-        <div *ngIf="showEditModal && !selectedAnimal.code" class="form-grid">
-          <div class="form-group full-width">
-            <div class="text-wrapper-6">Code</div>
-            <input type="text" class="data-filled" placeholder="Code" [(ngModel)]="searchCode" (keyup.enter)="findAnimalByCode()">
-            <button class="frame-9 modal-save-btn" (click)="findAnimalByCode()">
-
-              <div class="btntext">ShowData</div>
-            </button>
-          </div>
-        </div>
-
-        <!-- Animal Data Form (shown for Add or after finding animal in Update) -->
-        <div *ngIf="showAddModal || (showEditModal && selectedAnimal.code)" class="form-grid">
-          <!-- Type field alone at the top -->
+        <!-- ✅ Form لإضافة حيوان جديد -->
+        <div *ngIf="showAddModal" class="form-grid">
           <div class="form-group full-width">
             <div class="text-wrapper-6">Type</div>
             <div class="radio-group">
               <div class="raddiv">
-                <input type="radio" class="radio" name="animalType" value="Dairy" [(ngModel)]="selectedAnimal.animalType">
+                <input
+                  type="radio"
+                  class="radio"
+                  name="animalType"
+                  [value]="0"
+                  [(ngModel)]="selectedAnimal.animalType"
+                />
                 <label>Dairy</label>
               </div>
               <div class="raddiv">
-                <input type="radio" class="radio" name="animalType" value="Newborn" [(ngModel)]="selectedAnimal.animalType">
+                <input
+                  type="radio"
+                  class="radio"
+                  name="animalType"
+                  [value]="1"
+                  [(ngModel)]="selectedAnimal.animalType"
+                />
                 <label>Newborn</label>
               </div>
               <div class="raddiv">
-                <input type="radio" class="radio" name="animalType" value="Fattening" [(ngModel)]="selectedAnimal.animalType">
+                <input
+                  type="radio"
+                  class="radio"
+                  name="animalType"
+                  [value]="2"
+                  [(ngModel)]="selectedAnimal.animalType"
+                />
                 <label>Fattening</label>
               </div>
             </div>
           </div>
 
-          <!-- Code and Weight -->
           <div class="form-group">
             <div class="text-wrapper-6">Code</div>
-            <input type="text" class="data-filled" placeholder="Code" [(ngModel)]="selectedAnimal.code" [readonly]="showEditModal">
+            <input
+              type="text"
+              class="data-filled"
+              placeholder="Code"
+              [(ngModel)]="selectedAnimal.code"
+            />
           </div>
+
           <div class="form-group">
             <div class="text-wrapper-6">Weight</div>
-            <input type="number" class="data-filled" placeholder="Weight" [(ngModel)]="selectedAnimal.weight">
+            <input
+              type="number"
+              class="data-filled"
+              placeholder="Weight"
+              [(ngModel)]="selectedAnimal.weight"
+            />
           </div>
 
-          <!-- Date of Weight and Herd Number -->
           <div class="form-group">
             <div class="text-wrapper-6">Date of Weight</div>
-            <input type="date" class="data-filled" placeholder="DD/MM/YYYY" [(ngModel)]="selectedAnimal.weightDate">
-          </div>
-          <div class="form-group">
-            <div class="text-wrapper-6">Herd Number</div>
-            <input type="text" class="data-filled" placeholder="Herd Number" [(ngModel)]="selectedAnimal.herdNumber">
+            <input
+              type="date"
+              class="data-filled"
+              placeholder="DD/MM/YYYY"
+              [(ngModel)]="selectedAnimal.weightDate"
+            />
           </div>
 
-          <!-- Gender and Date of Birth -->
+          <div class="form-group">
+            <div class="text-wrapper-6">Herd Number</div>
+            <input
+              type="text"
+              class="data-filled"
+              placeholder="Herd Number"
+              [(ngModel)]="selectedAnimal.noFamily"
+            />
+          </div>
+
           <div class="form-group">
             <div class="text-wrapper-6">Gender</div>
             <div class="radio-group">
               <div class="raddiv">
-                <input type="radio" class="radio" name="gender" value="Female" [(ngModel)]="selectedAnimal.gender">
+                <input
+                  type="radio"
+                  class="radio"
+                  name="gender"
+                  [value]="0"
+                  [(ngModel)]="selectedAnimal.gender"
+                />
                 <label>Female</label>
               </div>
               <div class="raddiv">
-                <input type="radio" class="radio" name="gender" value="Male" [(ngModel)]="selectedAnimal.gender">
+                <input
+                  type="radio"
+                  class="radio"
+                  name="gender"
+                  [value]="1"
+                  [(ngModel)]="selectedAnimal.gender"
+                />
                 <label>Male</label>
               </div>
             </div>
           </div>
+
           <div class="form-group">
             <div class="text-wrapper-6">Date of Birth</div>
-            <input type="date" class="data-filled" placeholder="DD/MM/YYYY" [(ngModel)]="selectedAnimal.dateOfBirth">
+            <input
+              type="date"
+              class="data-filled"
+              placeholder="DD/MM/YYYY"
+              [(ngModel)]="selectedAnimal.dateOfBirth"
+            />
           </div>
 
-          <!-- Health Care Note and Vaccinations -->
           <div class="form-group">
             <div class="text-wrapper-6">Health Care Note</div>
-            <textarea class="textarea" placeholder="Health Care" [(ngModel)]="selectedAnimal.healthcareNote"></textarea>
+            <textarea
+              class="textarea"
+              placeholder="Health Care"
+              [(ngModel)]="selectedAnimal.description"
+            ></textarea>
           </div>
-          <div class="form-group">
-            <div class="text-wrapper-6">Taken Vaccinations</div>
-            <input type="text" class="data-filled" placeholder="Taken Vaccinations" [(ngModel)]="selectedAnimal.takenVaccinations">
+          <!-- ✅ زر الحفظ للإضافة -->
+          <div class="frame-8" *ngIf="showAddModal">
+            <button class="frame-9 modal-save-btn" (click)="addAnimal()">
+              <img
+                class="btn-icon cli"
+                src="assets/images/icons/save.png"
+                alt=""
+              />
+              <div class="btntext">Save Animal</div>
+            </button>
           </div>
         </div>
 
+        <!-- ✅ Form لتعديل بيانات حيوان -->
+        <div *ngIf="showEditModal">
+          <!-- البحث عن الحيوان بالكود -->
+          <div *ngIf="!selectedAnimal.code" class="form-grid">
+            <div class="form-group full-width">
+              <div class="text-wrapper-6">Code</div>
+              <input
+                type="text"
+                class="data-filled"
+                placeholder="Code"
+                [(ngModel)]="searchCode"
+                (keyup.enter)="findAnimalByCode()"
+              />
+              <button
+                class="frame-9 modal-save-btn"
+                (click)="findAnimalByCode()"
+              >
+                <div class="btntext">ShowData</div>
+              </button>
+            </div>
+          </div>
 
+          <!-- عرض البيانات بعد العثور على الحيوان -->
+          <div *ngIf="selectedAnimal.code" class="form-grid">
+            <div class="form-group full-width">
+              <div class="text-wrapper-6">Type</div>
+              <div class="radio-group">
+                <div class="raddiv">
+                  <input
+                    type="radio"
+                    class="radio"
+                    name="animalType"
+                    [value]="0"
+                    [(ngModel)]="selectedAnimal.animalType"
+                  />
+                  <label>Dairy</label>
+                </div>
+                <div class="raddiv">
+                  <input
+                    type="radio"
+                    class="radio"
+                    name="animalType"
+                    [value]="1"
+                    [(ngModel)]="selectedAnimal.animalType"
+                  />
+                  <label>Newborn</label>
+                </div>
+                <div class="raddiv">
+                  <input
+                    type="radio"
+                    class="radio"
+                    name="animalType"
+                    [value]="2"
+                    [(ngModel)]="selectedAnimal.animalType"
+                  />
+                  <label>Fattening</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="text-wrapper-6">Code</div>
+              <input
+                type="text"
+                class="data-filled"
+                placeholder="Code"
+                [(ngModel)]="selectedAnimal.code"
+
+              />
+            </div>
+
+            <div class="form-group">
+              <div class="text-wrapper-6">Weight</div>
+              <input
+                type="number"
+                class="data-filled"
+                placeholder="Weight"
+                [(ngModel)]="selectedAnimal.weight"
+              />
+            </div>
+
+            <div class="form-group">
+              <div class="text-wrapper-6">Date of Weight</div>
+              <input
+                type="date"
+                class="data-filled"
+                placeholder="DD/MM/YYYY"
+                [(ngModel)]="selectedAnimal.weightDate"
+              />
+            </div>
+
+            <div class="form-group">
+              <div class="text-wrapper-6">Herd Number</div>
+              <input
+                type="text"
+                class="data-filled"
+                placeholder="Herd Number"
+                [(ngModel)]="selectedAnimal.noFamily"
+              />
+            </div>
+
+            <div class="form-group">
+              <div class="text-wrapper-6">Gender</div>
+              <div class="radio-group">
+                <div class="raddiv">
+                  <input
+                    type="radio"
+                    class="radio"
+                    name="gender"
+                    [value]="0"
+                    [(ngModel)]="selectedAnimal.gender"
+                  />
+                  <label>Female</label>
+                </div>
+                <div class="raddiv">
+                  <input
+                    type="radio"
+                    class="radio"
+                    name="gender"
+                    [value]="1"
+                    [(ngModel)]="selectedAnimal.gender"
+                  />
+                  <label>Male</label>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="form-group">
+              <div class="text-wrapper-6">Health Care Note</div>
+              <textarea
+                class="textarea"
+                placeholder="Health Care"
+                [(ngModel)]="selectedAnimal.description"
+              ></textarea>
+            </div>
+            <div class="frame-8" *ngIf="showEditModal && selectedAnimal.code">
+              <button class="frame-9 modal-save-btn" (click)="updateAnimal()">
+                <img
+                  class="btn-icon cli"
+                  src="assets/images/icons/save.png"
+                  alt=""
+                />
+                <div class="btntext">Save Updates</div>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-       <div class="frame-8" *ngIf="showAddModal || (showEditModal && selectedAnimal.code)">
-          <button class="frame-9 modal-save-btn" (click)="submitAnimal()">
-            <img class="btn-icon cli"  src="assets/images/icons/save.png" alt="">
-            <div class="btntext">{{ showAddModal ? 'Save Animal' : 'Save Updates' }}</div>
-          </button>
-        </div>
+
+      <!-- ✅ زر الحفظ -->
     </div>
   </div>
 
-  <!-- Fattening Weight Modal -->
-  <div class="choose-update-milch" *ngIf="showFatteningWeightModal">
-    <div class="frame-4 modale">
-      <button class="close-btn" (click)="closeAllModals()"><img src="assets/images/icons/cross.png" alt=""></button>
-      <div class="frame-5">
-        <img class="modal-icon" src="assets/images/icons/scale.png" alt="">
-        <div class="text-wrapper-5">Weight Fattening</div>
+<!-- ✅ Fattening Weight Modal -->
+<div class="choose-update-milch" *ngIf="showFatteningWeightModal">
+  <div class="frame-4 modale">
+    <button class="close-btn" (click)="closeAllModals()">
+      <img src="assets/images/icons/cross.png" alt="" />
+    </button>
+    <div class="frame-5">
+      <img class="modal-icon" src="assets/images/icons/scale.png" alt="" />
+      <div class="text-wrapper-5">Weight Fattening</div>
+    </div>
+
+    <div class="frame-6">
+      <!-- ✅ البحث عن الحيوان بالكود -->
+      <div *ngIf="!selectedAnimal?.code" class="form-group">
+        <div class="text-wrapper-6">Code</div>
+        <input
+          type="text"
+          class="data-filled"
+          placeholder="Code"
+          [(ngModel)]="searchCode"
+          (keyup.enter)="findAnimalByCode()"
+        />
+        <button class="frame-9 modal-save-btn" (click)="findAnimalByCode()">
+          <div class="btntext">ShowData</div>
+        </button>
       </div>
-      <div class="frame-6">
-        <div class="form-flex ">
-          <div class="form-group">
-            <div class="text-wrapper-6">Weight</div>
-            <input type="number" class="data-filled" placeholder="weight" [(ngModel)]="selectedAnimal.weight">
-          </div>
-          <div class="form-flex ">
-            <div class="text-wrapper-6">Date of weight</div>
-            <input type="date" class="data-filled" placeholder="Date of weight" [(ngModel)]="selectedAnimal.weightDate">
-          </div>
-          <div class="form-flex ">
-            <div class="text-wrapper-6">Code</div>
-            <input type="text" class="data-filled" placeholder="Code" [(ngModel)]="selectedAnimal.code">
-          </div>
-          <div class="form-flex ">
-            <div class="text-wrapper-6">Healthcare note</div>
-            <textarea class="textarea" placeholder="Health Care" [(ngModel)]="selectedAnimal.healthcareNote"></textarea>
-          </div>
-            <button class="frame-9 modal-save-btn" (click)="submitFatteningWeight()">
-            <img class="btn-icon" src="assets/icons/save-weight.svg" alt="">
-            <div class="btntext">Save Weight</div>
-          </button>
+
+      <!-- ✅ عرض بيانات الحيوان بعد العثور عليه -->
+      <div *ngIf="selectedAnimal?.code" class="form-flex">
+        <div class="form-group">
+          <div class="text-wrapper-6">Weight</div>
+          <input
+            type="number"
+            class="data-filled"
+            placeholder="Weight"
+            [(ngModel)]="selectedAnimal.weight"
+          />
         </div>
 
-
+        <div class="form-group">
+          <div class="text-wrapper-6">Date of Weight</div>
+          <input
+            type="date"
+            class="data-filled"
+            placeholder="Date of weight"
+            [(ngModel)]="selectedAnimal.weightDate"
+          />
         </div>
+
+        <div class="form-group">
+          <div class="text-wrapper-6">Code</div>
+          <input
+            type="text"
+            class="data-filled"
+            placeholder="Code"
+            [(ngModel)]="selectedAnimal.code"
+          />
+        </div>
+
+        <div class="form-group">
+          <div class="text-wrapper-6">Healthcare Note</div>
+          <textarea
+            class="textarea"
+            placeholder="Health Care"
+            [(ngModel)]="selectedAnimal.description"
+          ></textarea>
+        </div>
+
+        <button class="frame-9 modal-save-btn" (click)="submitFatteningWeight()">
+          <img class="btn-icon" src="assets/icons/save-weight.svg" alt="" />
+          <div class="btntext">Save Weight</div>
+        </button>
       </div>
     </div>
+  </div>
+</div>
+
+
+
 
 
   <!-- Delete Animal Modal -->
   <div class="choose-update-milch" *ngIf="showDeleteModal">
     <div class="frame-4 modaldelete">
-
       <div class="delete-content">
-        <img class="delete-icon" src="assets/images/icons/delete.png" alt="">
+        <img class="delete-icon" src="assets/images/icons/delete.png" alt="" />
         <div class="delete-text">Delete Animal?</div>
         <div class="delete-buttons">
-          <button class="delete-cancel-btn" (click)="closeAllModals()">Cancel</button>
-          <button class="delete-confirm-btn" (click)="confirmDelete()">Delete</button>
+          <button class="delete-cancel-btn" (click)="closeAllModals()">
+            Cancel
+          </button>
+          <button class="delete-confirm-btn" (click)="confirmDeleteAnimals()">
+            Delete
+          </button>
         </div>
       </div>
     </div>
   </div>
 </main>
-

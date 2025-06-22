@@ -132,13 +132,7 @@
             </div>
           </div>
 
-          <div class="form-group">
-            <label for="takenVaccinations">Taken Vaccinations</label>
-            <textarea id="takenVaccinations" formControlName="takenVaccinations" placeholder="Taken Vaccinations" rows="3"></textarea>
-            <div class="error-message" *ngIf="animalForm.get('takenVaccinations')?.invalid && animalForm.get('takenVaccinations')?.touched">
-              Taken Vaccinations is required
-            </div>
-          </div>
+
         </div>
 
         <div class="error-message main-error" *ngIf="errorMessage">

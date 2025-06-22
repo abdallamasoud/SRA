@@ -4,6 +4,8 @@ import { Subscription } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
+import { NotificationService, NotificationItem } from '../services/notification.service';
+
 
 interface CustomRouteData extends Data {
   title?: string;
@@ -17,12 +19,15 @@ interface CustomRouteData extends Data {
   templateUrl: './simple-layout.component.html',
   styleUrls: ['./simple-layout.component.css']
 })
+
+
 export class SimpleLayoutComponent implements OnInit, OnDestroy {
   isAuthPage: boolean = false;
   pageTitle: string = '';
   userName: string = 'John Doe'; // Example user name
   userRole: string = 'Admin'; // Example user role
-  showNotificationsDropdown: boolean = false; // Property for notifications dropdown
+  notifications: NotificationItem[] = [];
+  showNotificationsDropdown = false;// Property for notifications dropdown
   showProfileDropdown: boolean = false; // New property for profile dropdown
   private routerSubscription: Subscription;
 

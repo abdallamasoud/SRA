@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Animal } from '../../services/animal.service';
 import { AnimalService } from '../../services/animal.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-animals',
@@ -8,33 +9,38 @@ import { AnimalService } from '../../services/animal.service';
   styleUrls: ['./animals.component.css']
 })
 export class AnimalsComponent implements OnInit {
-  animals: Animal[] = [];
-  allAnimals: Animal[] = []; // Store all animals to filter/search from
-  searchCode: string = ''; // For searching animal by code in update modal
+ animals: Animal[] = [];
+filteredAnimals: Animal[] = [];
+selectedAnimalIds: number[] = [];
+  allAnimals: Animal[] = [];
+  selectedIds: number[] = [];
+  searchCode: string = '';
+
+
+
+  fatteningWeight = {
+
+  weight: 0,
+  dateOfWeight: '',
+  description: ''
+};
   selectedAnimal: Animal = {
     id: 0,
     code: '',
-    herdNumber: '',
-    animalType: 'Dairy',
+    noFamily: '',
+    animalType: 0,
     weight: 0,
     weightDate: '',
-    dateOfBirth: '',
-    healthcareNote: '',
-    takenVaccinations: '',
-    madeArtificialInsemination: false,
-    dateOfArtificialInsemination: null,
-    statueOfInsemination: 'Pregnant',
-    expectedDateOfCalving: null,
-    gender: 'Female'
+    description: '',
+    gender: 0,
+    dateOfBirth:''
   };
 
-  // Modal states
   showAddModal = false;
   showEditModal = false;
   showFatteningWeightModal = false;
   showDeleteModal = false;
 
-  // Search states
   searchTerm: string = '';
   isFilterDropdownOpen = false;
 
@@ -44,42 +50,88 @@ export class AnimalsComponent implements OnInit {
     this.loadAnimals();
   }
 
-  loadAnimals(): void {
-    this.animalService.getAllAnimals().subscribe({
-      next: (data) => {
-        this.allAnimals = data;
-        this.animals = [...this.allAnimals]; // Initialize displayed animals with all animals
-      },
-      error: (error: Error) => {
-        console.error('Error loading animals', error);
-      }
-    });
-  }
+typeLabels: { [key: number]: string } = {
+  1: 'Dairy',
+  2: 'NewBorn',
+  0: 'Fattening'
+};
 
-  // Search functions
+genderLabels: { [key: number]: string } = {
+  1: 'Female',
+  0: 'Male'
+};
+
+
+  loadAnimals(): void {
+  this.animalService.getAllAnimals().subscribe({
+    next: (data) => {
+      // تأكد من تحويل القيم إلى أرقام
+      this.allAnimals = data.map(animal => ({
+        ...animal,
+        id: Number(animal.id),
+        animalType: Number(animal.animalType),
+        gender: Number(animal.gender),
+         weightDate: animal.weightDate.split('T')[0]
+
+      }));
+      this.animals = [...this.allAnimals];
+          this.filteredAnimals = [...this.animals];  // Initialize displayed animals with all animals
+    },
+    error: (error: Error) => {
+      console.error('Error loading animals', error);
+    }
+  });
+}
+
+
   searchAnimals(): void {
     if (!this.searchTerm.trim()) {
       this.animals = [...this.allAnimals];
       return;
     }
-
     const searchLower = this.searchTerm.toLowerCase();
     this.animals = this.allAnimals.filter(animal =>
       animal.code.toLowerCase().includes(searchLower) ||
-      animal.animalType.toLowerCase().includes(searchLower) ||
-      animal.herdNumber.toLowerCase().includes(searchLower) ||
-      animal.healthcareNote.toLowerCase().includes(searchLower) ||
-      animal.takenVaccinations?.toLowerCase().includes(searchLower) ||
+      animal.noFamily.toLowerCase().includes(searchLower) ||
+      animal.description.toLowerCase().includes(searchLower) ||
       animal.weight.toString().includes(searchLower)
     );
   }
+
+  initAnimal(): Animal {
+  return {
+    id: 0,
+    code: '',
+    gender: 0,
+    animalType: 0,
+    weight: 0,
+    weightDate: '',
+    noFamily: '',
+    description: '',
+    dateOfBirth:''
+  };
+}
+
+ toggleAnimalSelection(id: number): void {
+  if (this.selectedAnimalIds.includes(id)) {
+    this.selectedAnimalIds = this.selectedAnimalIds.filter(i => i !== id);
+  } else {
+    this.selectedAnimalIds.push(id);
+  }
+}
+
+toggleAllAnimalSelections(event: Event): void {
+  const checked = (event.target as HTMLInputElement).checked;
+  this.selectedAnimalIds = checked ? this.filteredAnimals.map(a => a.id!) : [];
+}
+
 
   toggleFilterDropdown(): void {
     this.isFilterDropdownOpen = !this.isFilterDropdownOpen;
   }
 
-  applyFilter(type: 'herdNumber' |'gender'| 'weight' | 'type' | 'all'): void {
-    this.isFilterDropdownOpen = false; // Close dropdown after applying filter
+  applyFilter(type: 'herdNumber' | 'gender' | 'weight' | 'type' | 'all'): void {
+    this.isFilterDropdownOpen = false;
 
     if (type === 'all') {
       this.animals = [...this.allAnimals];
@@ -89,102 +141,87 @@ export class AnimalsComponent implements OnInit {
     this.animals = this.allAnimals.filter(animal => {
       switch (type) {
         case 'herdNumber':
-          return animal.herdNumber !== null && animal.herdNumber !== undefined;
+          return animal.noFamily !== null && animal.noFamily !== undefined;
         case 'weight':
           return animal.weight !== null && animal.weight !== undefined;
         case 'type':
           return animal.animalType !== null && animal.animalType !== undefined;
-           case 'gender':
+        case 'gender':
           return animal.gender !== null && animal.gender !== undefined;
         default:
           return true;
       }
     });
-    // Additionally, if a search term is present, re-apply the search on the filtered results
     this.searchAnimals();
   }
 
-  // Modal functions
   openAddModal(): void {
     this.selectedAnimal = {
       id: 0,
       code: '',
-      herdNumber: '',
-      animalType: 'Dairy',
+      noFamily: '',
+      animalType:0,
       weight: 0,
       weightDate: '',
-      dateOfBirth: '',
-      healthcareNote: '',
-      takenVaccinations: '',
-      madeArtificialInsemination: false,
-      dateOfArtificialInsemination: null,
-      statueOfInsemination: 'Pregnant',
-      expectedDateOfCalving: null,
-      gender: 'Female'
+      description: '',
+      gender: 0,
+      dateOfBirth:''
     };
     this.showAddModal = true;
   }
 
-  openEditModal(animal: Animal | null): void {
+   openEditModal(animal: Animal | null): void {
     if (animal) {
       this.selectedAnimal = { ...animal };
     } else {
       this.selectedAnimal = {
         id: 0,
         code: '',
-        herdNumber: '',
-        animalType: 'Dairy',
+        noFamily: '',
+        animalType: 0,
         weight: 0,
         weightDate: '',
         dateOfBirth: '',
-        healthcareNote: '',
-        takenVaccinations: '',
-        madeArtificialInsemination: false,
-        dateOfArtificialInsemination: null,
-        statueOfInsemination: 'Pregnant',
-        expectedDateOfCalving: null,
-        gender: 'Female'
+        description: '',
+
+        gender: 0
       };
     }
     this.showEditModal = true;
   }
 
-  openFatteningWeightModal(): void {
+openFatteningWeightModal(animal: Animal | null): void {
+  if (animal) {
+    this.selectedAnimal = { ...animal };
+  } else {
     this.selectedAnimal = {
       id: 0,
       code: '',
-      herdNumber: '',
-      animalType: 'Dairy',
+      noFamily: '',
+      animalType: 0,
       weight: 0,
       weightDate: '',
-      dateOfBirth: '',
-      healthcareNote: '',
-      takenVaccinations: '',
-      madeArtificialInsemination: false,
-      dateOfArtificialInsemination: null,
-      statueOfInsemination: 'Pregnant',
-      expectedDateOfCalving: null,
-      gender: 'Female'
+      description: '',
+      gender: 0,
+      dateOfBirth: ''
     };
-    this.showFatteningWeightModal = true;
+    this.searchCode = '';
   }
+
+  this.showFatteningWeightModal = true;
+}
 
   openDeleteModal(): void {
     this.selectedAnimal = {
       id: 0,
       code: '',
-      herdNumber: '',
-      animalType: 'Dairy',
+      noFamily: '',
+      animalType: 0,
       weight: 0,
       weightDate: '',
-      dateOfBirth: '',
-      healthcareNote: '',
-      takenVaccinations: '',
-      madeArtificialInsemination: false,
-      dateOfArtificialInsemination: null,
-      statueOfInsemination: 'Pregnant',
-      expectedDateOfCalving: null,
-      gender: 'Female'
+      description: '',
+      gender: 0,
+      dateOfBirth:''
     };
     this.showDeleteModal = true;
   }
@@ -194,76 +231,78 @@ export class AnimalsComponent implements OnInit {
     this.showEditModal = false;
     this.showFatteningWeightModal = false;
     this.showDeleteModal = false;
-    // Clear selected animal or reset form if necessary
-    this.selectedAnimal = {
-      id: 0,
-      code: '',
-      herdNumber: '',
-      animalType: 'Dairy',
-      weight: 0,
-      weightDate: '',
-      dateOfBirth: '',
-      healthcareNote: '',
-      takenVaccinations: '',
-      madeArtificialInsemination: false,
-      dateOfArtificialInsemination: null,
-      statueOfInsemination: 'Pregnant',
-      expectedDateOfCalving: null,
-      gender: 'Female'
-    };
+
   }
 
-  // Submit functions
-  submitAnimal(): void {
-    if (this.showAddModal) {
-      this.animalService.createAnimal(this.selectedAnimal).subscribe({
-        next: () => {
-          this.loadAnimals();
-          this.showAddModal = false;
-        },
-        error: (error: Error) => {
-          console.error('Error adding animal', error);
-        }
-      });
-    } else if (this.showEditModal) {
-      this.animalService.updateAnimal(this.selectedAnimal).subscribe({
-        next: () => {
-          this.loadAnimals();
-          this.showEditModal = false;
-        },
-        error: (error: Error) => {
-          console.error('Error updating animal', error);
-        }
-      });
+addAnimal(): void {
+  this.animalService.createAnimal(this.selectedAnimal).subscribe({
+    next: () => {
+      console.log('✔️ Animal added successfully');
+      this.loadAnimals();
+      this.closeAllModals();
+    },
+    error: (error) => {
+      console.error('❌ Error adding animal:', error);
     }
-  }
+  });
+}
 
-  submitFatteningWeight(): void {
-    this.animalService.updateAnimal(this.selectedAnimal).subscribe({
-      next: () => {
-        this.loadAnimals();
-        this.showFatteningWeightModal = false;
-      },
-      error: (error: Error) => {
-        console.error('Error updating fattening weight', error);
+updateAnimal(): void {
+  this.animalService.updateAnimal(this.selectedAnimal).subscribe({
+    next: () => {
+      console.log('✔️ Animal updated successfully');
+      this.loadAnimals();
+      this.closeAllModals();
+    },
+    error: (error) => {
+      console.error('❌ Error updating animal:', error);
+    }
+  });
+}
+submitFatteningWeight(): void {
+  const dto = {
+    id: this.selectedAnimal.id,
+    code: this.selectedAnimal.code,
+    weight: this.selectedAnimal.weight,
+    dateOfWeight: this.selectedAnimal.weightDate,
+    description: this.selectedAnimal.description
+  };
+
+  this.animalService.updateFatteningWeight(dto).subscribe({
+    next: () => {
+      // ✅ تحديث القيم يدويًا بدل ما تستنى من الـ API
+      const updatedAnimal = this.animals.find(a => a.id === dto.id);
+      if (updatedAnimal) {
+        updatedAnimal.weight = dto.weight;
+        updatedAnimal.weightDate = dto.dateOfWeight;
+        updatedAnimal.description = dto.description;
+        updatedAnimal.code = dto.code;
       }
-    });
-  }
 
-  confirmDelete(): void {
-    if (this.selectedAnimal.id) {
-      this.animalService.deleteAnimal(this.selectedAnimal.id).subscribe({
-        next: () => {
-          this.loadAnimals();
-          this.showDeleteModal = false;
-        },
-        error: (error: Error) => {
-          console.error('Error deleting animal', error);
-        }
-      });
+
+      this.closeAllModals();
+    },
+    error: (err) => {
+      console.error('❌ Failed to save weight', err);
     }
+  });
+}
+confirmDeleteAnimals(): void {
+  if (this.selectedAnimalIds.length === 0) {
+    alert('اختر حيوانًا أو أكثر للحذف.');
+    return;
   }
 
+  const deletes = this.selectedAnimalIds.map(id => this.animalService.deleteAnimal(id));
+  forkJoin(deletes).subscribe({
+    next: () => {
+      this.loadAnimals();
+      this.selectedAnimalIds = [];
+       this.showDeleteModal = false;
+    },
+    error: err => console.error('حدث خطأ أثناء حذف الحيوانات:', err)
+  });
+}
   findAnimalByCode(): void {
     if (!this.searchCode.trim()) {
       return;
@@ -290,18 +329,14 @@ export class AnimalsComponent implements OnInit {
             this.selectedAnimal = {
               id: 0,
               code: this.searchCode,
-              herdNumber: '',
-              animalType: 'Dairy',
+              noFamily: '',
+              animalType: 0,
               weight: 0,
               weightDate: '',
               dateOfBirth: '',
-              healthcareNote: '',
-              takenVaccinations: '',
-              madeArtificialInsemination: false,
-              dateOfArtificialInsemination: null,
-              statueOfInsemination: 'Pregnant',
-              expectedDateOfCalving: null,
-              gender: 'Female'
+              description: '',
+
+              gender: 0
             };
           }
         },
@@ -311,18 +346,14 @@ export class AnimalsComponent implements OnInit {
           this.selectedAnimal = {
             id: 0,
             code: this.searchCode,
-            herdNumber: '',
-            animalType: 'Dairy',
+            noFamily: '',
+            animalType:0,
             weight: 0,
             weightDate: '',
             dateOfBirth: '',
-            healthcareNote: '',
-            takenVaccinations: '',
-            madeArtificialInsemination: false,
-            dateOfArtificialInsemination: null,
-            statueOfInsemination: 'Pregnant',
-            expectedDateOfCalving: null,
-            gender: 'Female'
+            description: '',
+
+            gender: 0
           };
         }
       });
@@ -332,3 +363,4 @@ export class AnimalsComponent implements OnInit {
     }
   }
 }
+

@@ -65,24 +65,19 @@ export class EditAnimalModalComponent implements OnInit, OnChanges {
   updateForm(): void {
     if (this.animal) {
       const weightDate = this.animal.weightDate ? new Date(this.animal.weightDate).toISOString().split('T')[0] : null;
-      const dateOfBirth = this.animal.dateOfBirth ? new Date(this.animal.dateOfBirth).toISOString().split('T')[0] : null;
-      const dateOfArtificialInsemination = this.animal.dateOfArtificialInsemination ? new Date(this.animal.dateOfArtificialInsemination).toISOString().split('T')[0] : null;
-      const expectedDateOfCalving = this.animal.expectedDateOfCalving ? new Date(this.animal.expectedDateOfCalving).toISOString().split('T')[0] : null;
+
 
       this.animalForm.patchValue({
         id: this.animal.id,
         code: this.animal.code,
-        herdNumber: this.animal.herdNumber,
+        herdNumber: this.animal.noFamily,
         animalType: this.animal.animalType,
         weight: this.animal.weight,
         weightDate: weightDate,
-        dateOfBirth: dateOfBirth,
-        healthcareNote: this.animal.healthcareNote,
-        takenVaccinations: this.animal.takenVaccinations,
-        madeArtificialInsemination: this.animal.madeArtificialInsemination,
-        dateOfArtificialInsemination: dateOfArtificialInsemination,
-        statueOfInsemination: this.animal.statueOfInsemination,
-        expectedDateOfCalving: expectedDateOfCalving
+
+        healthcareNote: this.animal.description,
+
+
       });
     }
   }

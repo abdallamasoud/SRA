@@ -60,7 +60,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let vaccine of filteredRecords" (click)="selectRecord(vaccine)">
-        
+
           <td><input type="checkbox" [checked]="selectedIds.includes(vaccine.id!)" (change)="toggleSelection(vaccine.id!)"></td>
 
           <td>{{ vaccine.name }}</td>

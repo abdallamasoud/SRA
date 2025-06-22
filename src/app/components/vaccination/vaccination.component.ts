@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ImmunizationRecord, ImmunizationRecordService } from '../../services/immunization-record.service';
 import { forkJoin } from 'rxjs';
 
+
 @Component({
   selector: 'app-vaccination',
   templateUrl: './vaccination.component.html',
