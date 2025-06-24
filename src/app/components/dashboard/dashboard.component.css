@@ -1,3 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+/* Apply Roboto font to all elements in the dashboard */
+.dashboard-container {
+  font-family: 'Roboto', sans-serif;
+}
+
 :root {
   --primary-color: #8bc34a;
   --secondary-color: #1e1e2d;
@@ -5,17 +12,26 @@
   --text-light: #666;
   --border-color: #eee;
   --card-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  --chart-color-1: #8bc34a;
-  --chart-color-2: #2196f3;
-  --chart-color-3: #ff9800;
-  --chart-color-4: #9c27b0;
-  --chart-color-5: #f44336;
+
+  /* Green color palette */
+  --chart-color-1: #8bc34a; /* light green */
+  --chart-color-2: #7cb342; /* medium-light green */
+  --chart-color-3: #689f38; /* medium green */
+  --chart-color-4: #558b2f; /* medium-dark green */
+  --chart-color-5: #33691e; /* dark green */
+
   --status-good: #8bc34a;
-  --status-medium: #ff9800;
-  --status-low: #f44336;
-  --status-urgent: #f44336;
-  --status-soon: #ff9800;
+  --status-medium: #689f38;
+  --status-low: #33691e;
+  --status-urgent: #33691e;
+  --status-soon: #689f38;
   --status-normal: #8bc34a;
+
+  /* Seasonal colors - now all green shades */
+  --spring-color: #8bc34a; /* light green */
+  --summer-color: #7cb342; /* medium-light green */
+  --autumn-color: #689f38; /* medium green */
+  --winter-color: #33691e; /* dark green */
 }
 
 .dashboard-container {
@@ -26,6 +42,7 @@
   flex-direction: column;
   gap: 20px;
   position: relative;
+  background-color: #f6f8fa;
 }
 
 .dashboard-header {
@@ -100,13 +117,14 @@
 
 .dashboard-row {
   display: flex;
+
   gap: 20px;
   flex-wrap: wrap;
 }
 
 .dashboard-card {
-  background-color: white;
-  border-radius: 8px;
+  background-color:#fff;
+  border-radius: 16px;
   box-shadow: var(--card-shadow);
   padding: 20px;
   flex: 1;
@@ -119,15 +137,16 @@
 .summary-card {
   display: flex;
   align-items: center;
+justify-content: center;
   gap: 15px;
   min-height: 120px;
 }
 
 .card-icon {
-  width: 60px;
-  height: 60px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
-  background-color: rgba(139, 195, 74, 0.1);
+
   color: var(--primary-color);
   display: flex;
   align-items: center;
@@ -137,11 +156,12 @@
 
 .card-content {
   flex: 1;
+ text-align: center;
 }
 
 .card-content h3 {
   margin: 0 0 10px 0;
-  font-size: 16px;
+  font-size: 18px;
   color: var(--text-light);
 }
 
@@ -165,11 +185,12 @@
 /* Chart Cards */
 .chart-card {
   min-height: 300px;
+  margin-left: 30px;
 }
 
 .chart-card h3 {
   margin: 0 0 20px 0;
-  font-size: 16px;
+  font-size: 18px;
   color: var(--text-color);
 }
 
@@ -182,60 +203,89 @@
   gap: 20px;
 }
 
-.chart-placeholder {
+/* Chart wrapper for real charts */
+.chart-wrapper {
   width: 100%;
   height: 180px;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
+/* Keep pie chart styles for compatibility */
 .pie-chart {
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  background-color: #f5f5f5;
   position: relative;
-  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  margin: 0 auto;
 }
 
-.pie-segment {
+/* Center circle for donut effect */
+.pie-chart::after {
+  content: "";
+  display: block;
   position: absolute;
-  width: 100%;
-  height: 100%;
-  transform-origin: 50% 50%;
-  background-color: var(--segment-color);
-  clip-path: polygon(50% 50%, 50% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%, 50% 0%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+}
+
+/* Hide old segments */
+.pie-segment {
+  display: none;
+}
+
+.pie-segment:nth-child(1),
+.pie-segment:nth-child(2),
+.pie-segment:nth-child(3),
+.pie-segment:nth-child(4) {
+  display: none; /* Hide old segments */
 }
 
 .chart-legend {
-  width: 100%;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  width: 100%;
+  margin-top: 10px;
 }
 
 .legend-item {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  font-size: 14px;
 }
 
 .legend-color {
-  width: 16px;
-  height: 16px;
-  border-radius: 4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
 }
 
 .legend-label {
-  flex: 1;
-  font-size: 14px;
-  color: var(--text-color);
+  font-weight: 500;
+  color: var(--text-light);
 }
 
 .legend-value {
   font-weight: 600;
   color: var(--text-color);
+}
+
+/* New bar chart using Chart.js */
+canvas {
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .bar-chart {
@@ -287,12 +337,16 @@
 .table-card {
   min-height: 300px;
   display: flex;
-  flex-direction: column;
+flex-direction: column;
+  margin-left: 90px;
+  background-color: #0b291a;
+  color: #fff;
 }
 
 .table-card h3 {
   margin: 0 0 15px 0;
-  font-size: 16px;
+  font-size: 18px;
+  font-weight: bold;
   color: var(--text-color);
 }
 
@@ -315,7 +369,7 @@ th, td {
 th {
   font-weight: 600;
   color: var(--text-color);
-  background-color: #f9f9f9;
+  border-bottom: 1px solid #fff;
 }
 
 td {
@@ -454,4 +508,27 @@ td {
   .action-btn {
     min-width: calc(50% - 10px);
   }
+}
+
+.bull-icon{
+  width: 65px;
+  height: 65px;
+}
+
+/* Custom styling for milk production chart */
+.milk-production-legend .legend-value {
+  font-weight: 600;
+  color: var(--text-color);
+  position: relative;
+}
+
+.milk-production-legend .legend-value::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--primary-color);
+  opacity: 0.5;
 }

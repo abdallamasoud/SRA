@@ -25,25 +25,27 @@ a {
 }
 
 /* Main Content Container */
-.content-container {
+/* .content-container {
   padding: 20px;
-  background-color: #f5f5f5;
+
   min-height: calc(100vh - var(--navbar-height));
   box-sizing: border-box;
-}
+} */
 
 /* Header and Buttons */
 .frame-4 {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 10px;
-  /* background-color: #fff; */
-  padding: 15px 20px;
-  border-radius: 15px;
-  /* box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); */
-  flex-wrap: wrap;
-  gap: 15px;
+  position: absolute;
+    width: 80%;
+    height:6%;
+    top:11%;
+    left: 18%;
+    background-color: transparent;
+    border-radius: 16px;
+    display: flex;
+    direction: row;
+    gap: 2%;
+    justify-content: flex-start;
+
 }
 
 .frame-9 {
@@ -57,7 +59,7 @@ a {
   background-color: #AEDF32 !important;
   color: #ffffff !important;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 300;
   cursor: pointer;
   border: none !important;
   transition: all 0.3s ease;
@@ -66,14 +68,14 @@ a {
 }
 
 .frame-9:hover {
-  background-color: #7cb342 !important;
+  background-color: #99cf5f !important;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
   transform: translateY(-2px);
 }
 
 .btn-icon {
-  width: 18px;
-  height: 18px;
+  width: 25px;
+  height: 25px;
 }
 
 .btntext {
@@ -138,7 +140,7 @@ a {
 
 .modal {
   background-color: white;
-  border-radius: 8px; /* From ingredient modal */
+  border-radius: 12px; /* From ingredient modal */
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* From ingredient modal */
   width: 90%;
   max-width: 600px; /* From ingredient modal */
@@ -174,18 +176,17 @@ a {
 }
 
 .choose-update-milch .frame-5 {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 20px; /* Add margin below header */
-  padding: 0;
-  width: auto;
-  height: auto;
-  position: static;
-  left: auto;
-  border-bottom: 1px solid #eee; /* From ingredient modal */
-  padding-bottom: 15px; /* Add padding below border */
+   display: flex;
+    width: 8%;
+    height: 8%;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 10px;
+    position: relative;
+    top: 5px;
+    left: 1%;
+    border-radius: 20px;
 }
 
 .update {
@@ -321,24 +322,22 @@ a {
 
 
 /* Modal Save Button */
-.modal-save-btn {
-  flex-grow: 0;
-  width: 190px;
-  height: 50px;
-  padding: 10px 20px;
-  border-radius: 4px;
-  background-color: #8bc34a;
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  border: none;
-  transition: all 0.3s ease;
-  box-shadow: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+.save-btn {
+  top:80%;
+    position: absolute;
+   left: 37%;
+    display: flex;
+   width: 50%;
+    height: 60px;
+    align-items: center;
+    justify-content: center;
+   border: hidden;
+
+    background-color: #aedf32;
+    border-radius: 14px;
+    color: #fff;
+
+    font-size:16px ;
 }
 
 .modal-save-btn:hover {
@@ -468,11 +467,14 @@ a {
 }
 /* Table Styles */
 .table-container {
+  position: absolute;
+  top: 18%;
   background-color: #fff;
   border-radius: 20px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-  overflow-x: auto;
+
   padding: 20px;
+
 }
 
 table {
@@ -527,8 +529,8 @@ th {
   border-radius: 8px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   width: 90%;
-  max-width:514px;
-  height: 299px;
+  max-width:400px;
+  height: 230px;
   max-height: 599px;
   overflow-y: auto;
   position: relative;
@@ -573,27 +575,10 @@ th {
   color: #ff5252;
 }
 
-.frame-5 {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  margin-bottom: 25px;
 
-
-
-  margin-bottom: 0;
-  gap: 15px;
-}
-/* .frame-5 {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 25px;
-  justify-content: flex-start;
-} */
 .modal-icon {
-  width: 24px;
-  height: 24px;
+  width: 40px;
+  height: 40px;
   object-fit: contain;
   position: relative;
 }
@@ -617,25 +602,14 @@ th {
   gap: 20px;
 }
 
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  width: 100%;
-}
-.form-flex {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 10px;
 
 
-}
 
 .form-group {
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
   /* background: rgba(128, 128, 128, 0.10); */
   padding: 10px;
@@ -648,7 +622,7 @@ th {
 }
 
 /* Style for all form elements in the popup */
-
+.form-group .data-filled,
 .form-group .textarea,
 .form-group .radio-group {
   border-radius: 16px;
@@ -664,25 +638,20 @@ th {
   background: rgba(128, 128, 128, 0.10);
 
 }
-.form-group .data-filled{
-    border-radius: 16px;
-  display: flex;
-  width: 237px;
-  height: 60px;
-  padding: 10px;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-  border: 1px solid #ddd;
-  background: rgba(128, 128, 128, 0.10);
-}
 /* Label styles */
 .text-wrapper-6 {
-  font-size: 14px;
-  font-weight: 500;
-  color: #333;
-  min-width: 120px;
+
+  display: flex;
+ flex-direction: row ;
+  margin-bottom: 8px; /* From ingredient modal label */
+  font-weight: 500; /* From ingredient modal label */
+  color: #333; /* From ingredient modal label */
+  font-size: 16px; /* From ingredient modal label */
+  position: static; /* Remove absolute positioning */
+  width: auto; /* Remove fixed width */
+  left: auto; /* Remove fixed positioning */
+  white-space: normal; /* Allow text to wrap */
+  line-height: normal;
   /* text-align: right; */
 }
 
@@ -719,12 +688,25 @@ th {
 
 /* Form grid layout */
 .form-grid {
+  position: absolute;
+ top: 6%;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
-  width: 100%;
+  width: 85%;
   padding: 20px;
 }
+
+.form-flex {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  position: absolute;
+top: 12%;
+
+}
+
 /* .form-grid{
   display: flex;
   flex-direction: column;
@@ -899,4 +881,89 @@ radio-group {
   width: 18px;
   height: 18px;
   filter: invert(0%) ; /* Makes SVG black */
+}
+.frame-recordmilk{
+  position: absolute;
+    width: 32%;
+    height: 50%;
+    top:21%;
+
+    background-color: #ffffff;
+    border-radius: 16px;
+    display: flex;
+    direction: column;
+    justify-content:flex-start ;
+
+    align-items: flex-start;
+    padding: 15px;
+}
+
+ .add-modal{
+ position: absolute;
+    width: 60%;
+    height: 88%;
+    top:8%;
+    /* left: 24%; */
+    background-color:  #ffffff;
+    border-radius: 16px;
+    display: flex;
+    direction: column;
+
+    align-items: flex-start;
+ }
+ .addsave-btn{
+   top:88%;
+    position: absolute;
+   left: 58%;
+    display: flex;
+   width: 40%;
+    height: 60px;
+    align-items: center;
+    justify-content: center;
+   border: hidden;
+
+    background-color: #aedf32;
+    border-radius: 16px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 20px;
+ }
+
+ .edit-modal{
+  position: absolute;
+    width: 50%;
+    height: 77%;
+    top:8%;
+    left: 30%;
+    background-color:  #ffffff;
+    border-radius: 16px;
+    display: flex;
+    direction: column;
+
+    align-items: flex-start;
+ }
+ .editsave-btn{
+ top:88%;
+    position: absolute;
+   left: 66%;
+    display: flex;
+   width: 25%;
+    height: 60px;
+    align-items: center;
+    justify-content: center;
+   border: hidden;
+   cursor: pointer;
+
+    background-color: #aedf32;
+    border-radius: 16px;
+    color: #fff;
+    font-size: 20px;
+
+ }
+
+
+ .editsave-btn:hover {
+  background-color: #eee;
+  color: #aedf32;
+
 }

@@ -578,6 +578,9 @@ th {
   justify-content: flex-start;
   align-items: center;
   margin-bottom: 25px;
+  position: absolute;
+  left: 23px;
+  top: 10px;
 
 
 

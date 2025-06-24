@@ -1,10 +1,6 @@
 <main class="content-container">
   <div class="frame-4">
-    <!-- Add New Newborn Animal Button -->
-    <button class="frame-9" (click)="openAddNewbornModal()">
-      <img class="btn-icon" src="assets/images/icons/Plus.png" alt="Add Icon">
-      <div class="btntext">Add New Newborn Animal</div>
-    </button>
+
 
     <!-- Updating Data in Newborn Button -->
     <button class="frame-9" (click)="openUpdateNewbornModal()">
@@ -79,79 +75,7 @@
     </table>
   </div>
 
-  <!-- Add Newborn Animal Modal -->
-  <div class="choose-update-milch" *ngIf="showAddNewbornModal">
-    <div class="frame-4 modal add-edit-modal">
-      <button class="close-btn" (click)="closeAllModals()"><img src="assets/images/icons/cross.png" alt="Close"></button>
-      <div class="frame-5">
-        <img class="modal-icon" src="assets/images/icons/add.png" alt="Add Newborn Animal Icon">
-        <div class="text-wrapper-5">Add Newborn Animal</div>
-      </div>
-      <div class="frame-6">
-        <div class="form-grid">
-          <div class="form-group">
-            <label class="text-wrapper-6">Code</label>
-            <input type="text" class="data-filled" placeholder="Code" [(ngModel)]="selectedNewbornAnimal.code">
-          </div>
-          <div class="form-group">
-            <label class="text-wrapper-6">Herd Number</label>
-            <input type="text" class="data-filled" placeholder="Herd Number" [(ngModel)]="selectedNewbornAnimal.herdNumber">
-          </div>
-          <div class="form-group">
-            <label class="text-wrapper-6">Weight</label>
-            <input type="number" class="data-filled" placeholder="weight" [(ngModel)]="selectedNewbornAnimal.weight">
-          </div>
-          <div class="form-group">
-            <label class="text-wrapper-6">Gender</label>
-            <div class="radio-group">
-              <div class="raddiv">
-                <input type="radio" class="radio" name="gender" value="Female" [(ngModel)]="selectedNewbornAnimal.gender">
-                <label>Female</label>
-              </div>
-              <div class="raddiv">
-                <input type="radio" class="radio" name="gender" value="Male" [(ngModel)]="selectedNewbornAnimal.gender">
-                <label>Male</label>
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="text-wrapper-6">Date of weight</label>
-            <input type="date" class="data-filled" placeholder="Date of weight" [(ngModel)]="selectedNewbornAnimal.dateOfWeight">
-          </div>
-          <div class="form-group">
-            <label class="text-wrapper-6">Date of Birth</label>
-            <input type="date" class="data-filled" placeholder="Date of Birth" [(ngModel)]="selectedNewbornAnimal.dateOfBirth">
-          </div>
-          <div class="form-group">
-            <label class="text-wrapper-6">Type</label>
-            <div class="radio-group">
-              <div class="raddiv">
-                <input type="radio" class="radio" name="type" value="Newborn" [(ngModel)]="selectedNewbornAnimal.type">
-                <label>Newborn</label>
-              </div>
-              <div class="raddiv">
-                <input type="radio" class="radio" name="type" value="Fattening" [(ngModel)]="selectedNewbornAnimal.type">
-                <label>Fattening</label>
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="text-wrapper-6">Taken Vaccinations</label>
-            <input type="text" class="data-filled" placeholder="Taken Vaccinations" [(ngModel)]="selectedNewbornAnimal.takenVaccinations">
-          </div>
-          <div class="form-group">
-            <label class="text-wrapper-6">Healthcare note</label>
-            <textarea class="textarea" placeholder="Health Care" [(ngModel)]="selectedNewbornAnimal.healthcareNote"></textarea>
-          </div>
-            <button class="frame-9 modal-save-btn" (click)="submitNewbornAnimal()">
-            <img class="btn-icon" src="assets/images/icons/save.png" alt="Save Icon">
-            <div class="btntext">Save Animal</div>
-          </button>
-        </div>
-
-      </div>
-    </div>
-  </div>
+  
 
   <!-- Updating Data in Newborn Modal -->
   <div class="choose-update-milch" *ngIf="showUpdateNewbornModal">
