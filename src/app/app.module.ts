@@ -17,7 +17,7 @@ import { AnimalsComponent } from './components/animals/animals.component';
 import { AddAnimalModalComponent } from './components/animals/add-animal-modal/add-animal-modal.component';
 import { EditAnimalModalComponent } from './components/animals/edit-animal-modal/edit-animal-modal.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { NewbornComponent } from './components/newborn/newborn.component';
+import { NewbornsComponent } from './components/newborn/newborn.component';
 import { LoginComponent } from './components/auth/login/login.component';
 import { RegisterComponent } from './components/auth/register/register.component';
 import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';
@@ -27,6 +27,7 @@ import { DairyComponent } from './components/dairy/dairy.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { AboutComponent } from './components/about/about.component';
 import { VaccineComponent } from './components/vaccination/vaccination.component';
+import { ReportComponent } from './components/reports/reports.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,9 @@ import { VaccineComponent } from './components/vaccination/vaccination.component
     AddAnimalModalComponent,
     EditAnimalModalComponent,
     DashboardComponent,
-    NewbornComponent,
+    ReportComponent ,
+
+    NewbornsComponent,
     VaccineComponent,
     LoginComponent,
     RegisterComponent,
@@ -50,12 +53,14 @@ import { VaccineComponent } from './components/vaccination/vaccination.component
     AboutComponent
   ],
   imports: [
+      FormsModule,
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    CommonModule,
+   
+
     SharedModule,
     SimpleLayoutComponent,
     DairyComponent

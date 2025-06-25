@@ -1,56 +1,82 @@
 <main class="content-container">
   <div class="frame-4">
-
-
     <!-- Updating Data in Newborn Button -->
-    <button class="frame-9" (click)="openUpdateNewbornModal()">
-      <img class="btn-icon" src="assets/images/icons/iconupdate.png" alt="Update Icon">
+    <button class="frame-9" (click)="openEditModal(null)">
+      <img
+        class="btn-icon"
+        src="assets/images/icons/iconupdate.png"
+        alt="Update Icon"
+      />
       <div class="btntext">Updating Data in Newborn</div>
     </button>
 
     <!-- Search Input -->
     <div class="search-container">
       <div class="search-input-wrapper">
-        <img class="search-icon" src="assets/images/icons/search.png" alt="Search Icon">
-        <input type="text" class="search-field" placeholder="Search" [(ngModel)]="searchTerm" (input)="performSearch()">
+        <img
+          class="search-icon"
+          src="assets/images/icons/search.png"
+          alt="Search Icon"
+        />
+        <input
+          type="text"
+          class="search-field"
+          placeholder="Search"
+          [(ngModel)]="searchTerm"
+          (input)="searchNewborns()"
+        />
       </div>
     </div>
 
     <!-- Filter Button -->
-    <div class="filter-dropdown-container" [class.active]="isFilterDropdownOpen">
+    <div
+      class="filter-dropdown-container"
+      [class.active]="isFilterDropdownOpen"
+    >
       <button class="frame-9 filter-button" (click)="toggleFilterDropdown()">
-        <img class="double-left1" src="assets/images/icons/filter.png">
+        <img class="double-left1" src="assets/images/icons/filter.png" />
         <div class="btntext">Filter</div>
       </button>
       <div class="filter-dropdown-menu">
-        <div class="filter-option" (click)="applyFilter('herdNumber')">Herd Number</div>
+        <div class="filter-option" (click)="applyFilter('herdNumber')">
+          Herd Number
+        </div>
         <div class="filter-option" (click)="applyFilter('weight')">Weight</div>
         <div class="filter-option" (click)="applyFilter('gender')">Gender</div>
-        <div class="filter-option" (click)="applyFilter('type')">Type</div>
       </div>
     </div>
 
     <!-- Delete Animal Button -->
     <button class="frame-9 delete-btn" (click)="openDeleteModal()">
-      <img class="btn-icon" src="assets/images/icons/Trash.png" alt="Delete Icon">
+      <img
+        class="btn-icon"
+        src="assets/images/icons/Trash.png"
+        alt="Delete Icon"
+      />
       <div class="btntext">Delete Animal</div>
     </button>
   </div>
 
   <!-- Newborn Table -->
   <div class="table-container">
-
-
     <div class="x">
-         <img class="btn-icon" src="assets/images/icons/newborn.png" alt="">
-    <h3>NewBorn</h3>
-
+      <img class="btn-icon" src="assets/images/icons/newborn.png" alt="" />
+      <h3>NewBorn</h3>
     </div>
 
     <table>
       <thead>
         <tr>
-          <th><input type="checkbox"></th>
+            <th>
+            <input
+              type="checkbox"
+              [checked]="
+                selectedAnimalIds.length === filteredNewborns.length &&
+                filteredNewborns.length > 0
+              "
+              (change)="toggleAllAnimalSelections($event)"
+            />
+          </th>
           <th>Code</th>
           <th>Herd Number</th>
           <th>Gender</th>
@@ -61,115 +87,133 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let newborn of newbornAnimals">
-          <td><input type="checkbox"></td>
-          <td>{{ newborn.code }}</td>
-          <td>{{ newborn.herdNumber }}</td>
-          <td>{{ newborn.gender }}</td>
-          <td>{{ newborn.dateOfBirth }}</td>
-          <td>{{ newborn.weight }}</td>
-          <td>{{ newborn.dateOfWeight }}</td>
-          <td>{{ newborn.healthcareNote }}</td>
+        <tr *ngFor="let Animal of newborns">
+           <td>
+            <input
+              type="checkbox"
+              [checked]="selectedAnimalIds.includes(Animal.id!)"
+              (click)="$event.stopPropagation()"
+              (change)="toggleAnimalSelection(Animal.id!)"
+            />
+          </td>
+          <td>{{ Animal.code }}</td>
+          <td>{{ Animal.noFamily }}</td>
+          <td>{{ genderLabels[Animal.gender] }}</td>
+          <td>{{ Animal.dateOfBirth }}</td>
+          <td>{{ Animal.weight }}</td>
+          <td>{{ Animal.weightDate }}</td>
+          <td>{{ Animal.description }}</td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  
+ <!-- ✅ Form لتعديل بيانات Newborn -->
+<div *ngIf="showEditModal">
+  <div class="frame-4 modal add-edit-modal">
+    <button class="close-btn" (click)="closeModals()">
+      <img src="assets/images/icons/cross.png" alt="Close" />
+    </button>
 
-  <!-- Updating Data in Newborn Modal -->
-  <div class="choose-update-milch" *ngIf="showUpdateNewbornModal">
-    <div class="frame-4 modal add-edit-modal">
-      <button class="close-btn" (click)="closeAllModals()"><img src="assets/images/icons/cross.png" alt="Close"></button>
-      <div class="frame-5">
-        <img class="modal-icon" src="assets/images/icons/update.png" alt="Updating Data Icon">
-        <div class="text-wrapper-5">Update Data in Newborn</div>
+    <div class="frame-5">
+      <img class="modal-icon" src="assets/images/icons/update.png" alt="Update Icon" />
+      <div class="text-wrapper-5">Update Newborn Data</div>
+    </div>
+
+    <div class="frame-6">
+      <!-- البحث عن الحيوان بالكود -->
+      <div *ngIf="!selectedNewborn.code" class="form-grid">
+        <div class="form-group full-width">
+          <div class="text-wrapper-6">Code</div>
+          <input
+            type="text"
+            class="data-filled"
+            placeholder="Enter Code"
+            [(ngModel)]="searchCode"
+            (keyup.enter)="findAnimalByCode()"
+          />
+          <button class="frame-9 modal-save-btn" (click)="findAnimalByCode()">
+            <div class="btntext">ShowData</div>
+          </button>
+        </div>
       </div>
-      <div class="frame-6">
-        <div class="form-grid">
-          <div class="form-group">
-            <label class="text-wrapper-6">Code</label>
-            <input type="text" class="data-filled" placeholder="Code" [(ngModel)]="selectedNewbornAnimal.code">
-          </div>
-          <div class="form-group">
-            <label class="text-wrapper-6">Name</label>
-            <input type="text" class="data-filled" placeholder="Name" [(ngModel)]="selectedNewbornAnimal.name" (input)="showDataForNewbornAnimal()">
-          </div>
-          <div class="form-group">
-            <label class="text-wrapper-6">Weight</label>
-            <input type="number" class="data-filled" placeholder="weight" [(ngModel)]="selectedNewbornAnimal.weight">
-          </div>
-          <div class="form-group">
-            <label class="text-wrapper-6">Herd Number</label>
-            <input type="text" class="data-filled" placeholder="Herd Number" [(ngModel)]="selectedNewbornAnimal.herdNumber">
-          </div>
-          <div class="form-group">
-            <label class="text-wrapper-6">Date of weight</label>
-            <input type="date" class="data-filled" placeholder="Date of weight" [(ngModel)]="selectedNewbornAnimal.dateOfWeight">
-          </div>
-          <div class="form-group">
-            <label class="text-wrapper-6">Gender</label>
-            <div class="radio-group">
-              <div class="raddiv">
-                <input type="radio" class="radio" name="updateGender" value="Female" [(ngModel)]="selectedNewbornAnimal.gender">
-                <label>Female</label>
-              </div>
-              <div class="raddiv">
-                <input type="radio" class="radio" name="updateGender" value="Male" [(ngModel)]="selectedNewbornAnimal.gender">
-                <label>Male</label>
-              </div>
+
+      <!-- عرض باقي الفورم بعد العثور على الحيوان -->
+      <div *ngIf="selectedNewborn.code" class="form-grid">
+        <div class="form-group">
+          <label class="text-wrapper-6">Code</label>
+          <input type="text" class="data-filled" [(ngModel)]="selectedNewborn.code" />
+        </div>
+
+        <div class="form-group">
+          <label class="text-wrapper-6">Weight</label>
+          <input type="number" class="data-filled" [(ngModel)]="selectedNewborn.weight" />
+        </div>
+
+        <div class="form-group">
+          <label class="text-wrapper-6">Date of Weight</label>
+          <input type="date" class="data-filled" [(ngModel)]="selectedNewborn.weightDate" />
+        </div>
+
+        <div class="form-group">
+          <label class="text-wrapper-6">Herd Number</label>
+          <input type="text" class="data-filled" [(ngModel)]="selectedNewborn.noFamily" />
+        </div>
+
+        <div class="form-group">
+          <label class="text-wrapper-6">Gender</label>
+          <div class="radio-group">
+            <div class="raddiv">
+              <input type="radio" [value]="0" [(ngModel)]="selectedNewborn.gender" />
+              <label>Female</label>
             </div>
-          </div>
-          <div class="form-group">
-            <label class="text-wrapper-6">Taken Vaccinations</label>
-            <input type="text" class="data-filled" placeholder="Taken Vaccinations" [(ngModel)]="selectedNewbornAnimal.takenVaccinations">
-          </div>
-          <div class="form-group">
-            <label class="text-wrapper-6">Type</label>
-            <div class="radio-group">
-              <div class="raddiv">
-                <input type="radio" class="radio" name="updateType" value="Newborn" [(ngModel)]="selectedNewbornAnimal.type">
-                <label>Newborn</label>
-              </div>
-              <div class="raddiv">
-                <input type="radio" class="radio" name="updateType" value="Dairy" [(ngModel)]="selectedNewbornAnimal.type">
-                <label>Dairy</label>
-              </div>
-              <div class="raddiv">
-                <input type="radio" class="radio" name="updateType" value="Fattening" [(ngModel)]="selectedNewbornAnimal.type">
-                <label>Fattening</label>
-              </div>
+            <div class="raddiv">
+              <input type="radio" [value]="1" [(ngModel)]="selectedNewborn.gender" />
+              <label>Male</label>
             </div>
-          </div>
-          <div class="form-group">
-            <label class="text-wrapper-6">Date of Birth</label>
-            <input type="date" class="data-filled" placeholder="Date of Birth" [(ngModel)]="selectedNewbornAnimal.dateOfBirth">
-          </div>
-          <div class="form-group">
-            <label class="text-wrapper-6">Healthcare note</label>
-            <textarea class="textarea" placeholder="Health Care" [(ngModel)]="selectedNewbornAnimal.healthcareNote"></textarea>
           </div>
         </div>
+
+        <div class="form-group">
+          <label class="text-wrapper-6">Vaccinations</label>
+          <input type="text" class="data-filled" [(ngModel)]="selectedNewborn.description" />
+        </div>
+
+        <div class="form-group">
+          <label class="text-wrapper-6">Date of Birth</label>
+          <input type="date" class="data-filled" [(ngModel)]="selectedNewborn.dateOfBirth" />
+        </div>
+
+        <div class="form-group">
+          <label class="text-wrapper-6">Healthcare Note</label>
+          <textarea class="textarea" [(ngModel)]="selectedNewborn.description"></textarea>
+        </div>
+
+        <!-- زر الحفظ -->
         <div class="frame-8">
-          <button class="frame-9 modal-save-btn" (click)="submitUpdateNewbornAnimal()">
-            <img class="btn-icon" src="assets/images/icons/save.png" alt="Save Icon">
+          <button class="frame-9 modal-save-btn" (click)="updateNewborn()">
+            <img class="btn-icon" src="assets/images/icons/save.png" alt="Save Icon" />
             <div class="btntext">Save Updates</div>
           </button>
         </div>
       </div>
     </div>
   </div>
+</div>
 
   <!-- Delete Animal Modal -->
-   <div class="choose-update-milch" *ngIf="showDeleteModal">
+  <div class="choose-update-milch" *ngIf="showDeleteModal">
     <div class="frame-4 modaldelete">
-
       <div class="delete-content">
-        <img class="delete-icon" src="assets/images/icons/delete.png" alt="">
+        <img class="delete-icon" src="assets/images/icons/delete.png" alt="" />
         <div class="delete-text">Delete Animal?</div>
         <div class="delete-buttons">
-          <button class="delete-cancel-btn" (click)="closeAllModals()">Cancel</button>
-          <button class="delete-confirm-btn" (click)="confirmDelete()">Delete</button>
+          <button class="delete-cancel-btn" (click)="closeModals()">
+            Cancel
+          </button>
+          <button class="delete-confirm-btn" (click)="confirmDeleteNewborns()">
+            Delete
+          </button>
         </div>
       </div>
     </div>

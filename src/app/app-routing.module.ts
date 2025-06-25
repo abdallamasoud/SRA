@@ -4,14 +4,14 @@ import { FeedComponent } from './components/feed/feed.component';
 import { IngredientsComponent } from './components/ingredients/ingredients.component';
 import { AnimalsComponent } from './components/animals/animals.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { NewbornComponent } from './components/newborn/newborn.component';
+import { NewbornsComponent } from './components/newborn/newborn.component';
 import { LoginComponent } from './components/auth/login/login.component';
 import { RegisterComponent } from './components/auth/register/register.component';
 import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/auth/reset-password/reset-password.component';
 import { AuthGuard } from './guards/auth.guard';
 import { VaccineComponent } from './components/vaccination/vaccination.component';
-import { ReportsComponent } from './components/reports/reports.component';
+import { ReportComponent } from './components/reports/reports.component';
 import { SimpleLayoutComponent } from './simple-layout/simple-layout.component';
 import { DairyComponent } from './components/dairy/dairy.component';
 import { SettingsComponent } from './components/settings/settings.component';
@@ -32,10 +32,10 @@ const routes: Routes = [
       { path: 'feed', component: FeedComponent, data: { title: 'Feed Management', isAuthPage: false } },
       { path: 'ingredients', component: IngredientsComponent, data: { title: 'Ingredients Management', isAuthPage: false } },
       { path: 'animals', component: AnimalsComponent, data: { title: 'Animals Management', isAuthPage: false } },
-      { path: 'newborn', component: NewbornComponent, data: { title: 'New Born Management', isAuthPage: false } },
+      { path: 'newborn', component: NewbornsComponent, data: { title: 'New Born Management', isAuthPage: false } },
       { path: 'dairy', component: DairyComponent, data: { title: 'Dairy Management', isAuthPage: false } },
       { path: 'vaccination', component: VaccineComponent, data: { title: 'Vaccination Management', isAuthPage: false } },
-      { path: 'reports', component: ReportsComponent, data: { title: 'Reports', isAuthPage: false } },
+      { path: 'reports', component: ReportComponent, data: { title: 'Reports', isAuthPage: false } },
       { path: 'settings', component: SettingsComponent, data: { title: 'Settings', isAuthPage: false } },
       { path: 'about', component: AboutComponent, data: { title: 'About Us', isAuthPage: false } },
     ]

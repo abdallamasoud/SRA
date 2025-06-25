@@ -503,14 +503,17 @@ th {
 /* Modal Styles */
 .modal {
   background-color: white;
+  z-index: 9999;
   border-radius: 8px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   width: 90%;
   max-width: 800px;
   max-height: 90vh;
-  overflow-y: auto;
-  position: relative;
-  box-sizing: border-box;
+
+  position: fixed;
+  top: 10%;
+  left: 35%;
+  /* box-sizing: border-box; */
 }
 
 .close-btn {
@@ -666,6 +669,10 @@ th {
 .form-group.full-width .textarea,
 .form-group.full-width  .radio-group {
   width: 82%;
+}
+
+.form-group.full-width .data-filled{
+width: 54%;
 }
 /* .radio-group {
   width: 100%;

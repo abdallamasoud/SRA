@@ -1,148 +1,39 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-
-
-export interface Animal {
-  id: number;
-  code: string;
-  gender: number;
-  animalType: number;
-  weight: number;
-  weightDate: string;
-  description: string;
-  noFamily: string;
-  dateOfBirth: string;
-}
-
-// Maps for frontend ↔ backend conversion
-export const genderMap: { [key: string]: number } = {
-  Male: 0,
-  Female: 1
-};
-
-export const animalTypeMap: { [key: string]: number } = {
-  Dairy: 1,
-  Newborn: 2,
-  Fattening: 0
-};
-
-export const genderReverseMap: { [key: number]: 'Male' | 'Female' } = {
-  0: 'Male',
-  1: 'Female'
-};
-
-export const animalTypeReverseMap: { [key: number]: 'Dairy' | 'Newborn' | 'Fattening' } = {
-  1: 'Dairy',
-  2: 'Newborn',
-  0: 'Fattening'
-};
+import { AnimalService } from './animal.service';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Animal } from './animal.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AnimalService {
-  private apiUrl = 'https://sra.runasp.net/api';
+export class NewbornService {
+  constructor(private animalService: AnimalService) {}
 
-  constructor(private http: HttpClient) {}
-
-  getAllAnimals(): Observable<Animal[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/Animal`).pipe(
-      map((data) =>
-        data.map(item => ({
-          ...item,
-          gender: this.mapGenderStringToNumber(item.gender),
-          animalType: this.mapAnimalTypeStringToNumber(item.animalType)
-        }))
-      ),
-      catchError(error => {
-        console.error('Error fetching animals', error);
-        return of([]);
+  getNewborns(): Observable<Animal[]> {
+    return this.animalService.getAllAnimals().pipe(
+      map(animals => animals.filter(a => a.animalType === 2)) // 2= Newborn
+    );
+  }
+    getNewbornById(id: number): Observable<Animal> {
+    return this.animalService.getAnimalById(id).pipe(
+      map(animal => {
+        if (animal.animalType !== 2) {
+          throw new Error('This animal is not a newborn.');
+        }
+        return animal;
       })
     );
   }
 
-  // ✅ فلترة حسب النوع (0 = Dairy, 1 = Newborn, 2 = Fattening)
-  getAnimalsByType(type: number): Observable<Animal[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/Animal`).pipe(
-      map((data) =>
-        data
-          .map(item => ({
-            ...item,
-            gender: this.mapGenderStringToNumber(item.gender),
-            animalType: this.mapAnimalTypeStringToNumber(item.animalType)
-          }))
-          .filter(animal => animal.animalType === type)
-      ),
-      catchError(error => {
-        console.error('Error fetching animals by type', error);
-        return of([]);
-      })
-    );
+ 
+
+  updateNewborn(animal: Animal): Observable<any> {
+    return this.animalService.updateAnimal(animal);
   }
 
-  private mapGenderStringToNumber(gender: string): number {
-    switch (gender.toLowerCase()) {
-      case 'female': return 0;
-      case 'male': return 1;
-      default: return 0;
-    }
+  deleteNewborn(id: number): Observable<void> {
+    return this.animalService.deleteAnimal(id);
   }
 
-  private mapAnimalTypeStringToNumber(type: string): number {
-    switch (type.toLowerCase()) {
-      case 'dairy': return 0;
-      case 'newborn': return 1;
-      case 'fattening': return 2;
-      default: return 0;
-    }
-  }
-
-  getAnimalById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/Animal/${id}`);
-  }
-
-  createAnimal(animal: Animal): Observable<any> {
-    const payload = {
-      id: 0,
-      code: animal.code,
-      gender: animal.gender,
-      animalType: animal.animalType,
-      weight: animal.weight,
-      dateOfWeight: animal.weightDate,
-      herdNumber: animal.noFamily,
-      description: animal.description,
-      dateOfBirth: animal.dateOfBirth
-    };
-    return this.http.post(`${this.apiUrl}/Animal`, payload);
-  }
-
-  updateAnimal(animal: Animal): Observable<any> {
-    const payload = {
-      id: animal.id,
-      code: animal.code,
-      gender: animal.gender,
-      animalType: animal.animalType,
-      weight: animal.weight,
-      dateOfWeight: animal.weightDate,
-      herdNumber: animal.noFamily,
-      description: animal.description
-    };
-    return this.http.put(`${this.apiUrl}/Animal/${animal.id}`, payload);
-  }
-
-  updateFatteningWeight(payload: {
-    id: number;
-    code: string;
-    description: string;
-    weight: number;
-    dateOfWeight: string;
-  }): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/Animal/${payload.id}`, payload);
-  }
-
-  deleteAnimal(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/Animal/${id}`);
-  }
 }

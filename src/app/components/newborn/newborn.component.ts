@@ -1,231 +1,256 @@
 import { Component, OnInit } from '@angular/core';
-import { AnimalService } from '../../services/animal.service';
+import { Animal } from '../../services/animal.service';
+import { NewbornService } from '../../services/new-born.service';
+import { forkJoin } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 
-// Define the NewbornAnimal interface based on the HTML structure and image
-export interface NewbornAnimal {
-  id?: number; // Assuming there's an ID for database operations
-  name: string;
-  code: string;
-  herdNumber: string;
-  gender: string; // "Male" or "Female"
-  dateOfBirth: string; // Date string
-  weight: number;
-  dateOfWeight: string; // Date string, date of last weight recording
-  healthcareNote: string;
-  type: string; // "Newborn" or "Fattening" or "Dairy" (for update modal)
-  takenVaccinations?: string; // Optional field
-}
 
 @Component({
-  selector: 'app-newborn',
+  selector: 'app-newborns',
   templateUrl: './newborn.component.html',
   styleUrls: ['./newborn.component.css']
 })
-export class NewbornComponent implements OnInit {
-  newbornAnimals: NewbornAnimal[] = [];
-  filteredNewbornAnimals: NewbornAnimal[] = [];
-  isLoading = false;
-  errorMessage = '';
-  searchTerm = '';
-  activeFilterType: string = 'all'; // For the filter dropdown
-  isFilterDropdownOpen: boolean = false; // To control filter dropdown visibility
+export class NewbornsComponent implements OnInit {
+  newborns: Animal[] = [];
+  filteredNewborns: Animal[] = [];
+  selectedAnimalIds: number[] = [];
+  selectedNewborn: Animal = this.initAnimal();
+  searchTerm: string = '';
+  searchCode: string = '';
+  showAddModal = false;
+  showEditModal = false;
+  showDeleteModal = false;
+  isFilterDropdownOpen = false;
 
-  // Modal control properties
-  showAddNewbornModal: boolean = false;
-  showUpdateNewbornModal: boolean = false;
-  showDeleteModal: boolean = false;
-  selectedNewbornAnimal: NewbornAnimal = this.initializeNewbornAnimal(); // Initialize with default values
 
-  constructor(private animalService: AnimalService) { }
+  constructor(private newbornService: NewbornService) {}
 
   ngOnInit(): void {
     this.loadNewborns();
   }
 
-  initializeNewbornAnimal(): NewbornAnimal {
+  genderLabels: { [key: number]: string } = {
+    1: 'Female',
+    0: 'Male'
+  };
+
+  loadNewborns(): void {
+    this.newbornService.getNewborns().subscribe({
+      next: (data) => {
+        this.newborns = data.map(a => ({
+          ...a,
+          id: Number(a.id),
+          gender: Number(a.gender),
+          animalType: Number(a.animalType),
+          weightDate: a.weightDate?.split('T')[0] ?? '',
+          dateOfBirth: a.dateOfBirth?.split('T')[0] ?? ''
+        }));
+        this.filteredNewborns = [...this.newborns];
+      },
+      error: err => console.error('Error loading newborns', err)
+    });
+  }
+
+  searchNewborns(): void {
+    if (!this.searchTerm.trim()) {
+      this.filteredNewborns = [...this.newborns];
+      return;
+    }
+
+    const searchLower = this.searchTerm.toLowerCase();
+    this.filteredNewborns = this.newborns.filter(a =>
+      a.code.toLowerCase().includes(searchLower) ||
+      a.noFamily.toLowerCase().includes(searchLower) ||
+      a.description.toLowerCase().includes(searchLower) ||
+      a.weight.toString().includes(searchLower)
+    );
+  }
+
+  initAnimal(): Animal {
     return {
-      name: '',
+      id: 0,
       code: '',
-      herdNumber: '',
-      gender: '',
-      dateOfBirth: '',
+      noFamily: '',
+      animalType: 2, // newborn
       weight: 0,
-      dateOfWeight: '',
-      healthcareNote: '',
-      type: 'Newborn', // Default type for new entries
-      takenVaccinations: ''
+      weightDate: '',
+      description: '',
+      gender: 0,
+      dateOfBirth: ''
     };
   }
 
-  loadNewborns(): void {
-    this.isLoading = true;
-    this.errorMessage = '';
+  openAddModal(): void {
+    this.selectedNewborn = this.initAnimal();
+    this.showAddModal = true;
+  }
+ openDeleteModal(): void {
+  this.showDeleteModal = true;
+}
 
-    // Mock data for demonstration purposes, replace with actual service calls later
-    this.newbornAnimals = [
-      {
-        id: 1,
-        name: 'Cow 1',
-        code: '45',
-        herdNumber: '5',
-        gender: 'Female',
-        dateOfBirth: '7/2/2025',
-        weight: 200,
-        dateOfWeight: '2/2/2025',
-        healthcareNote: 'In Good Health',
-        type: 'Newborn',
-        takenVaccinations: 'Vaccine X'
-      },
-      {
-        id: 2,
-        name: 'Cow 2',
-        code: '46',
-        herdNumber: '5',
-        gender: 'Female',
-        dateOfBirth: '7/2/2025',
-        weight: 220,
-        dateOfWeight: '2/2/2025',
-        healthcareNote: 'In Good Health',
-        type: 'Newborn',
-        takenVaccinations: 'Vaccine Y'
-      },
-      {
-        id: 3,
-        name: 'Cow 3',
-        code: '47',
-        herdNumber: '5',
-        gender: 'Female',
-        dateOfBirth: '7/2/2025',
-        weight: 140,
-        dateOfWeight: '2/2/2025',
-        healthcareNote: 'In Good Health',
-        type: 'Newborn',
-        takenVaccinations: 'Vaccine Z'
-      }
-    ];
-    this.filteredNewbornAnimals = [...this.newbornAnimals];
-    this.isLoading = false;
+    openEditModal(animal: Animal | null): void {
+    if (animal) {
+      this.selectedNewborn = { ...animal };
+    } else {
+      this.selectedNewborn = {
+        id: 0,
+        code: '',
+        noFamily: '',
+        animalType: 2,
+        weight: 0,
+        weightDate: '',
+        dateOfBirth: '',
+        description: '',
 
-    // TODO: Replace with actual animalService.getNewbornAnimals() or a dedicated NewbornService
-    // this.animalService.getNewbornAnimals().subscribe({
-    //   next: (data: NewbornAnimal[]) => { // Specify type for data
-    //     this.newbornAnimals = data;
-    //     this.filteredNewbornAnimals = [...this.newbornAnimals];
-    //     this.isLoading = false;
-    //   },
-    //   error: (error: Error) => { // Explicitly type error
-    //     console.error('Error loading newborn animals', error);
-    //     this.errorMessage = 'Failed to load newborn animals. Please try again later.';
-    //     this.isLoading = false;
-    //   }
-    // });
+        gender: 0
+      };
+    }
+    this.showEditModal = true;
   }
 
-  // --- Modal Functions ---
-  openAddNewbornModal(): void {
-    this.selectedNewbornAnimal = this.initializeNewbornAnimal(); // Reset form
-    this.showAddNewbornModal = true;
-  }
 
-  openUpdateNewbornModal(): void {
-    this.selectedNewbornAnimal = this.initializeNewbornAnimal(); // Reset form
-    this.showUpdateNewbornModal = true;
-  }
-
-  openDeleteModal(): void {
-    this.showDeleteModal = true;
-  }
-
-  closeAllModals(): void {
-    this.showAddNewbornModal = false;
-    this.showUpdateNewbornModal = false;
+  closeModals(): void {
+    this.showAddModal = false;
+    this.showEditModal = false;
     this.showDeleteModal = false;
-    this.selectedNewbornAnimal = this.initializeNewbornAnimal(); // Clear selected data
   }
 
-  // --- Submission Functions ---
-  submitNewbornAnimal(): void {
-    console.log('Submitting new newborn animal:', this.selectedNewbornAnimal);
-    // Implement add newborn animal logic here
-    this.closeAllModals();
-    this.loadNewborns(); // Refresh data after submission
+
+
+  updateNewborn(): void {
+    this.newbornService.updateNewborn(this.selectedNewborn).subscribe({
+      next: () => {
+        this.loadNewborns();
+        this.closeModals();
+      },
+      error: err => console.error('Error updating newborn', err)
+    });
   }
 
-  submitUpdateNewbornAnimal(): void {
-    console.log('Submitting updated newborn animal:', this.selectedNewbornAnimal);
-    // Implement update newborn animal logic here
-    this.closeAllModals();
-    this.loadNewborns(); // Refresh data after submission
+  deleteNewborn(id: number): void {
+    this.newbornService.deleteNewborn(id).subscribe({
+      next: () => {
+        this.loadNewborns();
+        this.closeModals();
+      },
+      error: err => console.error('Error deleting newborn', err)
+    });
   }
 
-  showDataForNewbornAnimal(): void {
-    console.log('Showing data for newborn animal with name:', this.selectedNewbornAnimal.name);
-    const foundAnimal = this.newbornAnimals.find(n => n.name === this.selectedNewbornAnimal.name);
-    if (foundAnimal) {
-      this.selectedNewbornAnimal = { ...foundAnimal };
+  toggleAnimalSelection(id: number): void {
+    if (this.selectedAnimalIds.includes(id)) {
+      this.selectedAnimalIds = this.selectedAnimalIds.filter(i => i !== id);
     } else {
-      alert('Newborn animal not found with this name.');
-      this.selectedNewbornAnimal = this.initializeNewbornAnimal();
+      this.selectedAnimalIds.push(id);
     }
   }
 
-  confirmDelete(): void {
-    console.log('Confirming delete for selected newborn animals.');
-    // Implement actual delete logic here
-    this.closeAllModals();
-    this.loadNewborns(); // Refresh data after deletion
+  toggleAllAnimalSelections(event: Event): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    this.selectedAnimalIds = checked ? this.filteredNewborns.map(a => a.id!) : [];
   }
 
-  // --- Search and Filter Functions ---
-  performSearch(): void {
-    if (this.searchTerm) {
-      const search = this.searchTerm.toLowerCase();
-      this.filteredNewbornAnimals = this.newbornAnimals.filter(newborn =>
-        newborn.name.toLowerCase().includes(search) ||
-        newborn.code.toLowerCase().includes(search) ||
-        newborn.herdNumber.toLowerCase().includes(search) ||
-        newborn.gender.toLowerCase().includes(search) ||
-        newborn.healthcareNote.toLowerCase().includes(search) ||
-        newborn.type.toLowerCase().includes(search)
-      );
-    } else {
-      this.filteredNewbornAnimals = [...this.newbornAnimals];
+  confirmDeleteNewborns(): void {
+    if (this.selectedAnimalIds.length === 0) {
+      alert('اختر حيوانًا أو أكثر للحذف.');
+      return;
     }
-    this.applyFilter(this.activeFilterType);
+
+    const deletes = this.selectedAnimalIds.map(id => this.newbornService.deleteNewborn(id));
+    forkJoin(deletes).subscribe({
+      next: () => {
+        this.loadNewborns();
+        this.selectedAnimalIds = [];
+        this.closeModals();
+      },
+      error: err => console.error('حدث خطأ أثناء حذف الأبناء:', err)
+    });
   }
 
   toggleFilterDropdown(): void {
     this.isFilterDropdownOpen = !this.isFilterDropdownOpen;
   }
 
-  applyFilter(filterType: string): void {
-    this.activeFilterType = filterType;
-    let tempFiltered = [...this.newbornAnimals];
+  applyFilter(type: 'herdNumber' | 'gender' | 'weight' | 'all'): void {
+    this.isFilterDropdownOpen = false;
 
-    // Apply search filter first
-    if (this.searchTerm) {
-      const search = this.searchTerm.toLowerCase();
-      tempFiltered = tempFiltered.filter(newborn =>
-        newborn.name.toLowerCase().includes(search) ||
-        newborn.code.toLowerCase().includes(search) ||
-        newborn.herdNumber.toLowerCase().includes(search) ||
-        newborn.gender.toLowerCase().includes(search) ||
-        newborn.healthcareNote.toLowerCase().includes(search) ||
-        newborn.type.toLowerCase().includes(search)
-      );
+    if (type === 'all') {
+      this.filteredNewborns = [...this.newborns];
+      return;
     }
 
-    // Apply specific filter
-    if (filterType === 'herdNumber') {
-      tempFiltered = tempFiltered.filter(newborn => newborn.herdNumber && newborn.herdNumber !== '');
-    } else if (filterType === 'weight') {
-      tempFiltered = tempFiltered.filter(newborn => newborn.weight > 0);
-    } else if (filterType === 'gender') {
-      tempFiltered = tempFiltered.filter(newborn => newborn.gender && newborn.gender !== '');
-    } else if (filterType === 'type') {
-      tempFiltered = tempFiltered.filter(newborn => newborn.type && newborn.type !== '');
+    this.filteredNewborns = this.newborns.filter(animal => {
+      switch (type) {
+        case 'herdNumber':
+          return !!animal.noFamily;
+        case 'weight':
+          return animal.weight !== null && animal.weight !== undefined;
+        case 'gender':
+          return animal.gender !== null && animal.gender !== undefined;
+        default:
+          return true;
+      }
+    });
+
+    this.searchNewborns();
+  }
+   findAnimalByCode(): void {
+    if (!this.searchCode.trim()) {
+      return;
     }
 
-    this.filteredNewbornAnimals = tempFiltered;
+    // First try to find in the current animals list
+    let foundAnimal = this.filteredNewborns.find(animal =>
+      animal.code.toLowerCase() === this.searchCode.toLowerCase()
+    );
+
+    // If not found in current list, try to fetch from server
+    if (!foundAnimal) {
+      this.newbornService.getNewbornById(parseInt(this.searchCode)).subscribe({
+        next: (newborns) => {
+          if (newborns) {
+            this.selectedNewborn = { ...newborns };
+            // Add to local list if not already there
+            if (!this.filteredNewborns.some(a => a.id === newborns.id)) {
+              this.filteredNewborns.push(newborns);
+            }
+          } else {
+            console.log('Animal not found');
+            // Reset form with empty data
+            this.selectedNewborn = {
+              id: 0,
+              code: this.searchCode,
+              noFamily: '',
+              animalType: 0,
+              weight: 0,
+              weightDate: '',
+              dateOfBirth: '',
+              description: '',
+
+              gender: 0
+            };
+          }
+        },
+        error: (error) => {
+          console.error('Error fetching animal:', error);
+          // Reset form with empty data
+          this.selectedNewborn = {
+            id: 0,
+            code: this.searchCode,
+            noFamily: '',
+            animalType:0,
+            weight: 0,
+            weightDate: '',
+            dateOfBirth: '',
+            description: '',
+
+            gender: 0
+          };
+        }
+      });
+    } else {
+      // If found in current list, use that data
+      this.selectedNewborn = { ...foundAnimal };
+    }
   }
 }

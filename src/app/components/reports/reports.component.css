@@ -60,7 +60,7 @@
   padding: 25px;
   display: flex;
   flex-direction: column;
-  max-height: 160px; /* Re-introduce max-height for truncation */
+  max-height: 300px; /* Re-introduce max-height for truncation */
   overflow-y: auto; /* Re-enable scrolling for individual cards */
   scrollbar-width: thin; /* For Firefox */
   scrollbar-color: #a0a0a0 #f1f1f1; /* Darker scrollbar thumb */

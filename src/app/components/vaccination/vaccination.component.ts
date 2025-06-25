@@ -117,10 +117,10 @@ updateRecord(): void {
   }
 
   openEditModal(): void {
-      if (!this.selectedRecord.id) {
-    alert('Please select a record first.');
-    return;
-  }
+  //     if (!this.selectedRecord.id) {
+  //   alert('Please select a record first.');
+  //   return;
+  // }
     this.showEditModal = true;
   }
 

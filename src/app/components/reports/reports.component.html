@@ -1,16 +1,55 @@
 <main class="dashboard-content-container">
-  <div class="dashboard-header">
-  </div>
+  <div class="dashboard-header"></div>
 
   <div class="report-sections-grid">
-    <div class="report-card" *ngFor="let section of reportSections">
+    <!-- Feed Reports -->
+    <div class="report-card">
       <div class="report-card-header">
-        <img [src]="section.icon" [alt]="section.title + ' Icon'" class="report-card-icon">
-        <h3 class="report-card-title">{{ section.title }}</h3>
+        <img src="assets/images/icons/feed.png" alt="Feed Icon" class="report-card-icon" />
+        <h3 class="report-card-title">Feed</h3>
       </div>
       <ul class="report-card-items">
-        <li *ngFor="let item of section.items" class="report-item">
-          {{ item.text }}
+        <li *ngFor="let item of feedReports" class="report-item">
+          {{ item.date | date: 'shortDate' }} - {{ item.message }}
+        </li>
+      </ul>
+    </div>
+
+    <!-- Vaccination Reports -->
+    <div class="report-card">
+      <div class="report-card-header">
+        <img src="assets/images/icons/vaccine.png" alt="Vaccination Icon" class="report-card-icon" />
+        <h3 class="report-card-title">Vaccination</h3>
+      </div>
+      <ul class="report-card-items">
+        <li *ngFor="let item of vaccinationReports" class="report-item">
+          {{ item.date | date: 'shortDate' }} - {{ item.message }}
+        </li>
+      </ul>
+    </div>
+
+    <!-- Animal Reports -->
+    <div class="report-card">
+      <div class="report-card-header">
+        <img src="assets/images/icons/bull.png" alt="Animal Icon" class="report-card-icon" />
+        <h3 class="report-card-title">Animal</h3>
+      </div>
+      <ul class="report-card-items">
+        <li *ngFor="let item of animalReports" class="report-item">
+          {{ item.date | date: 'shortDate' }} - {{ item.message }}
+        </li>
+      </ul>
+    </div>
+
+    <!-- Dairy Reports -->
+    <div class="report-card">
+      <div class="report-card-header">
+        <img src="assets/images/icons/milch.png" alt="Dairy Icon" class="report-card-icon" />
+        <h3 class="report-card-title">Dairy</h3>
+      </div>
+      <ul class="report-card-items">
+        <li *ngFor="let item of dairyReports" class="report-item">
+          {{ item.date | date: 'shortDate' }} - {{ item.message }}
         </li>
       </ul>
     </div>
@@ -18,7 +57,7 @@
 
   <div class="print-button-container">
     <button class="print-button" (click)="printReport()">
-      <img src="assets/icons/print.svg" alt="Print Icon">
+      <img src="assets/icons/print.svg" alt="Print Icon" />
       <span>Print</span>
     </button>
   </div>
