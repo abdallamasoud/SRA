@@ -16,6 +16,13 @@ export interface Animal {
   description: string;
   noFamily: string;
   dateOfBirth:string
+    // 🟩 خصائص جديدة نضيفها هنا
+  milk?: number;
+  fatPercentage?: number;
+  statuForitification?: number;
+  dateFertilization?: string;
+  expectedDate?: string;
+  type?: number;
 
 }
 
@@ -26,9 +33,9 @@ export const genderMap: { [key: string]: number } = {
 };
 
 export const animalTypeMap: { [key: string]: number } = {
-  Dairy: 0,
-  Newborn: 1,
-  Fattening: 2
+  Milking: 1,
+  Newborn: 2,
+  Fattening: 0
 };
 
 export const genderReverseMap: { [key: number]: 'Male' | 'Female' } = {
@@ -36,10 +43,10 @@ export const genderReverseMap: { [key: number]: 'Male' | 'Female' } = {
   1: 'Female'
 };
 
-export const animalTypeReverseMap: { [key: number]: 'Dairy' | 'Newborn' | 'Fattening' } = {
-  0: 'Dairy',
-  1: 'Newborn',
-  2: 'Fattening'
+export const animalTypeReverseMap: { [key: number]: 'Milking' | 'Newborn' | 'Fattening' } = {
+  1: 'Milking',
+  2: 'Newborn',
+  0: 'Fattening'
 };
 
 @Injectable({
@@ -75,7 +82,7 @@ private mapGenderStringToNumber(gender: string): number {
 
 private mapAnimalTypeStringToNumber(type: string): number {
   switch (type.toLowerCase()) {
-    case 'dairy': return 1;
+    case 'milking': return 1;
     case 'newborn': return 2;
     case 'fattening': return 0;
     default: return 0;

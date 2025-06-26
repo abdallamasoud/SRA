@@ -1,13 +1,13 @@
 <main class="content-container">
   <div class="frame-4">
     <!-- Record Milk Production Today Button -->
-    <button class="frame-9" (click)="openRecordMilkModal()">
+    <button class="frame-9" (click)="openAddModal()">
       <img class="btn-icon" src="assets/images/icons/record.png" alt="">
       <div class="btntext"> Milk Production Today</div>
     </button>
 
     <!-- Add New Dairy Record Button -->
- 
+
 
     <!-- Updating Data Button -->
     <button class="frame-9" (click)="openEditModal(null)">
@@ -19,13 +19,13 @@
     <div class="search-container">
       <div class="search-input-wrapper">
         <img class="search-icon" src="assets/images/icons/search.png" alt="">
-        <input type="text" class="search-field" placeholder="Search" [(ngModel)]="searchTerm" (input)="performSearch()">
+        <input type="text" class="search-field" placeholder="Search" [(ngModel)]="searchCode" (input)="findAnimalByCode()">
       </div>
     </div>
 
     <!-- Filter Button -->
     <div class="filter-dropdown-container" [class.active]="isFilterDropdownOpen">
-      <button class="frame-9 filter-button" (click)="toggleFilterDropdown($event)">
+      <button class="frame-9 filter-button" (click)="toggleFilterDropdown()">
         <img class="double-left1" src="assets/images/icons/filter.png">
         <div class="btntext">Filter</div>
       </button>
@@ -64,25 +64,25 @@
           <th>Weight</th>
           <th>Date of weight</th>
           <th>Statue Fortification</th>
-          <th>Date Of Artificial Insemination</th>
-          <th>Expected Date of Calfing</th>
+          <th>DateFertilization</th>
+          <th>ExpectedDate</th>
           <th>Healthcare</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let record of filteredDairy">
+        <tr *ngFor="let record of filteredDairies">
           <td><input type="checkbox"></td>
           <td>{{ record.code }}</td>
           <td>{{ record.type }}</td>
-          <td>{{ record.herdNumber }}</td>
-          <td>{{ record.milkProduction || '—' }}</td>
+          <td>{{ record.noFamily }}</td>
+          <td>{{ record.animalType }}</td>
           <td>{{ record.fatPercentage || '—' }}</td>
           <td>{{ record.weight }}</td>
           <td>{{ record.weightDate }}</td>
-          <td>{{ record.statueFortification || '—' }}</td>
-          <td>{{ record.dateOfArtificialInsemination || '—' }}</td>
-          <td>{{ record.expectedDateOfCalving || '—' }}</td>
-          <td>{{ record.healthcare || '—' }}</td>
+          <td>{{ record.statuForitification || '—' }}</td>
+          <td>{{ record.dateFertilization || '—' }}</td>
+          <td>{{ record.expectedDate || '—' }}</td>
+          <td>{{ record.description || '—' }}</td>
         </tr>
       </tbody>
     </table>
@@ -94,12 +94,12 @@
   <!-- Edit Modal -->
   <div class="choose-update-milch" *ngIf="showEditModal">
     <div class="edit-modal ">
-      <button class="close-btn" (click)="closeAllModals()"><img src="/assets/images/icons/cross.png"  alt=""></button>
+      <button class="close-btn" (click)="closeModals()"><img src="/assets/images/icons/cross.png"  alt=""></button>
       <div class="frame-5">
         <img class="modal-icon" src="/assets/images/icons/update.png" alt="">
         <div class="text-wrapper-5">Updating Data in Dairy</div>
       </div>
-      <form (ngSubmit)="submitUpdateDairy()">
+      <form (ngSubmit)="updateDairy()">
         <div class="form-grid">
           <div class="form-group">
             <label for="editCode" class="text-wrapper-6" >Code</label>
@@ -119,7 +119,7 @@
               </div>
             </div>
           </div>
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label for="editMadeArtificialInsemination" class="text-wrapper-6">Made Artificial Insemination</label>
             <div class="radio-group">
               <div class="raddiv">
@@ -131,13 +131,13 @@
                 <label>No</label>
               </div>
             </div>
-          </div>
+          </div> -->
           <div class="form-group">
             <label for="editWeight" class="text-wrapper-6">Weight</label>
             <input type="number" id="editWeight" class="data-filled" placeholder="weight" [(ngModel)]="selectedDairy.weight" name="editWeight">
           </div>
           <div class="form-group">
-            <label for="editDateOfArtificialInsemination" class="text-wrapper-6">Date Of Artificial Insemination</label>
+            <label for="editDateOfArtificialInsemination" class="text-wrapper-6">DateFertilization</label>
             <input type="date" id="editDateOfArtificialInsemination" class="data-filled" placeholder="DD/MM/YY" [(ngModel)]="selectedDairy.dateOfArtificialInsemination" name="editDateOfArtificialInsemination">
           </div>
           <div class="form-group">
@@ -145,7 +145,7 @@
             <input type="date" id="editDateOfWeight" class="data-filled" placeholder="DD/MM/YY" [(ngModel)]="selectedDairy.weightDate" name="editDateOfWeight">
           </div>
           <div class="form-group">
-            <label for="editStatueOfInsemination" class="text-wrapper-6">Statue Of Insemination</label>
+            <label for="editStatueOfInsemination" class="text-wrapper-6">statuForitification</label>
             <div class="radio-group">
               <div class="raddiv">
                 <input type="radio" class="radio" name="statueOfInsemination" value="Pregnant" [(ngModel)]="selectedDairy.statueFortification">
@@ -166,7 +166,7 @@
             <textarea id="editHealthcareNote" class="textarea" placeholder="Health Care" [(ngModel)]="selectedDairy.healthcare" name="editHealthcareNote"></textarea>
           </div>
           <div class="form-group">
-            <label for="editExpectedDateOfCalving" class="text-wrapper-6">Expected Date Of Calfing</label>
+            <label for="editExpectedDateOfCalving" class="text-wrapper-6">ExpectedDate</label>
             <input type="date" id="editExpectedDateOfCalving" class="data-filled" placeholder="DD/MM/YYYY" [(ngModel)]="selectedDairy.expectedDateOfCalving" name="editExpectedDateOfCalving">
           </div>
       <div class=" change">  <div class="form-group">
@@ -192,22 +192,22 @@
         <img class="delete-icon" src="assets/images/icons/delete.png" alt="">
         <div class="delete-text">Delete Animal?</div>
         <div class="delete-buttons">
-          <button class="delete-cancel-btn" (click)="closeAllModals()">Cancel</button>
-          <button class="delete-confirm-btn" (click)="confirmDelete()">Delete</button>
+          <button class="delete-cancel-btn" (click)="closeModals()">Cancel</button>
+          <button class="delete-confirm-btn" (click)="confirmDeleteDairies()">Delete</button>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Record Milk Production Today Modal -->
-  <div class="choose-update-milch" *ngIf="showRecordMilkModal">
+  <div class="choose-update-milch" *ngIf="showAddModal">
     <div class="frame-recordmilk ">
-      <button class="close-btn" (click)="closeAllModals()"><img src="/assets/images/icons/cross.png" alt=""></button>
+      <button class="close-btn" (click)="closeModals()"><img src="/assets/images/icons/cross.png" alt=""></button>
       <div class="frame-5">
         <img class="modal-icon" src="/assets/images/icons/milch.png" alt="">
         <div class="text-wrapper-5">Record Milk Production</div>
       </div>
-      <form (ngSubmit)="submitRecordMilkProduction()">
+      <form (ngSubmit)="addDairy()">
         <div class="form-flex">
           <div class="form-group">
             <label for="recordCode" >Code</label>

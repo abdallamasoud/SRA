@@ -227,7 +227,7 @@ export class FeedComponent implements OnInit {
 
   addSelectedItem(): void {
 
-    
+
     if (this.selectedFeed.type && this.selectedFeed.ingredients && this.selectedFeed.price !== undefined) {
       this.selectedItems.push({
         type: this.selectedFeed.type,
@@ -242,11 +242,11 @@ export class FeedComponent implements OnInit {
   }
 
   removeItem(item: { type: string; ingredients: string }): void {
-    this.selectedItems = this.selectedItems.filter(i => 
+    this.selectedItems = this.selectedItems.filter(i =>
       i.type !== item.type || i.ingredients !== item.ingredients
     );
   }
-  
+
 
   // --- Search and Filter Functions ---
   performSearch(): void {

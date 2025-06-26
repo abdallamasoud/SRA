@@ -50,7 +50,8 @@ import { ReportComponent } from './components/reports/reports.component';
     ForgotPasswordComponent,
     ResetPasswordComponent,
     SettingsComponent,
-    AboutComponent
+    AboutComponent,
+    DairyComponent
   ],
   imports: [
       FormsModule,
@@ -59,11 +60,11 @@ import { ReportComponent } from './components/reports/reports.component';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-   
+
 
     SharedModule,
     SimpleLayoutComponent,
-    DairyComponent
+
   ],
   providers: [
     CurrencyPipe,

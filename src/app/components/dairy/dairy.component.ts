@@ -1,175 +1,229 @@
-import { Component, OnInit, HostListener, ElementRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { Animal } from '../../services/animal.service';
 import { DairyService } from '../../services/dairy.service';
-import { Dairy } from '../../services/dairy.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-dairy',
-  standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './dairy.component.html',
   styleUrls: ['./dairy.component.css']
 })
 export class DairyComponent implements OnInit {
-  dairyRecords: Dairy[] = [];
-  selectedDairy: Dairy = this.initializeDairy();
-  filteredDairy: Dairy[] = [];
-  searchTerm: string = '';
-  isFilterDropdownOpen = false;
-
-  // Modal states
+  dairies: Animal[] = [];
+  filteredDairies: Animal[] = [];
+  selectedAnimalIds: number[] = [];
+  selectedDairy: any = this.initAnimal();
+  searchTerm = '';
+  searchCode = '';
   showAddModal = false;
   showEditModal = false;
   showDeleteModal = false;
-  showRecordMilkModal = false;
+  isFilterDropdownOpen = false;
 
-  constructor(private dairyService: DairyService, private elementRef: ElementRef) { }
+  constructor(private dairyService: DairyService) {}
 
   ngOnInit(): void {
-    this.loadDairyRecords();
+    this.loadDairies();
   }
 
-  initializeDairy(): Dairy {
-    return {
-      code: '',
-      date: '',
-      morningQuantity: 0,
-      eveningQuantity: 0,
-      totalQuantity: 0,
-      notes: ''
-    };
-  }
+  genderLabels: { [key: number]: string } = {
+    1: 'Female',
+    0: 'Male'
+  };
 
-  loadDairyRecords(): void {
-    this.dairyService.getAllDairyRecords().subscribe({
+  loadDairies(): void {
+    this.dairyService.getDairies().subscribe({
       next: (data) => {
-        this.dairyRecords = data;
-        this.filteredDairy = [...this.dairyRecords];
+        this.dairies = data.map(a => ({
+          ...a,
+          id: Number(a.id),
+          gender: Number(a.gender),
+          animalType: Number(a.animalType),
+          weightDate: a.weightDate?.split('T')[0] ?? '',
+          dateOfBirth: a.dateOfBirth?.split('T')[0] ?? '',
+            milk: a.milk ?? 0,
+          fatPercentage: a.fatPercentage ?? 0,
+         statuForitification: a.statuForitification ?? 0,
+         dateFertilization: a.dateFertilization ?? '',
+         expectedDate: a.expectedDate ?? ''
+        }));
+        this.filteredDairies = [...this.dairies];
       },
-      error: (error: Error) => {
-        console.error('Error loading dairy records', error);
-      }
+      error: err => console.error('Error loading dairies', err)
     });
   }
 
-  performSearch(): void {
-    this.filteredDairy = this.dairyRecords.filter(record =>
-      record.code.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      record.date.includes(this.searchTerm)
-    );
-  }
-
-  toggleFilterDropdown(event: Event): void {
-    this.isFilterDropdownOpen = !this.isFilterDropdownOpen;
-    event.stopPropagation(); // Prevent document click from immediately closing it
-  }
-
-  @HostListener('document:click', ['$event'])
-  onClick(event: Event): void {
-    // Close the filter dropdown if the click is outside its container
-    if (!this.elementRef.nativeElement.querySelector('.filter-dropdown-container')?.contains(event.target)) {
-      this.isFilterDropdownOpen = false;
-    }
-  }
-
-  applyFilter(filterType: string): void {
-    console.log(`Applying filter: ${filterType}`);
-    this.isFilterDropdownOpen = false;
-
-    if (filterType === 'herdNumber') {
-      this.filteredDairy = this.dairyRecords.filter(record => record.herdNumber !== null && record.herdNumber !== undefined);
-    } else if (filterType === 'weight') {
-      this.filteredDairy = this.dairyRecords.filter(record => record.weight !== null && record.weight !== undefined);
-    } else if (filterType === 'type') {
-      this.filteredDairy = this.dairyRecords.filter(record => record.type !== null && record.type !== undefined && record.type !== '');
-    }
+  initAnimal(): any {
+    return {
+      id: 0,
+      code: '',
+      noFamily: '',
+      animalType: 1,
+      weight: 0,
+      weightDate: '',
+      description: '',
+      gender: 0,
+      dateOfBirth: '',
+      milk: 0,
+      fatPercentage: 0,
+      statuForitification: 0,
+      dateFertilization: '',
+      expectedDate: ''
+    };
   }
 
   openAddModal(): void {
-    this.selectedDairy = this.initializeDairy();
+    this.selectedDairy = this.initAnimal();
     this.showAddModal = true;
   }
 
-  openEditModal(dairy: Dairy | null): void {
-    if (dairy) {
-      this.selectedDairy = { ...dairy };
-    } else {
-      this.selectedDairy = this.initializeDairy();
-    }
+  openEditModal(animal: Animal | null): void {
+    this.selectedDairy = animal ? { ...animal } : this.initAnimal();
     this.showEditModal = true;
   }
 
   openDeleteModal(): void {
-    this.selectedDairy = this.initializeDairy();
     this.showDeleteModal = true;
   }
 
-  openRecordMilkModal(): void {
-    this.selectedDairy = this.initializeDairy();
-    this.showRecordMilkModal = true;
-  }
-
-  closeAllModals(): void {
+  closeModals(): void {
     this.showAddModal = false;
     this.showEditModal = false;
     this.showDeleteModal = false;
-    this.showRecordMilkModal = false;
-    this.selectedDairy = this.initializeDairy();
   }
 
-  submitAddDairy(): void {
-    this.selectedDairy.totalQuantity = this.selectedDairy.morningQuantity + this.selectedDairy.eveningQuantity;
-    this.dairyService.createDairyRecord(this.selectedDairy).subscribe({
-      next: (newRecord) => {
-        console.log('Dairy record added successfully', newRecord);
-        this.loadDairyRecords();
-    this.closeAllModals();
+  // ✅ إضافة Dairy جديد
+addDairy(): void {
+  const dairyData = {
+    code: this.selectedDairy.code, // ← مهم جداً
+    milk: this.selectedDairy.milk,
+    fatPercentage: this.selectedDairy.fatPercentage
+  };
+
+  this.dairyService.addDairy(dairyData).subscribe({
+    next: () => {
+      this.loadDairies();
+      this.closeModals();
+    },
+    error: err => console.error('Error adding dairy', err)
+  });
+}
+
+  updateDairy(): void {
+    this.dairyService.updateDairy(this.selectedDairy).subscribe({
+      next: () => {
+        this.loadDairies();
+        this.closeModals();
       },
-      error: (error: Error) => {
-        console.error('Error adding dairy record:', error);
-        alert(`Failed to add dairy record: ${error.message || 'Unknown error'}`);
-      }
+      error: err => console.error('Error updating dairy', err)
     });
   }
 
-  submitUpdateDairy(): void {
-    this.selectedDairy.totalQuantity = this.selectedDairy.morningQuantity + this.selectedDairy.eveningQuantity;
-    this.dairyService.updateDairyRecord(this.selectedDairy).subscribe({
-      next: (updatedRecord) => {
-        console.log('Dairy record updated successfully', updatedRecord);
-        this.loadDairyRecords();
-    this.closeAllModals();
+  deleteDairy(id: number): void {
+    this.dairyService.deleteDairy(id).subscribe({
+      next: () => {
+        this.loadDairies();
+        this.closeModals();
       },
-      error: (error: Error) => {
-        console.error('Error updating dairy record:', error);
-        alert(`Failed to update dairy record: ${error.message || 'Unknown error'}`);
-      }
+      error: err => console.error('Error deleting dairy', err)
     });
   }
 
-
-
-  submitRecordMilkProduction(): void {
-    this.selectedDairy.totalQuantity = this.selectedDairy.morningQuantity + this.selectedDairy.eveningQuantity;
-    console.log('Submitting milk production record:', this.selectedDairy);
-    this.closeAllModals();
-    alert('Milk production record saved!');
+  toggleAnimalSelection(id: number): void {
+    if (this.selectedAnimalIds.includes(id)) {
+      this.selectedAnimalIds = this.selectedAnimalIds.filter(i => i !== id);
+    } else {
+      this.selectedAnimalIds.push(id);
+    }
   }
 
-  confirmDelete(): void {
-    if (this.selectedDairy.id) {
-      this.dairyService.deleteDairyRecord(this.selectedDairy.id).subscribe({
-        next: () => {
-          console.log('Dairy record deleted successfully');
-          this.loadDairyRecords();
-          this.closeAllModals();
+  toggleAllAnimalSelections(event: Event): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    this.selectedAnimalIds = checked ? this.filteredDairies.map(a => a.id!) : [];
+  }
+
+  confirmDeleteDairies(): void {
+    if (this.selectedAnimalIds.length === 0) {
+      alert('اختر حيوانًا أو أكثر للحذف.');
+      return;
+    }
+
+    const deletes = this.selectedAnimalIds.map(id => this.dairyService.deleteDairy(id));
+    forkJoin(deletes).subscribe({
+      next: () => {
+        this.loadDairies();
+        this.selectedAnimalIds = [];
+        this.closeModals();
+      },
+      error: err => console.error('حدث خطأ أثناء حذف الأبقار:', err)
+    });
+  }
+
+  toggleFilterDropdown(): void {
+    this.isFilterDropdownOpen = !this.isFilterDropdownOpen;
+  }
+
+  applyFilter(type: 'herdNumber' | 'gender' | 'weight' |'type'| 'all'): void {
+    this.isFilterDropdownOpen = false;
+
+    if (type === 'all') {
+      this.filteredDairies = [...this.dairies];
+      return;
+    }
+
+    this.filteredDairies = this.dairies.filter(animal => {
+      switch (type) {
+        case 'herdNumber':
+          return !!animal.noFamily;
+        case 'weight':
+          return animal.weight !== null && animal.weight !== undefined;
+        case 'gender':
+          return animal.gender !== null && animal.gender !== undefined;
+        default:
+          return true;
+      }
+    });
+
+    this.searchDairies();
+  }
+
+  searchDairies(): void {
+    if (!this.searchTerm.trim()) {
+      this.filteredDairies = [...this.dairies];
+      return;
+    }
+
+    const searchLower = this.searchTerm.toLowerCase();
+    this.filteredDairies = this.dairies.filter(a =>
+      a.code.toLowerCase().includes(searchLower) ||
+      a.noFamily.toLowerCase().includes(searchLower) ||
+      a.description.toLowerCase().includes(searchLower) ||
+      a.weight.toString().includes(searchLower)
+    );
+  }
+
+  findAnimalByCode(): void {
+    if (!this.searchCode.trim()) return;
+
+    let found = this.filteredDairies.find(a =>
+      a.code.toLowerCase() === this.searchCode.toLowerCase()
+    );
+
+    if (!found) {
+      this.dairyService.getDairyById(+this.searchCode).subscribe({
+        next: (animal) => {
+          if (!this.filteredDairies.some(a => a.id === animal.id)) {
+            this.filteredDairies.push(animal);
+          }
+          this.selectedDairy = { ...animal };
         },
-        error: (error: Error) => {
-          console.error('Error deleting dairy record:', error);
-          alert(`Failed to delete dairy record: ${error.message || 'Unknown error'}`);
+        error: err => {
+          console.error('Error fetching dairy:', err);
+          this.selectedDairy = this.initAnimal();
         }
       });
+    } else {
+      this.selectedDairy = { ...found };
     }
   }
 }
