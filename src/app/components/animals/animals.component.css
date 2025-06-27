@@ -5,6 +5,12 @@
   -webkit-font-smoothing: Roboto;
   box-sizing: border-box;
 }
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+/* Apply Roboto font to all elements in the dashboard */
+*{
+  font-family: 'Roboto', sans-serif;
+}
 
 html, body {
   margin: 0px;

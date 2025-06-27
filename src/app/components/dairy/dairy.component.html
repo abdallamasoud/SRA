@@ -55,7 +55,16 @@
     <table>
       <thead>
         <tr>
-          <th><input type="checkbox"></th>
+        <th>
+            <input
+              type="checkbox"
+              [checked]="
+                selectedAnimalIds.length === filteredDairies.length &&
+                filteredDairies.length > 0
+              "
+              (change)="toggleAllAnimalSelections($event)"
+            />
+          </th>
           <th>Code</th>
           <th>Type</th>
           <th>Herd Number</th>
@@ -71,7 +80,14 @@
       </thead>
       <tbody>
         <tr *ngFor="let record of filteredDairies">
-          <td><input type="checkbox"></td>
+             <td>
+            <input
+              type="checkbox"
+              [checked]="selectedAnimalIds.includes(record.id!)"
+              (click)="$event.stopPropagation()"
+              (change)="toggleAnimalSelection(record.id!)"
+            />
+          </td>
           <td>{{ record.code }}</td>
           <td>{{ record.type }}</td>
           <td>{{ record.noFamily }}</td>
@@ -103,7 +119,7 @@
     </div>
 
     <!-- ✅ البحث عن الحيوان بالكود -->
-    <div *ngIf="!selectedDairy?.code" class="form-group">
+    <div *ngIf="!selectedDairy?.code"  class="form-group show-modal ">
       <label class="text-wrapper-6">Code</label>
       <input
         type="text"

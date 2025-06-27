@@ -8,6 +8,13 @@
   --text-light: #f8f9fa;
   --text-muted: #adb5bd;
 }
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+/* Apply Roboto font to all elements in the dashboard */
+*{
+  font-family: 'Roboto', sans-serif;
+}
+
 
 .layout-container {
   display: flex;

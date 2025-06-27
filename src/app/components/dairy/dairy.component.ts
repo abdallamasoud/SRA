@@ -224,6 +224,7 @@ addDairy(): void {
       });
     } else {
       this.selectedDairy = { ...found };
+      this.searchCode='';
     }
   }
 }

@@ -1,10 +1,11 @@
 /* General Styles */
-@import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
 
-* {
-  -webkit-font-smoothing: Roboto;
-  box-sizing: border-box;
+/* Apply Roboto font to all elements in the dashboard */
+*{
+  font-family: 'Roboto', sans-serif;
 }
+
 
 html,
 body {

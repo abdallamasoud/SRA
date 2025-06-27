@@ -4,6 +4,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { SharedModule } from './shared/shared.module';
+import { NgChartsModule } from 'ng2-charts';
+import { Chart, registerables } from 'chart.js';
+
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -43,6 +46,7 @@ import { ReportComponent } from './components/reports/reports.component';
     DashboardComponent,
     ReportComponent ,
 
+
     NewbornsComponent,
     VaccineComponent,
     LoginComponent,
@@ -60,6 +64,7 @@ import { ReportComponent } from './components/reports/reports.component';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+   NgChartsModule,
 
 
     SharedModule,
