@@ -435,7 +435,7 @@ a {
   top: 100%;
   left: 0;
   background: white;
-  border-radius: 4px;
+  border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 8px 0;
   min-width: 150px;
@@ -445,7 +445,8 @@ a {
 
 .filter-dropdown-container.active .filter-dropdown-menu {
   display: block;
-  background-color: #8bc34a;
+  background-color: #AEDF32;
+  color: #FFFFFF;
 }
 
 .filter-option {
@@ -455,6 +456,8 @@ a {
 
 .filter-option:hover {
   background-color: #f5f5f5;
+  color: #AEDF32;
+
 }
 .x {
   display: flex;
@@ -659,7 +662,7 @@ th {
 .form-group .data-filledd {
   border-radius: 16px;
   display: flex;
-  width: 437px;
+  width: 447px;
   height: 60px;
 
   justify-content: center;
@@ -669,6 +672,7 @@ th {
   border: 1px solid #ddd;
   background: rgba(128, 128, 128, 0.1);
 }
+
 
 /* Label styles */
 .text-wrapper-6 {
@@ -706,8 +710,8 @@ th {
 .form-group .data-filled:focus,
 .form-group .textarea:focus {
   outline: none;
-  border-color: #4a90e2;
-  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+  /* border-color: #4a90e2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2); */
 }
 
 /* Form grid layout */
@@ -715,7 +719,7 @@ th {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
-  width: 100%;
+  width: 85%;
   /* padding: 20px; */
 }
 /* .form-grid{
@@ -762,12 +766,12 @@ radio-group {
 .show-data-btn {
   width: 200px;
   height: 60px;
-  background-color: #32cd32;
+  background-color:#AEDF32;
   color: #ffffff;
 
   padding: 12px 20px;
   border-radius: 20px;
-  font-size: 14px;
+  font-size: 20px;
   font-weight: 500;
   cursor: pointer;
   border: none;
@@ -775,11 +779,11 @@ radio-group {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.show-data-btn:hover {
+/* .show-data-btn:hover {
   background-color: #455a64;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   transform: translateY(-2px);
-}
+} */
 
 /* Delete Modal */
 .delete-modal {

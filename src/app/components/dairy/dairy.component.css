@@ -37,8 +37,8 @@ a {
   position: absolute;
     width: 80%;
     height:6%;
-    top:11%;
-    left: 18%;
+    top:10%;
+    left: 15%;
     background-color: transparent;
     border-radius: 16px;
     display: flex;
@@ -64,7 +64,8 @@ a {
   border: none !important;
   transition: all 0.3s ease;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) !important;
-  min-width: 150px;
+  min-width: 175px;
+  height: 50px;
 }
 
 .frame-9:hover {
@@ -410,7 +411,7 @@ a {
   padding: 10px 12px 10px 40px;
   border-radius: 40px;
   width: 400px;
-  height: 45px;
+  height: 50px;
   border: 1px solid #ddd;
   background: rgba(92, 179, 56, 0.25);
   font-size: 14px;
@@ -436,7 +437,7 @@ a {
   top: 100%;
   left: 0;
   background: white;
-  border-radius: 4px;
+  border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   padding: 8px 0;
   min-width: 150px;
@@ -446,7 +447,8 @@ a {
 
 .filter-dropdown-container.active .filter-dropdown-menu {
   display: block;
-    background-color: #8bc34a;
+    background-color: #AEDF32;
+    color: #FFFFFF;
 }
 
 .filter-option {
@@ -456,6 +458,7 @@ a {
 
 .filter-option:hover {
   background-color: #f5f5f5;
+  color: #AEDF32;
 }
 .x{
   display: flex;
@@ -469,6 +472,7 @@ a {
 .table-container {
   position: absolute;
   top: 18%;
+  left: 15%;
   background-color: #fff;
   border-radius: 20px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
@@ -703,7 +707,9 @@ th {
   justify-content: space-between;
   gap: 10px;
   position: absolute;
-top: 12%;
+top: 30%;
+left:40%;
+position: fixed;
 
 }
 

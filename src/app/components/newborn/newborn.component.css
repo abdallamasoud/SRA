@@ -429,7 +429,7 @@ a {
   top: 100%;
   left: 0;
   background: white;
-  border-radius: 4px;
+  border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   padding: 8px 0;
   min-width: 150px;
@@ -439,7 +439,8 @@ a {
 
 .filter-dropdown-container.active .filter-dropdown-menu {
   display: block;
-    background-color: #8bc34a;
+    background-color: #AEDF32;
+    color: #FFFFFF;
 
 }
 
@@ -450,6 +451,7 @@ a {
 
 .filter-option:hover {
   background-color: #f5f5f5;
+  color: #AEDF32;
 }
 .x{
   display: flex;
@@ -511,7 +513,7 @@ th {
   max-height: 90vh;
 
   position: fixed;
-  top: 10%;
+  top: 21%;
   left: 35%;
   /* box-sizing: border-box; */
 }

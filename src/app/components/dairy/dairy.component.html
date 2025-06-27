@@ -91,98 +91,113 @@
 
 
 
-  <!-- Edit Modal -->
   <div class="choose-update-milch" *ngIf="showEditModal">
-    <div class="edit-modal ">
-      <button class="close-btn" (click)="closeModals()"><img src="/assets/images/icons/cross.png"  alt=""></button>
-      <div class="frame-5">
-        <img class="modal-icon" src="/assets/images/icons/update.png" alt="">
-        <div class="text-wrapper-5">Updating Data in Dairy</div>
-      </div>
-      <form (ngSubmit)="updateDairy()">
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="editCode" class="text-wrapper-6" >Code</label>
-            <input type="text" id="editCode" class="data-filled" placeholder="Code" [(ngModel)]="selectedDairy.code" name="editCode" required>
-          </div>
+  <div class="edit-modal">
+    <button class="close-btn" (click)="closeModals()">
+      <img src="/assets/images/icons/cross.png" alt="" />
+    </button>
 
-          <div class="form-group">
-            <label for="editType" class="text-wrapper-6">Type</label>
-            <div class="radio-group">
-              <div class="raddiv">
-                <input type="radio" class="radio" name="editType" value="Dairy" [(ngModel)]="selectedDairy.type">
-                <label>Dairy</label>
-              </div>
-              <div class="raddiv">
-                <input type="radio" class="radio" name="editType" value="Drying" [(ngModel)]="selectedDairy.type">
-                <label>Drying</label>
-              </div>
-            </div>
-          </div>
-          <!-- <div class="form-group">
-            <label for="editMadeArtificialInsemination" class="text-wrapper-6">Made Artificial Insemination</label>
-            <div class="radio-group">
-              <div class="raddiv">
-                <input type="radio" class="radio" name="madeArtificialInsemination" value="Yes" [(ngModel)]="selectedDairy.madeArtificialInsemination">
-                <label>Yes</label>
-              </div>
-              <div class="raddiv">
-                <input type="radio" class="radio" name="madeArtificialInsemination" value="No" [(ngModel)]="selectedDairy.madeArtificialInsemination">
-                <label>No</label>
-              </div>
-            </div>
-          </div> -->
-          <div class="form-group">
-            <label for="editWeight" class="text-wrapper-6">Weight</label>
-            <input type="number" id="editWeight" class="data-filled" placeholder="weight" [(ngModel)]="selectedDairy.weight" name="editWeight">
-          </div>
-          <div class="form-group">
-            <label for="editDateOfArtificialInsemination" class="text-wrapper-6">DateFertilization</label>
-            <input type="date" id="editDateOfArtificialInsemination" class="data-filled" placeholder="DD/MM/YY" [(ngModel)]="selectedDairy.dateOfArtificialInsemination" name="editDateOfArtificialInsemination">
-          </div>
-          <div class="form-group">
-            <label for="editDateOfWeight" class="text-wrapper-6">Date of weight</label>
-            <input type="date" id="editDateOfWeight" class="data-filled" placeholder="DD/MM/YY" [(ngModel)]="selectedDairy.weightDate" name="editDateOfWeight">
-          </div>
-          <div class="form-group">
-            <label for="editStatueOfInsemination" class="text-wrapper-6">statuForitification</label>
-            <div class="radio-group">
-              <div class="raddiv">
-                <input type="radio" class="radio" name="statueOfInsemination" value="Pregnant" [(ngModel)]="selectedDairy.statueFortification">
-                <label>Pregnant</label>
-              </div>
-              <div class="raddiv">
-                <input type="radio" class="radio" name="statueOfInsemination" value="Re-Inseminate" [(ngModel)]="selectedDairy.statueFortification">
-                <label>Re-Inseminate</label>
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="editHerdNumber" class="text-wrapper-6">Herd Number</label>
-            <input type="text" id="editHerdNumber" class="data-filled" placeholder="Herd Number" [(ngModel)]="selectedDairy.herdNumber" name="editHerdNumber">
-          </div>
-          <div class="form-group">
-            <label for="editHealthcareNote" class="text-wrapper-6">Healthcare note</label>
-            <textarea id="editHealthcareNote" class="textarea" placeholder="Health Care" [(ngModel)]="selectedDairy.healthcare" name="editHealthcareNote"></textarea>
-          </div>
-          <div class="form-group">
-            <label for="editExpectedDateOfCalving" class="text-wrapper-6">ExpectedDate</label>
-            <input type="date" id="editExpectedDateOfCalving" class="data-filled" placeholder="DD/MM/YYYY" [(ngModel)]="selectedDairy.expectedDateOfCalving" name="editExpectedDateOfCalving">
-          </div>
-      <div class=" change">  <div class="form-group">
-            <label for="editTakenVaccinations" class="text-wrapper-6">Taken Vaccinations</label>
-            <input type="text" id="editTakenVaccinations" class="data-filled" placeholder="Taken Vaccinations" [(ngModel)]="selectedDairy.takenVaccinations" name="editTakenVaccinations">
-          </div></div>
-        </div>
-        <div class="modal-actions">
-          <button type="submit" class="editsave-btn">
-            <img class="btn-icon" src="/assets/images/icons/save.png" alt="">
-            Save Updates
-          </button>
-        </div>
-      </form>
+    <div class="frame-5">
+      <img class="modal-icon" src="/assets/images/icons/update.png" alt="" />
+      <div class="text-wrapper-5">Updating Data in Dairy</div>
     </div>
+
+    <!-- ✅ البحث عن الحيوان بالكود -->
+    <div *ngIf="!selectedDairy?.code" class="form-group">
+      <label class="text-wrapper-6">Code</label>
+      <input
+        type="text"
+        class="data-filled"
+        placeholder="Code"
+        [(ngModel)]="searchCode"
+        (keyup.enter)="findAnimalByCode()"
+      />
+      <button class="frame-9 modal-save-btn" (click)="findAnimalByCode()">
+        <div class="btntext">ShowData</div>
+      </button>
+    </div>
+
+    <!-- ✅ عرض النموذج للتعديل بعد العثور على الحيوان -->
+    <form *ngIf="selectedDairy?.code" (ngSubmit)="updateDairy()">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="editCode" class="text-wrapper-6">Code</label>
+          <input type="text" id="editCode" class="data-filled" placeholder="Code" [(ngModel)]="selectedDairy.code" name="editCode" required />
+        </div>
+
+        <div class="form-group">
+          <label for="editType" class="text-wrapper-6">Type</label>
+          <div class="radio-group">
+            <div class="raddiv">
+              <input type="radio" class="radio" name="editType" value="Dairy" [(ngModel)]="selectedDairy.type" />
+              <label>Dairy</label>
+            </div>
+            <div class="raddiv">
+              <input type="radio" class="radio" name="editType" value="Drying" [(ngModel)]="selectedDairy.type" />
+              <label>Drying</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="editWeight" class="text-wrapper-6">Weight</label>
+          <input type="number" id="editWeight" class="data-filled" placeholder="Weight" [(ngModel)]="selectedDairy.weight" name="editWeight" />
+        </div>
+
+        <div class="form-group">
+          <label for="editDateOfArtificialInsemination" class="text-wrapper-6">DateFertilization</label>
+          <input type="date" id="editDateOfArtificialInsemination" class="data-filled" placeholder="DD/MM/YY" [(ngModel)]="selectedDairy.dateOfArtificialInsemination" name="editDateOfArtificialInsemination" />
+        </div>
+
+        <div class="form-group">
+          <label for="editDateOfWeight" class="text-wrapper-6">Date of weight</label>
+          <input type="date" id="editDateOfWeight" class="data-filled" placeholder="DD/MM/YY" [(ngModel)]="selectedDairy.weightDate" name="editDateOfWeight" />
+        </div>
+
+        <div class="form-group">
+          <label for="editStatueOfInsemination" class="text-wrapper-6">statuForitification</label>
+          <div class="radio-group">
+            <div class="raddiv">
+              <input type="radio" class="radio" name="statueOfInsemination" value="Pregnant" [(ngModel)]="selectedDairy.statueFortification" />
+              <label>Pregnant</label>
+            </div>
+            <div class="raddiv">
+              <input type="radio" class="radio" name="statueOfInsemination" value="Re-Inseminate" [(ngModel)]="selectedDairy.statueFortification" />
+              <label>Re-Inseminate</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="editHerdNumber" class="text-wrapper-6">Herd Number</label>
+          <input type="text" id="editHerdNumber" class="data-filled" placeholder="Herd Number" [(ngModel)]="selectedDairy.herdNumber" name="editHerdNumber" />
+        </div>
+
+        <div class="form-group">
+          <label for="editHealthcareNote" class="text-wrapper-6">Healthcare note</label>
+          <textarea id="editHealthcareNote" class="textarea" placeholder="Health Care" [(ngModel)]="selectedDairy.healthcare" name="editHealthcareNote"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="editExpectedDateOfCalving" class="text-wrapper-6">ExpectedDate</label>
+          <input type="date" id="editExpectedDateOfCalving" class="data-filled" placeholder="DD/MM/YYYY" [(ngModel)]="selectedDairy.expectedDateOfCalving" name="editExpectedDateOfCalving" />
+        </div>
+
+        <div class="form-group">
+          <label for="editTakenVaccinations" class="text-wrapper-6">Taken Vaccinations</label>
+          <input type="text" id="editTakenVaccinations" class="data-filled" placeholder="Taken Vaccinations" [(ngModel)]="selectedDairy.takenVaccinations" name="editTakenVaccinations" />
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="submit" class="editsave-btn">
+          <img class="btn-icon" src="/assets/images/icons/save.png" alt="" />
+          Save Updates
+        </button>
+      </div>
+    </form>
   </div>
+</div>
 
   <!-- Delete Modal -->
   <div class="choose-update-milch" *ngIf="showDeleteModal">
