@@ -31,6 +31,7 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { AboutComponent } from './components/about/about.component';
 import { VaccineComponent } from './components/vaccination/vaccination.component';
 import { ReportComponent } from './components/reports/reports.component';
+import { RestpasswordComponent } from './components/auth/restpassword/restpassword.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { ReportComponent } from './components/reports/reports.component';
     ResetPasswordComponent,
     SettingsComponent,
     AboutComponent,
-    DairyComponent
+    DairyComponent,
+    RestpasswordComponent
   ],
   imports: [
       FormsModule,

@@ -16,6 +16,7 @@ import { SimpleLayoutComponent } from './simple-layout/simple-layout.component';
 import { DairyComponent } from './components/dairy/dairy.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { AboutComponent } from './components/about/about.component';
+import { RestpasswordComponent } from './components/auth/restpassword/restpassword.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -23,6 +24,7 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent, data: { isAuthPage: true } },
   { path: 'forgot-password', component: ForgotPasswordComponent, data: { isAuthPage: true } },
   { path: 'reset-password', component: ResetPasswordComponent, data: { isAuthPage: true } },
+  { path: 'restpassword', component: RestpasswordComponent, data: { isAuthPage: true } },
   {
     path: '',
     component: SimpleLayoutComponent,

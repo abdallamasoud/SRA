@@ -13,7 +13,8 @@ export class ResetPasswordComponent implements OnInit {
   isLoading = false;
   errorMessage = '';
   successMessage = '';
-  token: string = '';
+  userId: string = '';
+  code: string = '';
   showPassword = false;
   showConfirmPassword = false;
 
@@ -26,8 +27,9 @@ export class ResetPasswordComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      this.token = params['token'] || '';
-      if (!this.token) {
+      this.userId = params['userId'] || '';
+      this.code = params['code'] || '';
+      if (!this.userId || !this.code) {
         this.errorMessage = 'Invalid or missing reset token. Please request a new password reset link.';
       }
     });
@@ -58,7 +60,7 @@ export class ResetPasswordComponent implements OnInit {
       return;
     }
 
-    if (!this.token) {
+    if (!this.userId || !this.code) {
       this.errorMessage = 'Invalid or missing reset token. Please request a new password reset link.';
       return;
     }
@@ -69,7 +71,7 @@ export class ResetPasswordComponent implements OnInit {
 
     const { password } = this.resetPasswordForm.value;
 
-    this.authService.resetPassword(this.token, password).subscribe({
+    this.authService.resetPassword(this.userId, this.code, password).subscribe({
       next: () => {
         this.isLoading = false;
         this.successMessage = 'Your password has been reset successfully.';
