@@ -233,7 +233,9 @@ a {
 }
 
 .text-wrapper-6 {
+  
 
+  
   display: flex;
  flex-direction: row ;
   margin-bottom: 8px; /* From ingredient modal label */
@@ -660,6 +662,9 @@ th {
 }
 /* Label styles */
 .text-wrapper-6 {
+  position: fixed;
+  left: 37%;
+  top: 35%;
 
   display: flex;
  flex-direction: row ;
@@ -667,9 +672,9 @@ th {
   font-weight: 500; /* From ingredient modal label */
   color: #333; /* From ingredient modal label */
   font-size: 16px; /* From ingredient modal label */
-  position: static; /* Remove absolute positioning */
+  /* Remove absolute positioning */
   width: auto; /* Remove fixed width */
-  left: auto; /* Remove fixed positioning */
+   /* Remove fixed positioning */
   white-space: normal; /* Allow text to wrap */
   line-height: normal;
   /* text-align: right; */
@@ -968,8 +973,8 @@ radio-group {
   position: absolute;
     width: 50%;
     height: 23%;
-    top:16%;
-    left: 30%;
+    top:21%;
+    left: 22%;
     background-color:  #ffffff;
     border-radius: 16px;
     display: flex;

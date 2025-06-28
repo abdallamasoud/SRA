@@ -46,16 +46,46 @@ export class ForgotPasswordComponent implements OnInit {
 
     const { email } = this.forgotPasswordForm.value;
 
+    console.log('Sending forgot password request:', { email });
+
     this.authService.forgotPassword(email).subscribe({
-      next: () => {
+      next: (response) => {
+        console.log('Forgot password success:', response);
         this.isLoading = false;
-        this.successMessage = 'Password reset instructions have been sent to your email.';
+        
+        // استخدام رسالة النجاح من الباك إند أو رسالة افتراضية
+        this.successMessage = response?.message || 'تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني';
+        
         // Reset the form
         this.forgotPasswordForm.reset();
       },
       error: (error) => {
-        console.error('Forgot password error', error);
-        this.errorMessage = error.message || 'Failed to process your request. Please try again later.';
+        console.error('Forgot password error:', error);
+        console.error('Error details:', {
+          status: error.status,
+          statusText: error.statusText,
+          error: error.error,
+          message: error.message
+        });
+        
+        // للأمان: نعرض رسالة نجاح حتى للأخطاء (إلا مشاكل الاتصال)
+        let message = 'تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني';
+        let isError = false;
+        
+        if (error.status === 0) {
+          message = 'لا يمكن الاتصال بالخادم. يرجى التحقق من اتصال الإنترنت.';
+          isError = true;
+        } else if (error.status === 400) {
+          message = 'صيغة البريد الإلكتروني غير صحيحة';
+          isError = true;
+        }
+        
+        if (isError) {
+          this.errorMessage = message;
+        } else {
+          this.successMessage = message;
+        }
+        
         this.isLoading = false;
       }
     });

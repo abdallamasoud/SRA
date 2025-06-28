@@ -50,14 +50,41 @@ export class LoginComponent implements OnInit {
 
     const { email, password } = this.loginForm.value;
 
+    console.log('Sending login request:', { email });
+
     this.authService.login(email, password).subscribe({
       next: user => {
+        console.log('Login success:', user);
         this.isLoading = false;
         this.router.navigate(['/dashboard']);
       },
       error: error => {
         console.error('Login error:', error);
-        this.errorMessage = 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
+        console.error('Error details:', {
+          status: error.status,
+          statusText: error.statusText,
+          error: error.error,
+          message: error.message
+        });
+        
+        // تحسين رسائل الخطأ
+        let errorMsg = 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
+        
+        if (error.message) {
+          errorMsg = error.message;
+        } else if (error.error?.message) {
+          errorMsg = error.error.message;
+        } else if (error.status === 404) {
+          errorMsg = 'البريد الإلكتروني غير مسجل في النظام';
+        } else if (error.status === 401) {
+          errorMsg = 'كلمة المرور غير صحيحة';
+        } else if (error.status === 400) {
+          errorMsg = 'بيانات غير صحيحة';
+        } else if (error.status === 0) {
+          errorMsg = 'لا يمكن الاتصال بالخادم. يرجى التحقق من اتصال الإنترنت.';
+        }
+        
+        this.errorMessage = errorMsg;
         this.isLoading = false;
       }
     });
