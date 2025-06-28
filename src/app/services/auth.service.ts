@@ -19,6 +19,33 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login(email: string, password: string): Observable<User> {
+    // Mock login for testing when backend is not available
+    console.log('Attempting to login with:', { email, password });
+    
+    // Simulate API call delay
+    return new Observable(observer => {
+      setTimeout(() => {
+        // Simulate successful login
+        const mockResponse = {
+          token: 'mock-jwt-token-' + Date.now(),
+          roles: ['User'],
+          email: email
+        };
+        
+        const user: User = {
+          email: mockResponse.email,
+          token: mockResponse.token,
+          roles: mockResponse.roles
+        };
+        
+        localStorage.setItem(this.currentUserKey, JSON.stringify(user));
+        observer.next(user);
+        observer.complete();
+      }, 1000);
+    });
+
+    // Uncomment the following code when backend is available
+    /*
     return this.http.post<{ token: string; roles: string[]; email: string }>(
       `${this.apiUrl}/Login`,
       { email, password }
@@ -37,15 +64,44 @@ export class AuthService {
         return throwError(() => new Error('Invalid credentials'));
       })
     );
+    */
   }
 
-  register(user: User & { password: string }): Observable<User> {
+  register(user: any): Observable<User> {
+    // Mock registration for testing when backend is not available
+    console.log('Attempting to register user:', user);
+    
+    // Simulate API call delay
+    return new Observable(observer => {
+      setTimeout(() => {
+        // Simulate successful registration
+        const mockResponse = {
+          token: 'mock-jwt-token-' + Date.now(),
+          roles: ['User'],
+          email: user.email
+        };
+        
+        const newUser: User = {
+          email: mockResponse.email,
+          token: mockResponse.token,
+          roles: mockResponse.roles
+        };
+        
+        localStorage.setItem(this.currentUserKey, JSON.stringify(newUser));
+        observer.next(newUser);
+        observer.complete();
+      }, 1000);
+    });
+
+    // Uncomment the following code when backend is available
+    /*
     const requestBody = {
-      userName: user.userName || user.email.split('@')[0],
-      name: user.name || user.userName || user.email.split('@')[0],
+      userName: user.userName,
+      name: user.name,
       email: user.email,
       password: user.password,
-      roles: user.roles || ['User']
+      farmName: user.farmName,
+      role: user.role
     };
 
     return this.http.post<{ token: string; roles: string[]; email: string }>(
@@ -63,30 +119,45 @@ export class AuthService {
       }),
       catchError(err => {
         console.error('Registration failed', err);
-        return throwError(() => new Error('Registration error'));
+        let errorMessage = 'Registration failed. Please try again.';
+        
+        if (err.error?.message) {
+          errorMessage = err.error.message;
+        } else if (err.status === 400) {
+          errorMessage = 'Invalid registration data. Please check your information.';
+        } else if (err.status === 409) {
+          errorMessage = 'User already exists with this email or username.';
+        } else if (err.status === 0) {
+          errorMessage = 'Cannot connect to server. Please check your internet connection.';
+        }
+        
+        return throwError(() => new Error(errorMessage));
+      })
+    );
+    */
+  }
+
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/forget-password`, { email }).pipe(
+      catchError(error => {
+        console.error('Forgot password error', error);
+        return throwError(() => new Error('Failed to send reset email'));
       })
     );
   }
-  forgotPassword(email: string): Observable<any> {
-  return this.http.post(`${this.apiUrl}/forget-password`, { email }).pipe(
-    catchError(error => {
-      console.error('Forgot password error', error);
-      return throwError(() => new Error('Failed to send reset email'));
-    })
-  );
-}
 
-resetPassword(token: string, newPassword: string): Observable<any> {
-  return this.http.post(`${this.apiUrl}/reset-password`, {
-    token,
-    newPassword
-  }).pipe(
-    catchError(error => {
-      console.error('Reset password error', error);
-      return throwError(() => new Error('فشل في إعادة تعيين كلمة المرور'));
-    })
-  );
-}
+  resetPassword(token: string, newPassword: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reset-password`, {
+      token,
+      newPassword
+    }).pipe(
+      catchError(error => {
+        console.error('Reset password error', error);
+        return throwError(() => new Error('فشل في إعادة تعيين كلمة المرور'));
+      })
+    );
+  }
+
   logout(): void {
     localStorage.removeItem(this.currentUserKey);
   }

@@ -29,19 +29,35 @@
 
         <div class="form-group">
           <label for="name">
-            <i class="fas fa-id-card"></i> Farm Name
+            <i class="fas fa-user"></i> Full Name
           </label>
           <input
             type="text"
             id="name"
             formControlName="name"
-            placeholder="Enter your Farm name"
+            placeholder="Enter your full name"
             [ngClass]="{'invalid': registerForm.get('name')?.invalid && registerForm.get('name')?.touched}"
           >
           <div class="error-message" *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
             <span *ngIf="registerForm.get('name')?.errors?.['required']">Full name is required</span>
           </div>
         </div>
+
+      <div class="form-group">
+  <label for="farmName">
+    <i class="fas fa-tractor"></i> Farm Name
+  </label>
+  <input
+    type="text"
+    id="farmName"
+    formControlName="farmName"
+    placeholder="Enter your farm name"
+    [ngClass]="{'invalid': registerForm.get('farmName')?.invalid && registerForm.get('farmName')?.touched}"
+  >
+  <div class="error-message" *ngIf="registerForm.get('farmName')?.invalid && registerForm.get('farmName')?.touched">
+    <span *ngIf="registerForm.get('farmName')?.errors?.['required']">Farm name is required</span>
+  </div>
+</div>
 
         <div class="form-group">
           <label for="email">
@@ -87,44 +103,43 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label class="role-label">
-            <i class="fas fa-user-shield"></i> Accessibility
-          </label>
-          <div class="role-options">
-            <div class="role-option">
-              <input
-                type="radio"
-                id="owner"
-                formControlName="role"
-                value="Owner"
-              >
-              <label for="owner">Owner</label>
-            </div>
+      <div class="form-group">
+  <label class="role-label">
+    <i class="fas fa-user-shield"></i> Accessibility
+  </label>
+  <div class="role-options">
+    <div class="role-option">
+      <input
+        type="radio"
+        id="owner"
+        formControlName="role"
+        [value]="0"
+      >
+      <label for="owner">Owner</label>
+    </div>
 
-            <div class="role-option">
-              <input
-                type="radio"
-                id="engineer"
-                formControlName="role"
-                value="Engineer"
-              >
-              <label for="engineer">Engineer</label>
-            </div>
-              <div class="role-option">
-              <input
-                type="radio"
-                id="farmer"
-                formControlName="role"
-                value="Farmer"
-              >
-              <label for="farmer">Farmer</label>
-            </div>
+    <div class="role-option">
+      <input
+        type="radio"
+        id="engineer"
+        formControlName="role"
+        [value]="1"
+      >
+      <label for="engineer">Engineer</label>
+    </div>
 
+    <div class="role-option">
+      <input
+        type="radio"
+        id="farmer"
+        formControlName="role"
+        [value]="2"
+      >
+      <label for="farmer">Farmer</label>
+    </div>
+  </div>
+</div>
 
-          </div>
-
-        </div>
 
 
         <div class="error-message main-error" *ngIf="errorMessage">
