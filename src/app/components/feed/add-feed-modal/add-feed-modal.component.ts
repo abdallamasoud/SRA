@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
-import { FeedService, Ingredient } from '../../../services/feed.service';
+import { FeedService, Ingredient, Category } from '../../../services/feed.service';
 import { CustomDropdownComponent } from '../../../shared/custom-dropdown/custom-dropdown.component';
 
 @Component({
@@ -15,6 +15,7 @@ export class AddFeedModalComponent implements OnInit {
 
   feedForm!: FormGroup;
   ingredients: Ingredient[] = [];
+  categories: Category[] = [];
   selectedIngredientId: number | null = null;
   isLoading = false;
   errorMessage = '';
@@ -52,12 +53,14 @@ export class AddFeedModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
+    this.loadCategories();
     this.loadIngredients();
   }
 
   initForm(): void {
     this.feedForm = this.fb.group({
       feedName: ['', Validators.required],
+      categoryId: [null, Validators.required],
       growthRate: ['', Validators.required],
       weight: ['', [Validators.required, Validators.min(0)]],
       gender: [null, Validators.required],
@@ -68,6 +71,41 @@ export class AddFeedModalComponent implements OnInit {
       tdnPercentage: [''],
       ingredientType: [null, Validators.required],
       ingredientPrice: this.fb.array([])
+    });
+
+    this.feedForm.get('ingredientType')?.valueChanges.subscribe(selectedType => {
+      this.filterIngredientsByType(selectedType);
+    });
+  }
+
+  loadCategories(): void {
+    this.isLoading = true;
+    console.log('Loading categories...');
+    this.feedService.getCategories().subscribe({
+      next: (data) => {
+        console.log('Categories loaded successfully:', data);
+        this.categories = data;
+        console.log('Categories array after assignment:', this.categories);
+        console.log('Categories length:', this.categories.length);
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading categories', error);
+        this.errorMessage = 'Failed to load categories. Please try again.';
+        this.isLoading = false;
+        
+        // Fallback data for categories
+        this.categories = [
+          { id: 2, name: 'تسمين 100 ل 250' },
+          { id: 3, name: 'تسمين 250 ل 450' },
+          { id: 4, name: 'حلاب اقل من 6' },
+          { id: 5, name: 'حلاب من 6 ل 10' },
+          { id: 6, name: 'حلاب اعلي من 10' },
+          { id: 7, name: 'مواليد' }
+        ];
+        console.log('Using fallback categories:', this.categories);
+        console.log('Fallback categories length:', this.categories.length);
+      }
     });
   }
 
@@ -83,14 +121,40 @@ export class AddFeedModalComponent implements OnInit {
         this.errorMessage = 'Failed to load ingredients. Please try again.';
         this.isLoading = false;
 
-        // For demo purposes, add some mock ingredients if the API fails
         this.ingredients = [
-          { id: 1, name: 'Corn' },
-          { id: 2, name: 'Wheat' },
-          { id: 3, name: 'Barley' },
-          { id: 4, name: 'Soybean Meal' },
-          { id: 5, name: 'Vitamins' }
+          { id: 1, name: 'Corn', type: 'Grain' },
+          { id: 2, name: 'Wheat', type: 'Grain' },
+          { id: 3, name: 'Barley', type: 'Grain' },
+          { id: 4, name: 'Soybean Meal', type: 'Protein Source' },
+          { id: 5, name: 'Fish Meal', type: 'Protein Source' },
+          { id: 6, name: 'Vitamins', type: 'Mineral' },
+          { id: 7, name: 'Minerals', type: 'Mineral' }
         ];
+      }
+    });
+  }
+
+  filterIngredientsByType(selectedType: number): void {
+    if (!selectedType) {
+      this.loadIngredients();
+      return;
+    }
+
+    const typeName = this.ingredientTypesOptions.find(type => type.id === selectedType)?.name;
+    if (!typeName) return;
+
+    this.isLoading = true;
+    this.feedService.getIngredientsByType(typeName).subscribe({
+      next: (data) => {
+        this.ingredients = data;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error filtering ingredients', error);
+        this.ingredients = this.ingredients.filter(ingredient => 
+          ingredient.type === typeName
+        );
+        this.isLoading = false;
       }
     });
   }
@@ -124,7 +188,6 @@ export class AddFeedModalComponent implements OnInit {
       return;
     }
 
-    // Check if this ingredient is already added
     const ingredientPriceArray = this.feedForm.get('ingredientPrice') as FormArray;
     const alreadyExists = ingredientPriceArray.controls.some(
       control => control.get('id')?.value === this.selectedIngredientId
@@ -135,7 +198,6 @@ export class AddFeedModalComponent implements OnInit {
       return;
     }
 
-    // Add the ingredient to the form
     ingredientPriceArray.push(
       this.fb.group({
         id: [this.selectedIngredientId, Validators.required],
@@ -143,7 +205,6 @@ export class AddFeedModalComponent implements OnInit {
       })
     );
 
-    // Reset the input fields
     if (this.ingredientDropdown) {
       this.ingredientDropdown.selectedId = null;
       this.selectedIngredientId = null;
@@ -203,5 +264,9 @@ export class AddFeedModalComponent implements OnInit {
         this.markFormGroupTouched(control);
       }
     });
+  }
+
+  getCategoryNames(): string {
+    return this.categories.map(c => c.name).join(', ');
   }
 }

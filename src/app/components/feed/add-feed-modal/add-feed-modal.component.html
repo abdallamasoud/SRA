@@ -26,6 +26,19 @@
             </div>
           </div>
 
+          <!-- Category Dropdown (Dynamic from backend) -->
+          <div class="form-group">
+            <label for="categoryId">Category</label>
+            <app-custom-dropdown
+              [options]="categories"
+              [placeholder]="'Select Category'"
+              (selectionChange)="onDropdownSelectionChange('categoryId', $event)"
+            ></app-custom-dropdown>
+            <div class="error-message" *ngIf="feedForm.get('categoryId')?.invalid && feedForm.get('categoryId')?.touched">
+              Category is required
+            </div>
+          </div>
+
           <!-- Growth rate -->
           <div class="form-group">
             <label for="growthRate">Growth rate</label>
@@ -54,19 +67,6 @@
             <div class="error-message" *ngIf="feedForm.get('weight')?.invalid && feedForm.get('weight')?.touched">
               <span *ngIf="feedForm.get('weight')?.errors?.['required']">Weight is required</span>
               <span *ngIf="feedForm.get('weight')?.errors?.['min']">Weight must be positive</span>
-            </div>
-          </div>
-
-          <!-- Gender Dropdown -->
-          <div class="form-group">
-            <label>Gender</label>
-            <app-custom-dropdown
-              [options]="genderOptions"
-              [placeholder]="'Gender'"
-              (selectionChange)="onDropdownSelectionChange('gender', $event)"
-            ></app-custom-dropdown>
-            <div class="error-message" *ngIf="feedForm.get('gender')?.invalid && feedForm.get('gender')?.touched">
-              Gender is required
             </div>
           </div>
         </div>
@@ -137,7 +137,7 @@
           </div>
         </div>
 
-        <!-- Ingredients Section -->
+        <!-- Ingredients Section (Dynamic from backend) -->
         <div class="ingredients-section">
           <div class="form-row-grid ingredient-selection-row">
             <!-- Ingredient type Dropdown -->
@@ -152,7 +152,7 @@
               </div>
             </div>
 
-            <!-- Ingredients Dropdown -->
+            <!-- Ingredients Dropdown (Dynamic from backend, filtered by type) -->
             <div class="form-group">
               <app-custom-dropdown
                 #ingredientDropdown

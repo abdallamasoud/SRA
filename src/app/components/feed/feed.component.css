@@ -618,10 +618,35 @@ th {
 
 .form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 20px;
   width: 100%;
 }
+
+.form-group {
+  flex: 1 1 0;
+  min-width: 120px;
+  display: flex;
+  flex-direction: column;
+}
+
+.data-filled {
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  padding: 0 12px;
+  font-size: 15px;
+  background: #f7f7f7;
+  margin-top: 4px;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: #333;
+}
+
 .form-flex {
   display: flex;
   flex-direction: row;
@@ -718,10 +743,9 @@ th {
 /* Form grid layout */
 .form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 20px;
-  width: 85%;
-  /* padding: 20px; */
+  width: 100%;
 }
 /* .form-grid{
   display: flex;
@@ -765,8 +789,11 @@ radio-group {
 }
 
 .show-data-btn {
+  position: fixed;
+  left:58%;
+
   width: 200px;
-  height: 60px;
+  height: 62px;
   background-color:#AEDF32;
   color: #ffffff;
 
