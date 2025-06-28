@@ -18,10 +18,9 @@ export class RegisterComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    // Redirect if already logged in
     if (this.authService.isLoggedIn()) {
       this.router.navigate(['/dashboard']);
       return;
@@ -36,13 +35,13 @@ export class RegisterComponent implements OnInit {
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      role: ['Owner', Validators.required] // Default to 'Owner'
+      farmName: ['', Validators.required],
+      role: [0, Validators.required] // رقم: 0 = Owner
     });
   }
 
   onSubmit(): void {
     if (this.registerForm.invalid) {
-      // Mark all fields as touched to trigger validation messages
       Object.keys(this.registerForm.controls).forEach(key => {
         const control = this.registerForm.get(key);
         control?.markAsTouched();
@@ -55,13 +54,13 @@ export class RegisterComponent implements OnInit {
 
     const formValues = this.registerForm.value;
 
-    // Create user object with the correct format
-    const newUser: User = {
+    const newUser = {
       userName: formValues.userName,
       name: formValues.name,
       email: formValues.email,
       password: formValues.password,
-      roles: [formValues.role] // Convert role to roles array
+      farmName: formValues.farmName,
+      role: formValues.role
     };
 
     this.authService.register(newUser).subscribe({
@@ -71,7 +70,7 @@ export class RegisterComponent implements OnInit {
       },
       error: (error) => {
         console.error('Registration error', error);
-        this.errorMessage = error.message || 'Failed to create account. Please try again later.';
+        this.errorMessage = error.error?.message || 'Failed to create account. Please try again later.';
         this.isLoading = false;
       }
     });

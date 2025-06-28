@@ -18,10 +18,9 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    // Redirect if already logged in
     if (this.authService.isLoggedIn()) {
       this.router.navigate(['/dashboard']);
       return;
@@ -39,7 +38,6 @@ export class LoginComponent implements OnInit {
 
   onSubmit(): void {
     if (this.loginForm.invalid) {
-      // Mark all fields as touched to trigger validation messages
       Object.keys(this.loginForm.controls).forEach(key => {
         const control = this.loginForm.get(key);
         control?.markAsTouched();
@@ -53,13 +51,13 @@ export class LoginComponent implements OnInit {
     const { email, password } = this.loginForm.value;
 
     this.authService.login(email, password).subscribe({
-      next: () => {
+      next: user => {
         this.isLoading = false;
         this.router.navigate(['/dashboard']);
       },
-      error: (error) => {
-        console.error('Login error', error);
-        this.errorMessage = error.message || 'Failed to login. Please check your credentials.';
+      error: error => {
+        console.error('Login error:', error);
+        this.errorMessage = 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
         this.isLoading = false;
       }
     });

@@ -1,169 +1,107 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, throwError } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { Observable, throwError } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 export interface User {
-  id?: number;
+  email: string;
+  token?: string;
+  roles?: string[];
   userName?: string;
   name?: string;
-  email: string;
-  password?: string;
-  roles?: string[];
-  role?: string; // For backward compatibility
-  token?: string;
 }
 
-export interface LoginResponse {
-  user: User;
-  token: string;
-}
-
-export interface RegisterResponse {
-  user: User;
-  token: string;
-}
-
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  private apiUrl = 'https://sra.runasp.net/api';
+  private apiUrl = 'https://localhost:7174/api/Accounts';
   private currentUserKey = 'currentUser';
 
-  constructor(
-    private http: HttpClient,
-    private router: Router
-  ) { }
+  constructor(private http: HttpClient) {}
 
   login(email: string, password: string): Observable<User> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/Accounts/Login`, { email, password })
-      .pipe(
-        map(response => {
-          const user = response.user;
-          user.token = response.token;
-          this.setCurrentUser(user);
-          return user;
-        }),
-        catchError(error => {
-          console.error('Login error', error);
-          // For demo purposes, simulate successful login with mock data
-          if (email === 'demo@example.com' && password === 'password') {
-            const mockUser: User = {
-              id: 1,
-              email: email,
-              role: 'owner',
-              token: 'mock-jwt-token'
-            };
-            this.setCurrentUser(mockUser);
-            return of(mockUser);
-          }
-          return throwError(() => new Error('Invalid email or password'));
-        })
-      );
+    return this.http.post<{ token: string; roles: string[]; email: string }>(
+      `${this.apiUrl}/Login`,
+      { email, password }
+    ).pipe(
+      map(response => {
+        const user: User = {
+          email: response.email,
+          token: response.token,
+          roles: response.roles
+        };
+        localStorage.setItem(this.currentUserKey, JSON.stringify(user));
+        return user;
+      }),
+      catchError(err => {
+        console.error('Login failed', err);
+        return throwError(() => new Error('Invalid credentials'));
+      })
+    );
   }
 
-  register(user: User): Observable<User> {
-    // Format the request body according to the API requirements
+  register(user: User & { password: string }): Observable<User> {
     const requestBody = {
-      userName: user.userName || user.email.split('@')[0], // Use email username if userName not provided
-      name: user.name || user.userName || user.email.split('@')[0], // Use userName or email username if name not provided
+      userName: user.userName || user.email.split('@')[0],
+      name: user.name || user.userName || user.email.split('@')[0],
       email: user.email,
       password: user.password,
-      roles: user.roles || [user.role || 'User'] // Use role as fallback or default to 'User'
+      roles: user.roles || ['User']
     };
 
-    return this.http.post<RegisterResponse>(`${this.apiUrl}/Accounts/Register`, requestBody)
-      .pipe(
-        map(response => {
-          const newUser = response.user;
-          newUser.token = response.token;
-          this.setCurrentUser(newUser);
-          return newUser;
-        }),
-        catchError(error => {
-          console.error('Registration error', error);
-          // For demo purposes, simulate successful registration with mock data
-          const mockUser: User = {
-            id: Math.floor(Math.random() * 1000) + 1,
-            userName: requestBody.userName,
-            name: requestBody.name,
-            email: user.email,
-            roles: requestBody.roles,
-            token: 'mock-jwt-token'
-          };
-          this.setCurrentUser(mockUser);
-          return of(mockUser);
-        })
-      );
+    return this.http.post<{ token: string; roles: string[]; email: string }>(
+      `${this.apiUrl}/Register`,
+      requestBody
+    ).pipe(
+      map(response => {
+        const newUser: User = {
+          email: response.email,
+          token: response.token,
+          roles: response.roles
+        };
+        localStorage.setItem(this.currentUserKey, JSON.stringify(newUser));
+        return newUser;
+      }),
+      catchError(err => {
+        console.error('Registration failed', err);
+        return throwError(() => new Error('Registration error'));
+      })
+    );
   }
+  forgotPassword(email: string): Observable<any> {
+  return this.http.post(`${this.apiUrl}/forget-password`, { email }).pipe(
+    catchError(error => {
+      console.error('Forgot password error', error);
+      return throwError(() => new Error('Failed to send reset email'));
+    })
+  );
+}
 
+resetPassword(token: string, newPassword: string): Observable<any> {
+  return this.http.post(`${this.apiUrl}/reset-password`, {
+    token,
+    newPassword
+  }).pipe(
+    catchError(error => {
+      console.error('Reset password error', error);
+      return throwError(() => new Error('فشل في إعادة تعيين كلمة المرور'));
+    })
+  );
+}
   logout(): void {
     localStorage.removeItem(this.currentUserKey);
-    this.router.navigate(['/login']);
   }
 
   getCurrentUser(): User | null {
-    const userJson = localStorage.getItem(this.currentUserKey);
-    return userJson ? JSON.parse(userJson) : null;
-  }
-
-  setCurrentUser(user: User): void {
-    localStorage.setItem(this.currentUserKey, JSON.stringify(user));
-  }
-
-  isLoggedIn(): boolean {
-    return !!this.getCurrentUser();
+    const user = localStorage.getItem(this.currentUserKey);
+    return user ? JSON.parse(user) : null;
   }
 
   getToken(): string | null {
-    const user = this.getCurrentUser();
-    return user ? user.token || null : null;
+    return this.getCurrentUser()?.token || null;
   }
 
-  getUserRole(): string | null {
-    const user = this.getCurrentUser();
-    if (!user) return null;
-
-    // If roles array exists, return the first role
-    if (user.roles && user.roles.length > 0) {
-      return user.roles[0];
-    }
-
-    // Fallback to the role property
-    return user.role || null;
-  }
-
-  isOwner(): boolean {
-    const role = this.getUserRole();
-    return role === 'owner' || role === 'Owner';
-  }
-
-  isEngineer(): boolean {
-    const role = this.getUserRole();
-    return role === 'engineer' || role === 'Engineer';
-  }
-
-  forgotPassword(email: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/Accounts/forget-password`, { email })
-      .pipe(
-        catchError(error => {
-          console.error('Forgot password error', error);
-          // For demo purposes, return success
-          return of({ success: true });
-        })
-      );
-  }
-
-  resetPassword(token: string, newPassword: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/Accounts/reset-password`, { token, newPassword })
-      .pipe(
-        catchError(error => {
-          console.error('Reset password error', error);
-          // For demo purposes, return success
-          return of({ success: true });
-        })
-      );
+  isLoggedIn(): boolean {
+    const token = this.getToken();
+    return !!token;
   }
 }
