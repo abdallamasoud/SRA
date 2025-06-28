@@ -292,24 +292,24 @@
         <ng-container *ngIf="isFeedDataLoaded">
           <div class="frame-6">
             <!-- First row: Feed Name and Category -->
-            <div class="form-grid">
-              <div class="form-group">
+        <div class="form-grid">
+          <div class="form-group">
                 <label class="text-wrapper-6">Name</label>
-                <input
-                  type="text"
+            <input
+              type="text"
                   class="data-filled"
                   placeholder="Feed Name"
-                  [(ngModel)]="selectedFeed.feedName"
-                />
-              </div>
-              <div class="form-group">
-                <label class="text-wrapper-6">Category</label>
-                <select class="data-filled" [(ngModel)]="selectedFeed.category">
-                  <option value="">Select Category</option>
+              [(ngModel)]="selectedFeed.feedName"
+            />
+          </div>
+            <div class="form-group">
+              <label class="text-wrapper-6">Category</label>
+              <select class="data-filled" [(ngModel)]="selectedFeed.category">
+                <option value="">Select Category</option>
                   <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
-                </select>
-              </div>
-              <div class="form-group">
+              </select>
+            </div>
+            <div class="form-group">
                 <label class="text-wrapper-6">Quantity</label>
                 <input type="number" class="data-filled" [(ngModel)]="selectedFeed.count" placeholder="Quantity" min="0" />
               </div>
@@ -320,38 +320,38 @@
               <div class="form-group">
                 <label class="text-wrapper-6"> Type</label>
                 <select class="data-filled" [(ngModel)]="selectedType">
-                  <option value="">Select Type</option>
+                <option value="">Select Type</option>
                   <option *ngFor="let t of types" [ngValue]="t.value">{{ t.label }}</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="text-wrapper-6">Ingredients</label>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="text-wrapper-6">Ingredients</label>
                 <select class="data-filled" [(ngModel)]="selectedFeed.ingredients">
                   <option value="">Component</option>
                   <option *ngFor="let ing of filteredIngredients" [value]="ing.name">{{ ing.name }}</option>
-                </select>
-              </div>
-              <div class="form-group price-group">
-                <label class="text-wrapper-6">Price</label>
-                <input
+              </select>
+            </div>
+            <div class="form-group price-group">
+              <label class="text-wrapper-6">Price</label>
+              <input
                   type="text"
-                  class="data-filled price-input"
-                  [(ngModel)]="selectedFeed.price"
-                  placeholder="0.00"
-                />
-              </div>
-              <div class="form-group add-button-container">
-                <button class="add-button" (click)="addSelectedItem()">
+                class="data-filled price-input"
+                [(ngModel)]="selectedFeed.price"
+                placeholder="0.00"
+              />
+            </div>
+            <div class="form-group add-button-container">
+              <button class="add-button" (click)="addSelectedItem()">
                   <img
                     src="assets/images/icons/addingred.png"
                     alt="Add"
                     class="add-icon"
                   />
-                </button>
-              </div>
+              </button>
             </div>
+          </div>
 
-            <div class="selected-items-container">
+          <div class="selected-items-container">
               <table>
                 <tr class="m">
                   <!-- <th>ID</th> -->
@@ -370,18 +370,18 @@
                   </td>
                 </tr>
               </table>
-            </div>
+        </div>
 
             <div class="frame-8">
-              <button class="frame-9 modal-save-btn" (click)="submitUpdateFeed()">
-                <img
-                  class="btn-icon"
-                  src="assets/images/icons/save.png"
+          <button class="frame-9 modal-save-btn" (click)="submitUpdateFeed()">
+            <img
+              class="btn-icon"
+              src="assets/images/icons/save.png"
                   alt="Save Feed Icon"
-                />
-                <div class="btntext">Save Updates</div>
-              </button>
-            </div>
+            />
+            <div class="btntext">Save Updates</div>
+          </button>
+        </div>
           </div>
         </ng-container>
       </div>

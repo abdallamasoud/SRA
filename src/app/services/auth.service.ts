@@ -138,26 +138,26 @@ export class AuthService {
   }
 
   forgotPassword(email: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/forget-password`, { email }).pipe(
-      catchError(error => {
-        console.error('Forgot password error', error);
-        return throwError(() => new Error('Failed to send reset email'));
-      })
-    );
-  }
+  return this.http.post(`${this.apiUrl}/forget-password`, { email }).pipe(
+    catchError(error => {
+      console.error('Forgot password error', error);
+      return throwError(() => new Error('Failed to send reset email'));
+    })
+  );
+}
 
   resetPassword(userId: string, code: string, newPassword: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/reset-password`, {
+  return this.http.post(`${this.apiUrl}/reset-password`, {
       userId,
       code,
-      newPassword
-    }).pipe(
-      catchError(error => {
-        console.error('Reset password error', error);
-        return throwError(() => new Error('فشل في إعادة تعيين كلمة المرور'));
-      })
-    );
-  }
+    newPassword
+  }).pipe(
+    catchError(error => {
+      console.error('Reset password error', error);
+      return throwError(() => new Error('فشل في إعادة تعيين كلمة المرور'));
+    })
+  );
+}
 
   logout(): void {
     localStorage.removeItem(this.currentUserKey);

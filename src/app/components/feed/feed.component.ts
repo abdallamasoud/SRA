@@ -229,7 +229,7 @@ export class FeedComponent implements OnInit {
     this.feedService.createFeed(payload).subscribe({
       next: () => {
         this.loadFeeds();
-        this.closeAllModals();
+    this.closeAllModals();
         alert('تم إضافة العلف بنجاح!');
       },
       error: () => {
@@ -296,7 +296,7 @@ export class FeedComponent implements OnInit {
         },
         error: () => {
           alert('حدث خطأ أثناء حذف الأعلاف!');
-          this.closeAllModals();
+    this.closeAllModals();
         }
       });
     });

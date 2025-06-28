@@ -19,9 +19,12 @@
     <div class="search-container">
       <div class="search-input-wrapper">
         <img class="search-icon" src="assets/images/icons/search.png" alt="">
-        <input type="text" class="search-field" placeholder="Search" [(ngModel)]="searchCode" (input)="findAnimalByCode()">
+        <input type="text" class="search-field" placeholder="البحث في جميع الخصائص..." [(ngModel)]="searchTerm" (input)="searchDairies()">
       </div>
-    </div>
+    
+       
+      </div>
+    
 
     <!-- Filter Button -->
     <div class="filter-dropdown-container" [class.active]="isFilterDropdownOpen">
@@ -33,6 +36,7 @@
         <div class="filter-option" (click)="applyFilter('herdNumber')">Herd Number</div>
         <div class="filter-option" (click)="applyFilter('weight')">Weight</div>
         <div class="filter-option" (click)="applyFilter('type')">Type</div>
+        <div class="filter-option" (click)="applyFilter('milk')">Milk Production</div>
       </div>
     </div>
 
@@ -89,13 +93,13 @@
             />
           </td>
           <td>{{ record.code }}</td>
-          <td>{{ record.type }}</td>
+          <td>{{ getTypeDisplayName(record.type) }}</td>
           <td>{{ record.noFamily }}</td>
-          <td>{{ record.animalType }}</td>
+          <td>{{ record.milk }}</td>
           <td>{{ record.fatPercentage || '—' }}</td>
           <td>{{ record.weight }}</td>
           <td>{{ record.weightDate }}</td>
-          <td>{{ record.statuForitification || '—' }}</td>
+          <td>{{ getFertilizationStatusDisplayName(record.statuForitification) }}</td>
           <td>{{ record.dateFertilization || '—' }}</td>
           <td>{{ record.expectedDate || '—' }}</td>
           <td>{{ record.description || '—' }}</td>
@@ -145,13 +149,14 @@
           <label for="editType" class="text-wrapper-6">Type</label>
           <div class="radio-group">
             <div class="raddiv">
-              <input type="radio" class="radio" name="editType" value="Dairy" [(ngModel)]="selectedDairy.type" />
+              <input type="radio" class="radio" name="editType" [value]="1" [(ngModel)]="selectedDairy.type" />
               <label>Dairy</label>
             </div>
             <div class="raddiv">
-              <input type="radio" class="radio" name="editType" value="Drying" [(ngModel)]="selectedDairy.type" />
-              <label>Drying</label>
+              <input type="radio" class="radio" name="editType" [value]="3" [(ngModel)]="selectedDairy.type" />
+              <label>Dry</label>
             </div>
+           
           </div>
         </div>
 
@@ -162,7 +167,7 @@
 
         <div class="form-group">
           <label for="editDateOfArtificialInsemination" class="text-wrapper-6">DateFertilization</label>
-          <input type="date" id="editDateOfArtificialInsemination" class="data-filled" placeholder="DD/MM/YY" [(ngModel)]="selectedDairy.dateOfArtificialInsemination" name="editDateOfArtificialInsemination" />
+          <input type="date" id="editDateOfArtificialInsemination" class="data-filled" placeholder="DD/MM/YY" [(ngModel)]="selectedDairy.dateFertilization" name="editDateOfArtificialInsemination" />
         </div>
 
         <div class="form-group">
@@ -174,34 +179,35 @@
           <label for="editStatueOfInsemination" class="text-wrapper-6">statuForitification</label>
           <div class="radio-group">
             <div class="raddiv">
-              <input type="radio" class="radio" name="statueOfInsemination" value="Pregnant" [(ngModel)]="selectedDairy.statueFortification" />
-              <label>Pregnant</label>
+              <input type="radio" class="radio" name="statueOfInsemination" [value]="0" [(ngModel)]="selectedDairy.statuForitification" />
+              <label> Not Pregnant</label>
             </div>
             <div class="raddiv">
-              <input type="radio" class="radio" name="statueOfInsemination" value="Re-Inseminate" [(ngModel)]="selectedDairy.statueFortification" />
-              <label>Re-Inseminate</label>
+              <input type="radio" class="radio" name="statueOfInsemination" [value]="1" [(ngModel)]="selectedDairy.statuForitification" />
+              <label> Is Pregnant</label>
             </div>
+            
           </div>
         </div>
 
         <div class="form-group">
           <label for="editHerdNumber" class="text-wrapper-6">Herd Number</label>
-          <input type="text" id="editHerdNumber" class="data-filled" placeholder="Herd Number" [(ngModel)]="selectedDairy.herdNumber" name="editHerdNumber" />
+          <input type="text" id="editHerdNumber" class="data-filled" placeholder="Herd Number" [(ngModel)]="selectedDairy.noFamily" name="editHerdNumber" />
         </div>
 
         <div class="form-group">
           <label for="editHealthcareNote" class="text-wrapper-6">Healthcare note</label>
-          <textarea id="editHealthcareNote" class="textarea" placeholder="Health Care" [(ngModel)]="selectedDairy.healthcare" name="editHealthcareNote"></textarea>
+          <textarea id="editHealthcareNote" class="textarea" placeholder="Health Care" [(ngModel)]="selectedDairy.description" name="editHealthcareNote"></textarea>
         </div>
 
         <div class="form-group">
           <label for="editExpectedDateOfCalving" class="text-wrapper-6">ExpectedDate</label>
-          <input type="date" id="editExpectedDateOfCalving" class="data-filled" placeholder="DD/MM/YYYY" [(ngModel)]="selectedDairy.expectedDateOfCalving" name="editExpectedDateOfCalving" />
+          <input type="date" id="editExpectedDateOfCalving" class="data-filled" placeholder="DD/MM/YYYY" [(ngModel)]="selectedDairy.expectedDate" name="editExpectedDateOfCalving" />
         </div>
 
         <div class="form-group">
           <label for="editTakenVaccinations" class="text-wrapper-6">Taken Vaccinations</label>
-          <input type="text" id="editTakenVaccinations" class="data-filled" placeholder="Taken Vaccinations" [(ngModel)]="selectedDairy.takenVaccinations" name="editTakenVaccinations" />
+          <input type="text" id="editTakenVaccinations" class="data-filled" placeholder="Taken Vaccinations" [(ngModel)]="selectedDairy.description" name="editTakenVaccinations" />
         </div>
       </div>
 
@@ -238,25 +244,38 @@
         <img class="modal-icon" src="/assets/images/icons/milch.png" alt="">
         <div class="text-wrapper-5">Record Milk Production</div>
       </div>
-      <form (ngSubmit)="addDairy()">
+      
+      <!-- Search for animal by code first -->
+      <div *ngIf="!selectedDairy?.code || selectedDairy?.code === ''" class="form-group show-modal">
+        <label class="text-wrapper-6">Code</label>
+        <input
+          type="text"
+          class="data-filled"
+          placeholder="Code"
+          [(ngModel)]="searchCode"
+          (keyup.enter)="findAnimalByCode()"
+        />
+        <button class="frame-9 modal-save-btn" (click)="findAnimalByCode()">
+          <div class="btntext">ShowData</div>
+        </button>
+      </div>
+
+      <!-- Show milk production form after finding animal -->
+      <form *ngIf="selectedDairy?.code && selectedDairy?.code !== ''" (ngSubmit)="addDairy()" #milkForm="ngForm">
         <div class="form-flex">
           <div class="form-group">
-            <label for="recordCode" >Code</label>
-            <input type="text" id="recordCode" class="data-filled" placeholder="Code" [(ngModel)]="selectedDairy.code" name="recordCode" required>
+            <label for="recordMilkProduction">Milk Production (Liters)</label>
+            <input type="number" id="recordMilkProduction" class="data-filled" placeholder="Milk Production" [(ngModel)]="selectedDairy.milk" name="recordMilkProduction" step="0.1" min="0" required>
           </div>
           <div class="form-group">
-            <label for="recordMilkProduction">Milk Production</label>
-            <input type="number" id="recordMilkProduction" class="data-filled" placeholder="Milk Production" [(ngModel)]="selectedDairy.milkProduction" name="recordMilkProduction" step="0.1">
-          </div>
-          <div class="form-group">
-            <label for="recordFatPresentence">Fat Percentage</label>
-            <input type="number" id="recordFatPresentence" class="data-filled" placeholder="Fat Percentage" [(ngModel)]="selectedDairy.fatPercentage" name="recordFatPresentence" step="0.1">
+            <label for="recordFatPresentence">Fat Percentage (%)</label>
+            <input type="number" id="recordFatPresentence" class="data-filled" placeholder="Fat Percentage" [(ngModel)]="selectedDairy.fatPercentage" name="recordFatPresentence" step="0.1" min="0" max="100" required>
           </div>
         </div>
         <div class="modal-actions">
-          <button type="submit" class="save-btn">
+          <button type="submit" class="save-btn" [disabled]="!milkForm.valid">
             <img class="btn-icon" src="/assets/images/icons/save.png" alt="">
-            Save Milk production Today
+            Save Milk Production
           </button>
         </div>
       </form>
