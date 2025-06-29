@@ -43,7 +43,7 @@ export class NewbornsComponent implements OnInit {
           gender: Number(a.gender),
           animalType: Number(a.animalType),
           weightDate: a.weightDate?.split('T')[0] ?? '',
-          dateOfBirth: a.dateOfBirth?.split('T')[0] ?? ''
+          dateOfBirth: a.dob?.split('T')[0] ?? ''
         }));
         this.filteredNewborns = [...this.newborns];
       },
@@ -76,7 +76,7 @@ export class NewbornsComponent implements OnInit {
       weightDate: '',
       description: '',
       gender: 0,
-      dateOfBirth: ''
+      dob: ''
     };
   }
 
@@ -99,7 +99,7 @@ export class NewbornsComponent implements OnInit {
         animalType: 2,
         weight: 0,
         weightDate: '',
-        dateOfBirth: '',
+        dob: '',
         description: '',
 
         gender: 0
@@ -224,7 +224,7 @@ export class NewbornsComponent implements OnInit {
               animalType: 0,
               weight: 0,
               weightDate: '',
-              dateOfBirth: '',
+              dob: '',
               description: '',
 
               gender: 0
@@ -241,7 +241,7 @@ export class NewbornsComponent implements OnInit {
             animalType:0,
             weight: 0,
             weightDate: '',
-            dateOfBirth: '',
+            dob: '',
             description: '',
 
             gender: 0

@@ -323,17 +323,36 @@ export class AddIngredientModalComponent implements OnInit {
     }
 
     this.isLoading = true;
-    this.ingredientService.create(this.ingredientForm.value).subscribe(
-      (response) => {
+    this.errorMessage = '';
+
+    const formData = this.ingredientForm.value;
+    console.log('Submitting ingredient data:', formData);
+
+    this.ingredientService.create(formData).subscribe({
+      next: (response) => {
+        console.log('Ingredient created successfully:', response);
         this.isLoading = false;
         this.closeModal(true);
       },
-      (error) => {
-        console.error('Error creating ingredient', error);
-        this.errorMessage = 'Failed to create ingredient. Please try again.';
+      error: (error) => {
+        console.error('Error creating ingredient:', error);
         this.isLoading = false;
+        
+        let errorMessage = 'Failed to create ingredient. Please try again.';
+        
+        if (error.status === 400) {
+          errorMessage = 'Invalid data. Please check your inputs.';
+        } else if (error.status === 409) {
+          errorMessage = 'An ingredient with this name already exists.';
+        } else if (error.status === 500) {
+          errorMessage = 'Server error. Please try again later.';
+        } else if (error.status === 0) {
+          errorMessage = 'Network error. Please check your connection.';
+        }
+        
+        this.errorMessage = errorMessage;
       }
-    );
+    });
   }
 
   closeModal(success = false): void {

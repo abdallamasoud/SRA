@@ -194,6 +194,18 @@ export class FeedComponent implements OnInit {
 
   // --- Submission Functions ---
   submitNewFeed(): void {
+    // التحقق من وجود category
+    if (!this.selectedFeed.category) {
+      alert('يرجى اختيار فئة الحيوان');
+      return;
+    }
+
+    const categoryId = Number(this.selectedFeed.category);
+    if (isNaN(categoryId)) {
+      alert('فئة الحيوان غير صحيحة');
+      return;
+    }
+
     // تحقق من وجود مكون واحد على الأقل من كل نوع
     const typesNeeded = [0, 1, 2]; // 0: حبوب، 1: كسب، 2: نخالة
     const typesInItems = this.selectedItems.map(item => Number(item.type));
@@ -221,7 +233,7 @@ export class FeedComponent implements OnInit {
 
     const payload = {
       name: this.selectedFeed.feedName,
-      animalCatgeoryId: this.selectedFeed.category,
+      animalCatgeoryId: categoryId,
       quntity: this.selectedFeed.count,
       ingredientPrice
     };
@@ -239,19 +251,95 @@ export class FeedComponent implements OnInit {
   }
 
   submitUpdateFeed(): void {
-    // عند التحديث، تأكد أن type يتم تحويله إلى number
-    const index = this.feeds.findIndex(f => f.id === this.selectedFeed.id);
-    if (index !== -1) {
-      this.feeds[index] = {
-        ...this.selectedFeed,
-        items: this.selectedItems.map(item => ({
-          ...item,
-          type: Number(item.type)
-        }))
-      };
+    if (!this.selectedFeed.id) {
+      alert('لا يمكن تحديث العلف بدون معرف صحيح');
+      return;
     }
-    this.closeAllModals();
-    this.loadFeeds(); // Refresh data
+
+    // التحقق من وجود category
+    if (!this.selectedFeed.category) {
+      alert('يرجى اختيار فئة الحيوان');
+      return;
+    }
+
+    const categoryId = Number(this.selectedFeed.category);
+    if (isNaN(categoryId)) {
+      alert('فئة الحيوان غير صحيحة');
+      return;
+    }
+
+    // التحقق من وجود مكون واحد على الأقل من كل نوع
+    const typesNeeded = [0, 1, 2]; // 0: حبوب، 1: كسب، 2: نخالة
+    const typesInItems = this.selectedItems.map(item => Number(item.type));
+    const missingTypes = typesNeeded.filter(type => !typesInItems.includes(type));
+    
+    if (missingTypes.length > 0) {
+      const missingTypeNames = missingTypes.map(type => this.typeNames[type]).join(', ');
+      alert(`يجب إضافة مكون واحد على الأقل من كل نوع: ${missingTypeNames}`);
+      return;
+    }
+
+    // التحقق من وجود اسم العلف
+    if (!this.selectedFeed.feedName || this.selectedFeed.feedName.trim() === '') {
+      alert('يرجى إدخال اسم العلف');
+      return;
+    }
+
+    // التحقق من وجود الكمية
+    if (!this.selectedFeed.count || isNaN(Number(this.selectedFeed.count))) {
+      alert('يرجى إدخال كمية صحيحة للعلف');
+      return;
+    }
+
+    // بناء ingredientPrice: كل عنصر يجب أن يحتوي على id وسعر (نفس شكل POST)
+    const ingredientPrice = this.selectedItems
+      .map(item => {
+        const ingredientObj = this.ingredients.find(ing => ing.name === item.ingredients);
+        if (ingredientObj && typeof ingredientObj.id === 'number') {
+          const price = Number(item.price);
+          if (isNaN(price)) {
+            alert(`السعر غير صحيح للمكون: ${item.ingredients}`);
+            return null;
+          }
+          return {
+            id: ingredientObj.id,
+            price: price // تحويل السعر إلى رقم
+          };
+        }
+        alert(`لم يتم العثور على المكون: ${item.ingredients}`);
+        return null;
+      })
+      .filter((ip): ip is { id: number; price: number } => ip !== null);
+
+    if (ingredientPrice.length === 0) {
+      alert('لا توجد مكونات صحيحة للعلف');
+      return;
+    }
+
+    // نفس شكل payload في POST مع إضافة id
+    const updatePayload = {
+      id: Number(this.selectedFeed.id),
+      name: this.selectedFeed.feedName.trim(),
+      animalCatgeoryId: categoryId,
+      quntity: Number(this.selectedFeed.count),
+      ingredientPrice
+    };
+
+    console.log('Updating feed with ID:', this.selectedFeed.id);
+    console.log('Update payload:', updatePayload);
+
+    this.feedService.updateFeed(this.selectedFeed.id, updatePayload).subscribe({
+      next: (response: any) => {
+        console.log('Feed updated successfully:', response);
+        alert('تم تحديث العلف بنجاح!');
+        this.closeAllModals();
+        this.loadFeeds(); // إعادة تحميل البيانات
+      },
+      error: (error: any) => {
+        console.error('Error updating feed:', error);
+        alert('حدث خطأ أثناء تحديث العلف. يرجى المحاولة مرة أخرى.');
+      }
+    });
   }
 
   showDataForFeed(): void {
@@ -423,30 +511,43 @@ export class FeedComponent implements OnInit {
       this.feedService.getFeedById(foundFeed.id).subscribe({
         next: (data: any) => {
           this.selectedFeed = {
-            id: data.id,
-            feedName: data.name,
-            category: data.animalCatgeory,
-            count: data.quntity,
-            proteinPercentage: data.totalProten,
-            tdnPercentage: data.totalTDN
+            id: data.id || foundFeed.id, // استخدام foundFeed.id كبديل
+            feedName: data.name || foundFeed.feedName,
+            category: data.animalCatgeory || foundFeed.category,
+            count: data.quntity || foundFeed.count,
+            proteinPercentage: data.totalProten || foundFeed.proteinPercentage,
+            tdnPercentage: data.totalTDN || foundFeed.tdnPercentage
           };
           // جلب المكونات مع النوع والسعر
-          this.selectedItems = (data.items || []).map((item: any) => ({
+          this.selectedItems = (data.items || foundFeed.items || []).map((item: any) => ({
             type: Number(item.type),
             ingredients: item.ingredientName || item.ingredients || '',
             price: item.price
           }));
           this.isFeedDataLoaded = true;
+          alert('تم العثور على العلف! يمكنك الآن تعديل البيانات.');
         },
         error: () => {
-          alert('حدث خطأ أثناء جلب بيانات العلف من السيرفر');
-          this.selectedFeed = this.initializeFeed();
-          this.selectedItems = [];
-          this.isFeedDataLoaded = false;
+          // إذا فشل API، استخدم البيانات المحلية
+          this.selectedFeed = {
+            id: foundFeed.id,
+            feedName: foundFeed.feedName,
+            category: foundFeed.category,
+            count: foundFeed.count,
+            proteinPercentage: foundFeed.proteinPercentage,
+            tdnPercentage: foundFeed.tdnPercentage
+          };
+          this.selectedItems = (foundFeed.items || []).map((item: any) => ({
+            type: Number(item.type),
+            ingredients: item.ingredients || '',
+            price: item.price
+          }));
+          this.isFeedDataLoaded = true;
+          alert('تم العثور على العلف! (باستخدام البيانات المحلية)');
         }
       });
     } else {
-      alert('Feed not found with this name.');
+      alert('لم يتم العثور على علف بهذا الاسم. يرجى التحقق من الاسم والمحاولة مرة أخرى.');
       this.selectedFeed = this.initializeFeed();
       this.selectedItems = [];
       this.isFeedDataLoaded = false;

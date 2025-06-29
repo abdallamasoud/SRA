@@ -33,13 +33,15 @@ selectedAnimalIds: number[] = [];
     weightDate: '',
     description: '',
     gender: 0,
-    dateOfBirth:''
+    dob:''
   };
 
   showAddModal = false;
   showEditModal = false;
   showFatteningWeightModal = false;
   showDeleteModal = false;
+  showAnimalDetailsModal = false;
+  selectedAnimalDetails: any = null;
 
   searchTerm: string = '';
   isFilterDropdownOpen = false;
@@ -63,7 +65,7 @@ genderLabels: { [key: number]: string } = {
 
 
   loadAnimals(): void {
-  this.animalService.getAllAnimals().subscribe({
+  this.animalService.getAllAnimalsWithLastWeight().subscribe({
     next: (data) => {
       // تأكد من تحويل القيم إلى أرقام
       this.allAnimals = data.map(animal => ({
@@ -71,11 +73,17 @@ genderLabels: { [key: number]: string } = {
         id: Number(animal.id),
         animalType: Number(animal.animalType),
         gender: Number(animal.gender),
-         weightDate: animal.weightDate.split('T')[0]
-
+        weightDate: animal.weightDate?.split('T')[0] || '',
+        // استخدام آخر وزن للعرض
+        displayWeight: animal.displayWeight || animal.weight,
+        displayWeightDate: animal.displayWeightDate || animal.weightDate?.split('T')[0] || ''
       }));
       this.animals = [...this.allAnimals];
-          this.filteredAnimals = [...this.animals];  // Initialize displayed animals with all animals
+      this.filteredAnimals = [...this.animals];  // Initialize displayed animals with all animals
+      console.log('Loaded animals with last weight:', this.allAnimals);
+      
+      // محاولة تحميل آخر وزن لكل حيوان بشكل منفصل
+      this.loadLastWeightsForAllAnimals();
     },
     error: (error: Error) => {
       console.error('Error loading animals', error);
@@ -83,6 +91,30 @@ genderLabels: { [key: number]: string } = {
   });
 }
 
+// دالة جديدة لتحميل آخر وزن لكل حيوان
+loadLastWeightsForAllAnimals(): void {
+  this.allAnimals.forEach(animal => {
+    this.animalService.getLastWeightFromHistory(animal.id).subscribe({
+      next: (lastWeight) => {
+        if (lastWeight) {
+          // تحديث البيانات المحلية بآخر وزن
+          const animalIndex = this.allAnimals.findIndex(a => a.id === animal.id);
+          if (animalIndex !== -1) {
+            this.allAnimals[animalIndex].displayWeight = lastWeight.weight;
+            this.allAnimals[animalIndex].displayWeightDate = lastWeight.dateOfWeight?.split('T')[0] || '';
+            
+            // تحديث الجدول المعروض
+            this.animals = [...this.allAnimals];
+            this.filteredAnimals = [...this.animals];
+          }
+        }
+      },
+      error: (error) => {
+        console.error(`Error loading last weight for animal ${animal.id}:`, error);
+      }
+    });
+  });
+}
 
   searchAnimals(): void {
     if (!this.searchTerm.trim()) {
@@ -108,7 +140,7 @@ genderLabels: { [key: number]: string } = {
     weightDate: '',
     noFamily: '',
     description: '',
-    dateOfBirth:''
+    dob:''
   };
 }
 
@@ -165,7 +197,7 @@ toggleAllAnimalSelections(event: Event): void {
       weightDate: '',
       description: '',
       gender: 0,
-      dateOfBirth:''
+      dob:''
     };
     this.showAddModal = true;
   }
@@ -181,7 +213,7 @@ toggleAllAnimalSelections(event: Event): void {
         animalType: 0,
         weight: 0,
         weightDate: '',
-        dateOfBirth: '',
+        dob: '',
         description: '',
 
         gender: 0
@@ -191,24 +223,19 @@ toggleAllAnimalSelections(event: Event): void {
   }
 
 openFatteningWeightModal(animal: Animal | null): void {
-  if (animal) {
-    this.selectedAnimal = { ...animal };
-  } else {
-    this.selectedAnimal = {
-      id: 0,
-      code: '',
-      noFamily: '',
-      animalType: 0,
-      weight: 0,
-      weightDate: '',
-      description: '',
-      gender: 0,
-      dateOfBirth: ''
-    };
-    this.searchCode = '';
-  }
-
+  this.closeAllModals();
+  
+  // دائماً نبدأ بمودال فاضي، حتى لو تم تمرير حيوان
+  this.selectedAnimal = this.initAnimal();
+  this.searchCode = ''; // إفراغ كود البحث أيضاً
+  
   this.showFatteningWeightModal = true;
+}
+
+closeFatteningWeightModal(): void {
+  this.showFatteningWeightModal = false;
+  this.selectedAnimal = this.initAnimal();
+  this.searchCode = '';
 }
 
   openDeleteModal(): void {
@@ -221,7 +248,7 @@ openFatteningWeightModal(animal: Animal | null): void {
       weightDate: '',
       description: '',
       gender: 0,
-      dateOfBirth:''
+      dob:''
     };
     this.showDeleteModal = true;
   }
@@ -231,7 +258,11 @@ openFatteningWeightModal(animal: Animal | null): void {
     this.showEditModal = false;
     this.showFatteningWeightModal = false;
     this.showDeleteModal = false;
-
+    this.showAnimalDetailsModal = false;
+    
+    // إفراغ البيانات عند إغلاق جميع المودالات
+    this.selectedAnimal = this.initAnimal();
+    this.searchCode = '';
   }
 
 addAnimal(): void {
@@ -260,30 +291,69 @@ updateAnimal(): void {
   });
 }
 submitFatteningWeight(): void {
+  // التحقق من وجود ID صحيح
+  if (!this.selectedAnimal.id || this.selectedAnimal.id === 0) {
+    alert('خطأ: لم يتم تحديد حيوان صحيح. يرجى البحث عن الحيوان مرة أخرى.');
+    return;
+  }
+
+  // البحث عن الحيوان في القائمة المحلية للحصول على البيانات الكاملة
+  const fullAnimalData = this.allAnimals.find(animal => animal.id === this.selectedAnimal.id);
+  
+  if (!fullAnimalData) {
+    alert('لم يتم العثور على بيانات الحيوان. يرجى المحاولة مرة أخرى.');
+    return;
+  }
+
+  console.log('Selected animal ID:', this.selectedAnimal.id);
+  console.log('Selected animal code:', this.selectedAnimal.code);
+  console.log('Full animal data:', fullAnimalData);
+
+  // تنسيق التاريخ للباك إند (ISO format)
+  const formattedDate = this.selectedAnimal.weightDate ? new Date(this.selectedAnimal.weightDate).toISOString() : '';
+
+  // دمج البيانات الجديدة مع البيانات الموجودة
   const dto = {
     id: this.selectedAnimal.id,
     code: this.selectedAnimal.code,
     weight: this.selectedAnimal.weight,
-    dateOfWeight: this.selectedAnimal.weightDate,
+    dateOfWeight: formattedDate,
     description: this.selectedAnimal.description
   };
 
+  console.log('Sending data to backend:', dto);
+  console.log('PATCH URL will be:', `https://sra.runasp.net/api/Animal/${this.selectedAnimal.id}`);
+
   this.animalService.updateFatteningWeight(dto).subscribe({
-    next: () => {
-      // ✅ تحديث القيم يدويًا بدل ما تستنى من الـ API
-      const updatedAnimal = this.animals.find(a => a.id === dto.id);
-      if (updatedAnimal) {
-        updatedAnimal.weight = dto.weight;
-        updatedAnimal.weightDate = dto.dateOfWeight;
-        updatedAnimal.description = dto.description;
-        updatedAnimal.code = dto.code;
-      }
-
-
+    next: (response) => {
+      console.log('Success response:', response);
+      // ✅ إعادة تحميل البيانات من الباك إند بدلاً من التحديث اليدوي
+      this.loadAnimals();
+      
+      // إشعار نجاح للمستخدم
+      alert('تم تحديث وزن الحيوان بنجاح!');
+      
+      // إفراغ البيانات وإغلاق المودال
+      this.selectedAnimal = this.initAnimal();
+      this.searchCode = '';
       this.closeAllModals();
     },
     error: (err) => {
       console.error('❌ Failed to save weight', err);
+      console.error('Error status:', err.status);
+      console.error('Error message:', err.message);
+      console.error('Error details:', err.error);
+      
+      let errorMessage = 'حدث خطأ أثناء تحديث وزن الحيوان.';
+      if (err.status === 400) {
+        errorMessage = 'بيانات غير صحيحة. يرجى التحقق من المدخلات.';
+      } else if (err.status === 404) {
+        errorMessage = `لم يتم العثور على الحيوان بالـ ID: ${this.selectedAnimal.id}. يرجى التأكد من صحة الكود.`;
+      } else if (err.status === 500) {
+        errorMessage = 'خطأ في الخادم. يرجى المحاولة مرة أخرى.';
+      }
+      
+      alert(errorMessage);
     }
   });
 }
@@ -305,62 +375,82 @@ confirmDeleteAnimals(): void {
 }
   findAnimalByCode(): void {
     if (!this.searchCode.trim()) {
+      alert('يرجى إدخال كود الحيوان');
       return;
     }
 
-    // First try to find in the current animals list
-    let foundAnimal = this.allAnimals.find(animal =>
-      animal.code.toLowerCase() === this.searchCode.toLowerCase()
-    );
+    console.log('Searching for animal with code:', this.searchCode.trim());
 
-    // If not found in current list, try to fetch from server
-    if (!foundAnimal) {
-      this.animalService.getAnimalById(parseInt(this.searchCode)).subscribe({
-        next: (animal) => {
-          if (animal) {
-            this.selectedAnimal = { ...animal };
-            // Add to local list if not already there
-            if (!this.allAnimals.some(a => a.id === animal.id)) {
-              this.allAnimals.push(animal);
-            }
-          } else {
-            console.log('Animal not found');
-            // Reset form with empty data
-            this.selectedAnimal = {
-              id: 0,
-              code: this.searchCode,
-              noFamily: '',
-              animalType: 0,
-              weight: 0,
-              weightDate: '',
-              dateOfBirth: '',
-              description: '',
-
-              gender: 0
-            };
-          }
-        },
-        error: (error) => {
-          console.error('Error fetching animal:', error);
-          // Reset form with empty data
-          this.selectedAnimal = {
-            id: 0,
-            code: this.searchCode,
-            noFamily: '',
-            animalType:0,
-            weight: 0,
-            weightDate: '',
-            dateOfBirth: '',
-            description: '',
-
-            gender: 0
-          };
+    // البحث في الباك إند مباشرة بالكود
+    this.animalService.getAnimalByCode(this.searchCode.trim()).subscribe({
+      next: (animal) => {
+        console.log('Animal found in backend:', animal);
+        this.selectedAnimal = { ...animal };
+        if (!this.showFatteningWeightModal) {
+          this.showEditModal = true;
         }
-      });
-    } else {
-      // If found in current list, use that data
-      this.selectedAnimal = { ...foundAnimal };
+        // تحديث البيانات المحلية
+        this.loadAnimals();
+      },
+      error: (error) => {
+        console.error('Error fetching animal by code:', error);
+        
+        // إذا فشل البحث في الباك إند، جرب البحث في البيانات المحلية
+        const foundAnimal = this.allAnimals.find(animal => 
+          animal.code.toLowerCase() === this.searchCode.trim().toLowerCase()
+        );
+
+        if (foundAnimal) {
+          console.log('Animal found in local data:', foundAnimal);
+          this.selectedAnimal = { ...foundAnimal };
+          if (!this.showFatteningWeightModal) {
+            this.showEditModal = true;
+          }
+        } else {
+          alert('لم يتم العثور على حيوان بهذا الكود في النظام');
+        }
+      }
+    });
+  }
+
+  openAnimalDetailsModal(animal: Animal): void {
+    // جلب بيانات الحيوان التفصيلية من الباك اند
+    this.animalService.getAnimalById(animal.id!).subscribe({
+      next: (data: any) => {
+        this.selectedAnimalDetails = data;
+        this.showAnimalDetailsModal = true;
+      },
+      error: (error) => {
+        console.error('Error fetching animal details:', error);
+        // إذا فشل API، استخدم البيانات المحلية
+        this.selectedAnimalDetails = animal;
+        this.showAnimalDetailsModal = true;
+      }
+    });
+  }
+
+  closeAnimalDetailsModal(): void {
+    this.showAnimalDetailsModal = false;
+    this.selectedAnimalDetails = null;
+  }
+
+  getTypeLabel(animalType: string | number): string {
+    if (typeof animalType === 'number') {
+      return this.typeLabels[animalType] || String(animalType);
     }
+    if (typeof animalType === 'string') {
+      switch (animalType.toLowerCase()) {
+        case 'milking':
+          return 'Dairy';
+        case 'fattening':
+          return 'Fattening';
+        case 'newborn':
+          return 'NewBorn';
+        default:
+          return animalType;
+      }
+    }
+    return '';
   }
 }
 

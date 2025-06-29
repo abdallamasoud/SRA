@@ -16,7 +16,7 @@ export interface Ingredient {
 
 @Injectable({ providedIn: 'root' })
 export class IngredientService {
-  private baseUrl = 'https://sra.runasp.net/api';
+  private baseUrl = 'https://localhost:7174/api';
 
   constructor(private http: HttpClient) {}
 
@@ -24,19 +24,20 @@ export class IngredientService {
     return this.http.get<Ingredient[]>(`${this.baseUrl}/Ingredients`);
   }
 
- getById(id: number): Observable<Ingredient> {
-  return this.http.get<Ingredient>(`${this.baseUrl}/Ingredients/${id}`);
-}
+  getById(id: number): Observable<Ingredient> {
+    return this.http.get<Ingredient>(`${this.baseUrl}/Ingredients/${id}`);
+  }
 
-create(ingredient: Ingredient): Observable<Ingredient> {
-  return this.http.post<Ingredient>(`${this.baseUrl}/Ingredients`, ingredient);
-}
+  create(ingredient: Ingredient): Observable<Ingredient> {
+    console.log('IngredientService - Creating ingredient:', ingredient);
+    return this.http.post<Ingredient>(`${this.baseUrl}/Ingredients`, ingredient);
+  }
 
-update(ingredient: Ingredient): Observable<void> {
-  return this.http.put<void>(`${this.baseUrl}/Ingredients/${ingredient.id}`, ingredient);
-}
+  update(ingredient: Ingredient): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/Ingredients/${ingredient.id}`, ingredient);
+  }
 
-delete(id: number): Observable<void> {
-  return this.http.delete<void>(`${this.baseUrl}/Ingredients/${id}`);
-}
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/Ingredients/${id}`);
+  }
 }

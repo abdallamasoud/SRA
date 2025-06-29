@@ -190,7 +190,7 @@ a {
 
 .choose-update-milch .frame-6 {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   width: 100%;
   height: auto;
   align-items: center;
@@ -880,4 +880,191 @@ radio-group {
   height: 18px;
   /* filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(0%) contrast(100%); Makes SVG black */
    filter: invert(0%);
+}
+
+/* Animal Details Modal Styles */
+.animal-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.detail-item {
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #007bff;
+}
+
+.detail-item strong {
+  color: #495057;
+  margin-right: 8px;
+}
+
+.weights-table-container {
+  margin-top: 24px;
+}
+
+.weights-table-container h4 {
+  margin-bottom: 16px;
+  color: #495057;
+  font-size: 18px;
+}
+
+.weights-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.weights-table th,
+.weights-table td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.weights-table th {
+  background-color: #007bff;
+  color: white;
+  font-weight: 600;
+}
+
+.weights-table tr:hover {
+  background-color: #f8f9fa;
+}
+
+.weights-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Animal Details Modal - Simple Table Styles */
+.choose-update-milch .frame-6 .table-container {
+  margin-bottom: 0;
+}
+
+.choose-update-milch .frame-6 .table-container table {
+  font-size: 14px;
+}
+
+.choose-update-milch .frame-6 .table-container th {
+  background-color: #f5f5f5;
+  color: #333;
+  padding: 12px 8px;
+  font-weight: 600;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.choose-update-milch .frame-6 .table-container td {
+  padding: 12px 8px;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+  color: #222;
+}
+
+.choose-update-milch .frame-6 .table-container table {
+  font-size: 14px;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.choose-update-milch .frame-6 h3 {
+  color: #333;
+  font-size: 18px;
+  margin-bottom: 10px;
+  margin-top: 0;
+  font-weight: 600;
+}
+
+.additional-info {
+  border: 1px solid #dee2e6;
+}
+
+.additional-info div {
+  font-size: 14px;
+  color: #495057;
+}
+
+.additional-info strong {
+  color: #007bff;
+  margin-right: 8px;
+}
+
+.choose-update-milch .frame-4.modal.add-edit-modal {
+  width: 900px;
+  max-width: 98vw;
+  min-height: 420px;
+  padding: 40px 32px 32px 32px;
+}
+
+@media (max-width: 1000px) {
+  .choose-update-milch .frame-4.modal.add-edit-modal {
+    width: 98vw;
+    min-width: unset;
+    padding: 20px 5px;
+  }
+}
+
+.weights-list .weight-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: #fafbfc;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  border: 1px solid #eee;
+}
+.weights-list .weight-row strong {
+  color: #333;
+  font-weight: 600;
+}
+
+/* Styles for weight display indicators */
+.weight-display, .date-display {
+  position: relative;
+  display: inline-block;
+}
+
+.weight-indicator, .date-indicator {
+  font-size: 10px;
+  color: #4CAF50;
+  font-weight: bold;
+  margin-left: 4px;
+  background-color: #E8F5E8;
+  padding: 2px 4px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.weight-display:hover, .date-display:hover {
+  cursor: help;
+}
+
+/* Tooltip styles */
+td[title] {
+  position: relative;
+}
+
+td[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: white;
+  padding: 5px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1000;
+  pointer-events: none;
 }

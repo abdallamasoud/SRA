@@ -99,7 +99,7 @@
           <td>{{ Animal.code }}</td>
           <td>{{ Animal.noFamily }}</td>
           <td>{{ genderLabels[Animal.gender] }}</td>
-          <td>{{ Animal.dateOfBirth }}</td>
+          <td>{{ Animal.dob }}</td>
           <td>{{ Animal.weight }}</td>
           <td>{{ Animal.weightDate }}</td>
           <td>{{ Animal.description }}</td>
@@ -181,7 +181,7 @@
 
         <div class="form-group">
           <label class="text-wrapper-6">Date of Birth</label>
-          <input type="date" class="data-filled" [(ngModel)]="selectedNewborn.dateOfBirth" />
+          <input type="date" class="data-filled" [(ngModel)]="selectedNewborn.dob" />
         </div>
 
         <div class="form-group">

@@ -26,60 +26,124 @@ export class IngredientsComponent implements OnInit {
   }
 
   initIngredient(): Ingredient {
-    return { name: '', type: 0, unit: 0, cp: 0, tdn: 0, cf: 0, me: 0, season: '' };
+    return { name: '', type: null, unit: 0, cp: 0, tdn: 0, cf: 0, me: 0, season: '' };
   }
 
-loadIngredients(): void {
-  this.ingredientService.getAll().subscribe({
-    next: (data) => {
-      this.ingredients = data.map(item => ({
-        ...item,
-        season: localStorage.getItem(`season_${item.name}`) || ''
-      }));
-      this.applySearchAndFilter();
-    },
-    error: (err) => console.error(err)
-  });
-}
-
-  toggleSelection(id: number): void {
-  if (this.selectedIds.includes(id)) {
-    this.selectedIds = this.selectedIds.filter(i => i !== id);
-  } else {
-    this.selectedIds.push(id);
-  }
-}
-toggleAllSelections(event: any): void {
-  const isChecked = event.target.checked;
-  if (isChecked) {
-    this.selectedIds = this.filteredIngredients.map(i => i.id!);
-  } else {
-    this.selectedIds = [];
-  }
-}
-
-saveIngredient(): void {
-  const ingredient = { ...this.selectedIngredient };
-  localStorage.setItem(`season_${ingredient.name}`, ingredient.season ?? '');
-
-  delete ingredient.season; // عشان ميبعتش للباك
-  this.ingredientService.create(ingredient).subscribe({
-    next: () => {
-      this.loadIngredients(); // هتعدلها كمان تحت عشان تضيف الـ season تاني
-      this.closeAllModals();
-    },
-    error: (err) => console.error(err)
-  });
-}
-
-
-  submitUpdateIngredient(): void {
-    this.ingredientService.update(this.selectedIngredient).subscribe({
-      next: () => {
-        this.loadIngredients();
-        this.closeAllModals();
+  loadIngredients(): void {
+    this.ingredientService.getAll().subscribe({
+      next: (data) => {
+        this.ingredients = data.map(item => ({
+          ...item,
+          season: localStorage.getItem(`season_${item.name}`) || ''
+        }));
+        this.applySearchAndFilter();
       },
       error: (err) => console.error(err)
+    });
+  }
+
+  toggleSelection(id: number): void {
+    if (this.selectedIds.includes(id)) {
+      this.selectedIds = this.selectedIds.filter(i => i !== id);
+    } else {
+      this.selectedIds.push(id);
+    }
+  }
+
+  toggleAllSelections(event: any): void {
+    const isChecked = event.target.checked;
+    if (isChecked) {
+      this.selectedIds = this.filteredIngredients.map(i => i.id!);
+    } else {
+      this.selectedIds = [];
+    }
+  }
+
+  saveIngredient(): void {
+    if (!this.selectedIngredient.name || this.selectedIngredient.type === null) {
+      alert('يرجى إدخال اسم المكون ونوعه');
+      return;
+    }
+
+    const ingredient = { ...this.selectedIngredient };
+    localStorage.setItem(`season_${ingredient.name}`, ingredient.season ?? '');
+
+    const ingredientToSend = { 
+      ...ingredient,
+      type: Number(ingredient.type),
+      unit: Number(ingredient.unit),
+      cp: Number(ingredient.cp),
+      tdn: Number(ingredient.tdn),
+      cf: Number(ingredient.cf),
+      me: Number(ingredient.me)
+    };
+    delete ingredientToSend.season;
+
+    console.log('Sending ingredient to backend:', ingredientToSend);
+
+    this.ingredientService.create(ingredientToSend).subscribe({
+      next: (response) => {
+        console.log('Ingredient created successfully:', response);
+        this.loadIngredients();
+        this.closeAllModals();
+        alert('تم إضافة المكون بنجاح!');
+      },
+      error: (err) => {
+        console.error('Error creating ingredient:', err);
+        let errorMessage = 'حدث خطأ أثناء إضافة المكون';
+        
+        if (err.status === 400) {
+          errorMessage = 'بيانات غير صحيحة. يرجى التحقق من المدخلات.';
+        } else if (err.status === 409) {
+          errorMessage = 'يوجد مكون بنفس الاسم بالفعل.';
+        } else if (err.status === 500) {
+          errorMessage = 'خطأ في الخادم. يرجى المحاولة مرة أخرى.';
+        }
+        
+        alert(errorMessage);
+      }
+    });
+  }
+
+  submitUpdateIngredient(): void {
+    if (!this.selectedIngredient.name || this.selectedIngredient.type === null) {
+      alert('يرجى إدخال اسم المكون ونوعه');
+      return;
+    }
+
+    const ingredientToUpdate = {
+      ...this.selectedIngredient,
+      type: Number(this.selectedIngredient.type),
+      unit: Number(this.selectedIngredient.unit),
+      cp: Number(this.selectedIngredient.cp),
+      tdn: Number(this.selectedIngredient.tdn),
+      cf: Number(this.selectedIngredient.cf),
+      me: Number(this.selectedIngredient.me)
+    };
+
+    console.log('Updating ingredient:', ingredientToUpdate);
+
+    this.ingredientService.update(ingredientToUpdate).subscribe({
+      next: () => {
+        console.log('Ingredient updated successfully');
+        this.loadIngredients();
+        this.closeAllModals();
+        alert('تم تحديث المكون بنجاح!');
+      },
+      error: (err) => {
+        console.error('Error updating ingredient:', err);
+        let errorMessage = 'حدث خطأ أثناء تحديث المكون';
+        
+        if (err.status === 400) {
+          errorMessage = 'بيانات غير صحيحة. يرجى التحقق من المدخلات.';
+        } else if (err.status === 404) {
+          errorMessage = 'لم يتم العثور على المكون.';
+        } else if (err.status === 500) {
+          errorMessage = 'خطأ في الخادم. يرجى المحاولة مرة أخرى.';
+        }
+        
+        alert(errorMessage);
+      }
     });
   }
 
@@ -97,26 +161,27 @@ saveIngredient(): void {
   }
 
   typeLabels: { [key: number]: string } = {
-  0: 'Grain',
-  1: 'Cake',
-  2: 'Bran'
-};
- confirmDelete(): void {
-  if (this.selectedIds.length === 0) {
-    alert('Please select at least one ingredient to delete.');
-    return;
-  }
+    0: 'Grain',
+    1: 'Cake',
+    2: 'Bran'
+  };
 
-  const deleteRequests = this.selectedIds.map(id => this.ingredientService.delete(id));
-  forkJoin(deleteRequests).subscribe({
-    next: () => {
-      this.loadIngredients();
-      this.selectedIds = [];
-      this.closeAllModals();
-    },
-    error: err => console.error('Error deleting ingredients', err)
-  });
-}
+  confirmDelete(): void {
+    if (this.selectedIds.length === 0) {
+      alert('Please select at least one ingredient to delete.');
+      return;
+    }
+
+    const deleteRequests = this.selectedIds.map(id => this.ingredientService.delete(id));
+    forkJoin(deleteRequests).subscribe({
+      next: () => {
+        this.loadIngredients();
+        this.selectedIds = [];
+        this.closeAllModals();
+      },
+      error: err => console.error('Error deleting ingredients', err)
+    });
+  }
 
   closeAllModals(): void {
     this.showAddNewIngredientModal = false;
@@ -138,12 +203,12 @@ saveIngredient(): void {
     this.applySearchAndFilter();
   }
 
-applySearchAndFilter(): void {
-  this.filteredIngredients = this.ingredients.filter(i =>
-    (!this.selectedSeason || this.selectedSeason === 'All' || i.season === this.selectedSeason) &&
-    (!this.searchTerm || i.name?.toLowerCase().includes(this.searchTerm.toLowerCase()))
-  );
-}
+  applySearchAndFilter(): void {
+    this.filteredIngredients = this.ingredients.filter(i =>
+      (!this.selectedSeason || this.selectedSeason === 'All' || i.season === this.selectedSeason) &&
+      (!this.searchTerm || i.name?.toLowerCase().includes(this.searchTerm.toLowerCase()))
+    );
+  }
 
   showDataForIngredient(): void {
     const found = this.ingredients.find(i => i.name === this.selectedIngredient.name);

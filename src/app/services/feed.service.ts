@@ -9,6 +9,7 @@ export interface IngredientPrice {
 
 export interface FeedCreate {
   name: string;
+  animalCatgeoryId: number;
   quntity: number;
   ingredientPrice: IngredientPrice[];
 }
@@ -62,5 +63,9 @@ export class FeedService {
 
   getFeedById(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/Feeds/${id}`);
+  }
+
+  updateFeed(id: number, feed: FeedCreate): Observable<any> {
+    return this.http.put(`${this.apiUrl}/Feeds/${id}`, feed);
   }
 }
