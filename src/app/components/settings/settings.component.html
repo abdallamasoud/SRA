@@ -1,48 +1,168 @@
 <div class="settings-container">
   <div class="settings-header">
-    <img src="assets/settings-icon.png" alt="Settings Icon" class="settings-icon">
-    <h2>Settings</h2>
+    <img src="assets/images/icons/setting.png" alt="Settings Icon" class="settings-icon">
+    <span class="settings-title">Settings</span>
   </div>
-  <div class="settings-section">
-    <h3>Basic</h3>
-    <button class="edit-button">Edit</button>
-    <div class="info-row">
-      <div class="label">Photo</div>
-      <div class="value">
-        <img src="assets/profile-pic.png" alt="Profile Picture" class="profile-picture">
+  <hr class="divider" />
+
+  <div class="section-block">
+    <div class="section-header">
+      <span class="section-title">Basic</span>
+      <div class="section-actions">
+        <button class="access-btn" (click)="openGiveAccessEngineerModal()">Give Access</button>
+        <button class="edit-btn" (click)="openEditProfileModal()">Edit</button>
       </div>
     </div>
-    <div class="info-row">
-      <div class="label">Name</div>
-      <div class="value">Layla Hassan</div>
-    </div>
-    <div class="info-row">
-      <div class="label">Email Address</div>
-      <div class="value">Azzamaa&#64;example.com</div>
-    </div>
-    <div class="info-row">
-      <div class="label">Password</div>
-      <div class="value">********</div>
-    </div>
-    <div class="info-row">
-      <div class="label">Farm Name</div>
-      <div class="value">Dina Farm</div>
-    </div>
-    <div class="info-row">
-      <div class="label">Accessibility</div>
-      <div class="value">Owner</div>
+    <div class="info-table">
+      <div class="info-row">
+        <div class="label">Photo</div>
+        <div class="value"><img src="assets/images/user-avatar.png" alt="Profile Picture" class="profile-picture"></div>
+      </div>
+      <div class="info-row">
+        <div class="label">Name</div>
+        <div class="value">Layla Hassan</div>
+      </div>
+      <div class="info-row">
+        <div class="label">Email Address</div>
+        <div class="value">Azzamaa&#64;example.com</div>
+      </div>
+      <div class="info-row">
+        <div class="label">Password</div>
+        <div class="value">**********</div>
+      </div>
+      <div class="info-row">
+        <div class="label">Farm Name</div>
+        <div class="value">Dina Farm</div>
+      </div>
+      <div class="info-row">
+        <div class="label">Accessibility</div>
+        <div class="value">Owner</div>
+      </div>
     </div>
   </div>
 
-  <div class="settings-section">
-    <h3>Performance</h3>
-    <div class="info-row">
-      <div class="label">Date Format</div>
-      <div class="value">DD/MM/YYYY</div>
+  <div class="engineers-section">
+    <div class="section-header">
+      <span class="section-title">Engineers</span>
     </div>
-    <div class="info-row">
-      <div class="label">Automatic Time Zone</div>
-      <div class="value">UTC+2</div>
+    <ul class="engineers-list">
+      <li *ngFor="let engineer of engineers">
+        <span>{{ engineer.name }}</span>
+        <button class="delete-engineer-btn" (click)="deleteEngineer(engineer)">
+          <i class="fas fa-trash"></i>
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section-block">
+    <div class="section-header">
+      <span class="section-title">Performance</span>
     </div>
+    <div class="info-table">
+      <div class="info-row">
+        <div class="label">Date Format</div>
+        <div class="value"><button class="small-btn">DD/MM/YYYY</button></div>
+      </div>
+      <div class="info-row">
+        <div class="label">Automatic Time Zone</div>
+        <div class="value"><button class="small-btn">UTC+2</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div class="modal-overlay" *ngIf="showEditProfileModal">
+  <div class="edit-modal">
+    <div class="settings-header">
+      <img src="assets/images/icons/setting.png" alt="Settings Icon" class="settings-icon">
+      <span class="settings-title">Settings</span>
+    </div>
+    <hr class="divider" />
+    <div class="edit-title">Edit Profile</div>
+    <div class="edit-profile-pic-container">
+      <img src="assets/images/user-avatar.png" class="edit-profile-pic" alt="Profile Picture">
+      <label class="edit-pic-btn">
+        <input type="file" hidden>
+        <span class="camera-icon"><i class="fas fa-camera"></i></span>
+      </label>
+    </div>
+    <form class="edit-form">
+      <div class="edit-input-group">
+        <label>Name</label>
+        <input type="text" value="Layla Hassan">
+      </div>
+      <div class="edit-input-group">
+        <label>Email</label>
+        <input type="email" value="Azzamaa&#64;example.com">
+      </div>
+      <div class="edit-input-group">
+        <label>Password</label>
+        <input type="password" value="**********">
+      </div>
+      <div class="change-password-link" (click)="closeEditProfileModal(); openGiveAccessModal()">Change Password</div>
+      <div class="edit-actions">
+        <button type="button" class="back-btn" (click)="closeEditProfileModal()">
+          <i class="fas fa-angle-double-left"></i>
+        </button>
+        <button type="submit" class="save-btn">
+          <i class="fas fa-save"></i> Save
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal-overlay" *ngIf="showGiveAccessModal">
+  <div class="edit-modal">
+    <div class="settings-header">
+      <img src="assets/images/icons/setting.png" alt="Settings Icon" class="settings-icon">
+      <span class="settings-title">Settings</span>
+    </div>
+    <hr class="divider" />
+    <div class="edit-title">Change Password</div>
+    <form class="edit-form">
+      <div class="edit-input-group">
+        <input type="password" placeholder="Current Password">
+      </div>
+      <div class="edit-input-group">
+        <input type="password" placeholder="New Password">
+      </div>
+      <div class="edit-input-group">
+        <input type="password" placeholder="Confirm Password">
+      </div>
+      <div class="edit-actions">
+        <button type="button" class="back-btn" (click)="closeGiveAccessModal()">
+          <i class="fas fa-angle-double-left"></i>
+        </button>
+        <button type="submit" class="save-btn">
+          Save Change Password
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- مودال إعطاء الصلاحية للمهندسين -->
+<div class="modal-overlay" *ngIf="showGiveAccessEngineerModal">
+  <div class="edit-modal">
+    <button class="close-x" (click)="closeGiveAccessEngineerModal()">&times;</button>
+    <div class="settings-header">
+      <img src="assets/images/icons/setting.png" alt="Settings Icon" class="settings-icon">
+      <span class="settings-title">Settings</span>
+    </div>
+    <hr class="divider" />
+    <div class="give-access-title">Give access to your engineers</div>
+    <form class="edit-form give-access-form">
+      <div class="edit-input-group">
+        <input type="email" placeholder="Email" value="Azzamaa&#64;example.com">
+      </div>
+      <div class="edit-input-group">
+        <input type="password" placeholder="Password" value="**********">
+      </div>
+      <button type="submit" class="give-access-btn">Give access</button>
+    </form>
   </div>
 </div> 

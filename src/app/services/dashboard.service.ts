@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AnimalService } from './animal.service';
+import { environment } from 'src/environments/environment.development';
 
 export interface DashboardSummary {
   totalAnimals: number;
@@ -19,7 +20,7 @@ export interface DashboardSummary {
   providedIn: 'root'
 })
 export class DashboardService {
-  private apiUrl = 'https://sra.runasp.net/api';
+  private apiUrl = environment.apiUrl + '/api';
 
   constructor(
     private http: HttpClient,
@@ -39,7 +40,7 @@ export class DashboardService {
 
   private getMockDashboardData(): DashboardSummary {
     return {
-      totalAnimals: 125,
+      totalAnimals: 15,
       animalsByType: [
         { type: 'Cow', count: 45 },
         { type: 'Bull', count: 15 },

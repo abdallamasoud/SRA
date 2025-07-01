@@ -1,0 +1,10 @@
+{
+    "$schema": "https://raw.githubusercontent.com/cyclosproject/ng-openapi-gen/master/ng-openapi-gen-schema.json",
+    "input": "./openapi/base/swagger.json",
+    "output": "./src/app/core/backend/base",
+    "ignoreUnusedModels": false,
+    "module": "BaseApiModule",
+    "skipJsonSuffix": true,
+    "removeStaleFiles": true,
+    "templates": "openapi/templates"
+}

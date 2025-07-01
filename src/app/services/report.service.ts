@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment.development';
 
 export interface Report {
   date: string;
@@ -12,7 +13,7 @@ export interface Report {
   providedIn: 'root'
 })
 export class ReportService {
-  private apiUrl = 'https://sra.runasp.net/api/Reports';
+    private apiUrl = environment.apiUrl + '/api';
 
   constructor(private http: HttpClient) {}
 

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable,of} from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { NotificationService, NotificationItem } from '../services/notification.service';
+import { environment } from 'src/environments/environment.development';
 
 
 
@@ -59,7 +60,7 @@ export const animalTypeReverseMap: { [key: number]: 'Milking' | 'Newborn' | 'Fat
   providedIn: 'root'
 })
 export class AnimalService {
-  private apiUrl = 'https://localhost:7174/api';
+  private apiUrl = environment.apiUrl + '/api';
 
   constructor(private http: HttpClient) {}
 
@@ -150,10 +151,10 @@ updateFatteningWeight(payload: {
     weight: payload.weight,
     dateOfWeight: payload.dateOfWeight
   };
-  
+
   console.log('AnimalService - Sending PATCH request to:', `${this.apiUrl}/Animal/${payload.id}`);
   console.log('AnimalService - Payload:', formattedPayload);
-  
+
   // استخدام PATCH method مع البيانات المطلوبة فقط
   return this.http.patch(`${this.apiUrl}/Animal/${payload.id}`, formattedPayload).pipe(
     catchError(error => {
@@ -174,11 +175,11 @@ getAnimalByCode(code: string): Observable<any> {
   return this.http.get<any>(`${this.apiUrl}/Animal/code/${code}`).pipe(
     catchError(error => {
       console.error('Error fetching animal by code endpoint:', error);
-      
+
       // إذا فشل، جرب البحث في جميع الحيوانات
       return this.getAllAnimals().pipe(
         map(animals => {
-          const foundAnimal = animals.find(animal => 
+          const foundAnimal = animals.find(animal =>
             animal.code.toLowerCase() === code.toLowerCase()
           );
           if (foundAnimal) {
@@ -233,7 +234,7 @@ getLastWeightFromHistory(animalId: number): Observable<any> {
     map(history => {
       if (history && history.length > 0) {
         // ترتيب السجل حسب التاريخ واختيار آخر وزن
-        const sortedHistory = history.sort((a, b) => 
+        const sortedHistory = history.sort((a, b) =>
           new Date(b.dateOfWeight).getTime() - new Date(a.dateOfWeight).getTime()
         );
         return sortedHistory[0];

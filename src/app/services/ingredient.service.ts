@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment.development';
 
 export interface Ingredient {
   id?: number;
@@ -16,28 +17,28 @@ export interface Ingredient {
 
 @Injectable({ providedIn: 'root' })
 export class IngredientService {
-  private baseUrl = 'https://localhost:7174/api';
+   private apiUrl = environment.apiUrl + '/api';
 
   constructor(private http: HttpClient) {}
 
   getAll(): Observable<Ingredient[]> {
-    return this.http.get<Ingredient[]>(`${this.baseUrl}/Ingredients`);
+    return this.http.get<Ingredient[]>(`${this.apiUrl}/Ingredients`);
   }
 
   getById(id: number): Observable<Ingredient> {
-    return this.http.get<Ingredient>(`${this.baseUrl}/Ingredients/${id}`);
+    return this.http.get<Ingredient>(`${this.apiUrl}/Ingredients/${id}`);
   }
 
   create(ingredient: Ingredient): Observable<Ingredient> {
     console.log('IngredientService - Creating ingredient:', ingredient);
-    return this.http.post<Ingredient>(`${this.baseUrl}/Ingredients`, ingredient);
+    return this.http.post<Ingredient>(`${this.apiUrl}/Ingredients`, ingredient);
   }
 
   update(ingredient: Ingredient): Observable<void> {
-    return this.http.put<void>(`${this.baseUrl}/Ingredients/${ingredient.id}`, ingredient);
+    return this.http.put<void>(`${this.apiUrl}/Ingredients/${ingredient.id}`, ingredient);
   }
 
   delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/Ingredients/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/Ingredients/${id}`);
   }
 }

@@ -662,9 +662,9 @@ th {
 }
 /* Label styles */
 .text-wrapper-6 {
-  position: fixed;
+  /* position: fixed;
   left: 37%;
-  top: 35%;
+  top: 35%; */
 
   display: flex;
  flex-direction: row ;
@@ -969,6 +969,10 @@ radio-group {
 
     align-items: flex-start;
  }
+
+
+
+ 
   .show-modal{
   position: absolute;
     width: 50%;

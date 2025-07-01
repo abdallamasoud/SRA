@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment.development';
 
 export interface IngredientPrice {
   id: number;
@@ -29,7 +30,7 @@ export interface Category {
   providedIn: 'root'
 })
 export class FeedService {
-  private apiUrl = 'https://localhost:7174/api';
+   private apiUrl = environment.apiUrl + '/api';
 
   constructor(private http: HttpClient) { }
 

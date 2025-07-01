@@ -3,6 +3,7 @@ import { AnimalService } from './animal.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Animal } from './animal.service';
+import { environment } from 'src/environments/environment.development';
 
 @Injectable({
   providedIn: 'root'

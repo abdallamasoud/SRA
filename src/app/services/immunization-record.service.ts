@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment.development';
 
 export interface ImmunizationRecord {
   id?: number;
@@ -14,27 +15,27 @@ export interface ImmunizationRecord {
   providedIn: 'root'
 })
 export class ImmunizationRecordService {
-  private baseUrl = 'https://sra.runasp.net/api';
+  private apiUrl = environment.apiUrl + '/api';
 
   constructor(private http: HttpClient) {}
 
   getAll(): Observable<ImmunizationRecord[]> {
-    return this.http.get<ImmunizationRecord[]>(`${this.baseUrl}/ImmunizationRecord`);
+    return this.http.get<ImmunizationRecord[]>(`${this.apiUrl}/ImmunizationRecord`);
   }
 
   getById(id: number): Observable<ImmunizationRecord> {
-    return this.http.get<ImmunizationRecord>(`${this.baseUrl}/ImmunizationRecord/${id}`);
+    return this.http.get<ImmunizationRecord>(`${this.apiUrl}/ImmunizationRecord/${id}`);
   }
 
   create(record: ImmunizationRecord): Observable<ImmunizationRecord> {
-    return this.http.post<ImmunizationRecord>(`${this.baseUrl}/ImmunizationRecord`, record);
+    return this.http.post<ImmunizationRecord>(`${this.apiUrl}/ImmunizationRecord`, record);
   }
 
   update(record: ImmunizationRecord): Observable<void> {
-    return this.http.put<void>(`${this.baseUrl}/ImmunizationRecord/${record.id}`, record);
+    return this.http.put<void>(`${this.apiUrl}/ImmunizationRecord/${record.id}`, record);
   }
 
   delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/ImmunizationRecord/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/ImmunizationRecord/${id}`);
   }
 }

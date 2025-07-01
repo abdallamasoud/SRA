@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, mergeMap, catchError } from 'rxjs/operators';
+import { environment } from 'src/environments/environment.development';
 
 // ✅ تعريف interface للبيانات
 export interface MilkCollection {
@@ -23,7 +24,7 @@ export interface MilkCollection {
   providedIn: 'root'
 })
 export class DairyService {
-  private apiUrl = 'https://sra.runasp.net/api';
+  private apiUrl = environment.apiUrl + '/api';
   private milkCollectionApi = `${this.apiUrl}/MilkCollections`;
   private dairies: MilkCollection[] = [];
 
@@ -34,12 +35,12 @@ export class DairyService {
     if (!dateString) {
       return new Date().toISOString();
     }
-    
+
     // إذا كان التنسيق صحيح بالفعل
     if (dateString.includes('T') && dateString.includes('Z')) {
       return dateString;
     }
-    
+
     // تحويل من YYYY-MM-DD إلى ISO
     try {
       const date = new Date(dateString);
@@ -79,7 +80,7 @@ export class DairyService {
     switch (type) {
       case 1: return 'Dairy';
       case 3: return 'Dry';
-     
+
       default: return '';
     }
   }
@@ -121,18 +122,18 @@ export class DairyService {
       console.error('Invalid fat percentage:', dairyData.fatPercentage);
       throw new Error('نسبة الدهون يجب أن تكون بين 0 و 10%');
     }
-    
+
     // البحث عن الحيوان الموجود أولاً
     console.log('=== DAIRY SERVICE DEBUG ===');
     console.log('Looking for existing animal with code:', dairyData.code);
     console.log('Available dairies:', this.dairies);
-    
+
     // البحث في البيانات المحملة
     const existingAnimal = this.dairies.find(a => a.code.toLowerCase() === dairyData.code.toLowerCase());
-    
+
     if (existingAnimal) {
       console.log('Found existing animal:', existingAnimal);
-      
+
       // تحديث بيانات الحليب للحيوان الموجود بالشكل المطلوب للـ PUT
       const updatedAnimal = {
         id: existingAnimal.id,
@@ -148,7 +149,7 @@ export class DairyService {
         expectedDate: this.formatDateForBackend(existingAnimal.expectedDate),
         description: existingAnimal.description
       };
-      
+
       console.log('Updating animal with milk data:', updatedAnimal);
       console.log('API URL:', `${this.milkCollectionApi}/${existingAnimal.id}`);
       console.log('Request method: PUT');
@@ -168,7 +169,7 @@ export class DairyService {
       console.log('expectedDate:', typeof updatedAnimal.expectedDate, updatedAnimal.expectedDate);
       console.log('description:', typeof updatedAnimal.description, updatedAnimal.description);
       console.log('========================');
-      
+
       return this.http.put(`${this.milkCollectionApi}/${existingAnimal.id}`, updatedAnimal, {
         headers: { 'Content-Type': 'application/json' }
       }).pipe(
@@ -186,14 +187,14 @@ export class DairyService {
     } else {
       console.log('Animal not found in loaded data, searching API...');
       console.log('Available dairies codes:', this.dairies.map(d => d.code));
-      
+
       // البحث في الـ API
       return this.http.get<MilkCollection[]>(this.milkCollectionApi).pipe(
         map(allDairies => {
           const apiAnimal = allDairies.find(a => a.code.toLowerCase() === dairyData.code.toLowerCase());
           if (apiAnimal) {
             console.log('Found animal via API:', apiAnimal);
-            
+
             const updatedAnimal = {
               id: apiAnimal.id,
               code: apiAnimal.code,
@@ -208,13 +209,13 @@ export class DairyService {
               expectedDate: this.formatDateForBackend(apiAnimal.expectedDate),
               description: apiAnimal.description
             };
-            
+
             console.log('Updating animal via API with milk data:', updatedAnimal);
             console.log('API URL:', `${this.milkCollectionApi}/${apiAnimal.id}`);
             console.log('Request method: PUT (via API search)');
             console.log('Request body:', JSON.stringify(updatedAnimal, null, 2));
             console.log('========================');
-            
+
             return this.http.put(`${this.milkCollectionApi}/${apiAnimal.id}`, updatedAnimal, {
               headers: { 'Content-Type': 'application/json' }
             }).pipe(
@@ -245,7 +246,7 @@ export class DairyService {
               expectedDate: '',
               description: ''
             };
-            
+
             console.log('Creating new record with PATCH:', requestData);
             return this.http.patch(this.milkCollectionApi, requestData);
           }
@@ -260,7 +261,7 @@ export class DairyService {
     console.log('=== UPDATE DAIRY DEBUG ===');
     console.log('Updating dairy with PUT, ID:', id);
     console.log('Update data:', dairyData);
-    
+
     // تأكد من أن البيانات بالشكل الصحيح للـ PUT
     const putData = {
       id: dairyData.id,
@@ -276,14 +277,14 @@ export class DairyService {
       expectedDate: this.formatDateForBackend(dairyData.expectedDate),
       description: dairyData.description
     };
-    
+
     console.log('Formatted PUT data:', putData);
     console.log('API URL:', `${this.milkCollectionApi}/${id}`);
     console.log('Request method: PUT');
     console.log('Request body:', JSON.stringify(putData, null, 2));
     console.log('Request headers:', { 'Content-Type': 'application/json' });
     console.log('========================');
-    
+
     return this.http.put(`${this.milkCollectionApi}/${id}`, putData, {
       headers: { 'Content-Type': 'application/json' }
     }).pipe(
@@ -307,7 +308,7 @@ export class DairyService {
     console.log('API URL:', `${this.apiUrl}/Animal/${id}`);
     console.log('Request method: DELETE');
     console.log('========================');
-    
+
     return this.http.delete<void>(`${this.apiUrl}/Animal/${id}`).pipe(
       map(response => {
         console.log('=== DELETE SUCCESS ===');
